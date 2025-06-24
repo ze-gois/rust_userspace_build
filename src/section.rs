@@ -28,6 +28,7 @@ use crate::ELFHeader;
 pub mod standard;
 
 #[repr(C)]
+#[derive(Clone)]
 pub struct Table {
     pub offset: dtype::Off,
     pub counter: usize,

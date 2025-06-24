@@ -8,11 +8,13 @@ arch = { path = "crates/arch" }
 human = { path = "crates/human" }
 syscall = { path = "crates/syscall" }
 result = { path = "crates/result" }
+macros = { path = "crates/macros" }
 
 [workspace]
 members = [
     "crates/arch",
-    "crates/human", "crates/macros",
+    "crates/human",
+    "crates/macros",
     "crates/result",
     "crates/syscall",
     "crates/x86_64",

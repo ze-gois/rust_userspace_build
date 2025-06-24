@@ -7,6 +7,8 @@ use super::Header;
 pub struct Entry {
     pub header: Header,
     pub content: *mut u8,
+    pub counter: usize,
+    pub cursor: usize,
 }
 
 impl Entry {
@@ -17,6 +19,8 @@ impl Entry {
         Ok(Entry {
             header: Header::from_file_descriptor(file_descriptor, endianness)?,
             content: core::ptr::null_mut(),
+            counter: 0,
+            cursor: 0,
         })
     }
 }

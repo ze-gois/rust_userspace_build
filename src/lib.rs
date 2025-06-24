@@ -513,7 +513,7 @@ impl<'a> core::fmt::Display for ELF<'a> {
 
         if let Some(st) = &self.string_table {
             write!(f, "\n\t\tString table{{\n")?;
-            for (e, entry) in st.into_iter().enumerate() {
+            for (e, entry) in st.clone().into_iter().enumerate() {
                 write!(f, "\t\t\t{}: {}\n", e, entry.content)?;
             }
             write!(f, "\t\t}}\n")?;
@@ -522,14 +522,18 @@ impl<'a> core::fmt::Display for ELF<'a> {
         }
 
         if let Some(shtable) = &self.section_header_table {
-            for (e, entry) in shtable.into_iter().enumerate() {
+            for (e, entry) in shtable.clone().into_iter().enumerate() {
                 match &self.string_table {
                     Some(strtab) => {
                         let endianness = self.header.get_identifier().get_endianness();
-                        let shname =
+                        let shname = match
                             entry
                                 .header
-                                .get_name_from_filemap(&self.filemap, strtab, &endianness);
+                                .get_name(self.file_descriptor, strtab, endianness) {
+                                    Ok(s) => s,
+                                    _ => "<nn>"
+                                };
+
                         write!(f, "\n\t\t{}: {}", e, shname)?;
                     }
                     None => {}
@@ -554,7 +558,7 @@ impl<'a> core::fmt::Display for ELF<'a> {
     }
 }
 
-impl core::fmt::Debug for ELF {
+impl<'a> core::fmt::Debug for ELF<'a> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("ELF")
             .field("header", &self.header)
