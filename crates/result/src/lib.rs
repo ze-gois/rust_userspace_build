@@ -8,7 +8,9 @@
 /// - Optional advertising of error codes for syscall returns
 pub trait ErrorTrait {
     /// Creates an error instance from a numeric error code
-    fn from_no(errno: isize) -> Self;
+    fn from(errno: isize) -> Self;
+
+    fn to(&self) -> isize;
 
     /// Returns a human-readable description of the error
     fn describe(&self) -> &str;

@@ -1,17 +1,25 @@
 pub mod flags;
 
 pub use flags::*;
+use macros::labeled_enum_typed;
 
 use super::Number;
 use arch::{Arch, Callable};
 
 static NUMBER: usize = Number::MMap as usize;
 
-define_syscall_error!(
+macros::labeled_enum_typed!(
     Error,
-    MMap,
+    isize,
+    isize,
     "mmap",
-    [[NotReadable, -13, "File not open for reading", EACCES]]
+    [[
+        NotReadable,
+        EACCES,
+        -13,
+        "File not open for reading",
+        "EACCES"
+    ]]
 );
 
 #[inline(always)]

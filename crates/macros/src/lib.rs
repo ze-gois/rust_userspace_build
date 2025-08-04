@@ -1,6 +1,8 @@
 #![no_std]
 
 pub mod labeled_enum;
+pub mod labeled_enum_typed;
+pub mod labeled_typed_enum;
 
 #[macro_export]
 macro_rules! impl_partial_eq_for_type {
@@ -58,17 +60,10 @@ macro_rules! impl_from_for_type {
                     val.0 as $t
                 }
             }
-        )*
-    }
-}
 
-#[macro_export]
-macro_rules! impl_into_for_type {
-    ($name:ty, $inner:ty, $($t:ty),*) => {
-        $(
-            impl Into<$name> for $t {
-                fn into(val: $name) -> $t {
-                    val.0 as $t
+            impl From<$t> for $name {
+                fn from(v: $t) -> Self {
+                    Self(v as $inner)
                 }
             }
         )*

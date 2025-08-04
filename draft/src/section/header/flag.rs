@@ -42,7 +42,7 @@ pub enum Flag {
 
 impl Flag {
     pub fn from(i: T) -> Self {
-        match i {
+        match i.0 {
             0x0 => Self::Blank,
             0x1 => Self::Write,
             0x2 => Self::Allocate,

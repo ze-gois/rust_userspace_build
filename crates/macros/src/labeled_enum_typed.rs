@@ -1,31 +1,6 @@
-/// A macro that defines an error type and error handling for syscalls.
-///
-/// This macro generates:
-/// 1. An Error enum with the specified variants and their associated discriminant values
-/// 2. ErrorTrait implementation for the Error type with proper discriminant mapping
-/// 3. An discriminant module with standard Linux error constants
-/// 4. Into<isize> implementation for the Error type
-/// 5. A handle_result function that maps arch errors to syscall errors
-///
-/// # Arguments
-///
-/// * `$enum_identifier` - The name of the error enum (usually Error)
-/// * `$variant` - The variant name in the crate::result::Error enum (e.g., Open, Read, Write)
-/// * `$label` - String slice with the syscall name
-/// * A list of error variants with their descriptions, discriminant values and Linux standard constant names
-///   [VariantName, discriminant_value, "description", "LINUX_CONSTANT"]
-///
-/// # Example
-///
-/// ```
-/// define_syscall_error!(Error, Read, "read", [
-///     [BadFileDescriptor, -9, "Bad file descriptor", "EBADF"],
-///     [InvalidBuffer, -14, "Invalid buffer pointer", "EFAULT"]
-/// ]);
-/// ```
 #[macro_export]
-macro_rules! labeled_enum {
-    ($enum_identifier:ident, $variant:ty, $label:expr,
+macro_rules! labeled_enum_typed {
+    ($enum_identifier:ident, $variant:ty, $content:ty, $label:expr,
      [ $( [$identifier:ident, $const_identifier:ident, $discriminant:expr, $description:expr, $acronym:expr] ),* $(,)? ]) => {
         // Define Linux standard error constants in an discriminant module with standard names
         pub mod constants {
@@ -35,37 +10,38 @@ macro_rules! labeled_enum {
         }
 
         #[repr(C)]
+        #[repr($variant)]
         #[derive(Copy, Clone, Eq, PartialEq)]
         pub enum $enum_identifier {
-            $($identifier = $discriminant,)*
+            $($identifier($content) = $discriminant,)*
             TODO,
         }
 
         impl $enum_identifier {
             pub fn from(discriminant: $variant) -> Self {
                 match discriminant {
-                    $($discriminant => Self::$identifier,)*
+                    $($discriminant => Self::$identifier(<$content>::default()),)*
                     _ => Self::TODO,
                 }
             }
 
             pub fn to(&self) -> $variant {
                 match *self {
-                    $(Self::$identifier => $discriminant,)*
+                    $(Self::$identifier(_) => $discriminant,)*
                     _ => <$variant>::MAX
                 }
             }
 
             pub fn str(&self) -> &str {
                 match self {
-                    $(Self::$identifier => $description,)*
+                    $(Self::$identifier(_) => $description,)*
                     _ => "TODO"
                 }
             }
 
             pub fn acronym(&self) -> &str {
                 match *self {
-                    $(Self::$identifier => $acronym,)*
+                    $(Self::$identifier(_) => $acronym,)*
                     _ => "Unknown error",
                 }
             }

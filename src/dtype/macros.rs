@@ -1,9 +1,9 @@
 #[macro_export]
 macro_rules! elf_define_type {
-    ($(#[$meta:meta])* pub $name:ident, $inner:ty) => {
+    ($(#[$meta:meta])* $vis:vis $name:ident, $inner:ty) => {
         $(#[$meta])*
         #[derive(Clone, Copy, Debug, PartialEq)]
-        pub struct $name(pub $inner);
+        $vis struct $name(pub $inner);
 
         impl $crate::dtype::ELFType for $name {
             type Inner = $inner;
@@ -12,12 +12,16 @@ macro_rules! elf_define_type {
         }
 
         impl $name {
-            pub fn new(value: $inner) -> Self {
+            $vis fn new(value: $inner) -> Self {
                 Self(value)
             }
 
-            pub fn from_bytes(bytes: [u8; Self::SIZE_BYTES], endianness: $crate::dtype::Endianness) -> Self {
+            $vis fn from_bytes(bytes: [u8; Self::SIZE_BYTES], endianness: $crate::dtype::Endianness) -> Self {
                 match endianness {
+                    Endianness::TODO => {
+                        $crate::info!("Endianness is TODO");
+                        panic!("TODO");
+                    },
                     Endianness::None => {
                         $crate::info!("Endianness is zeroed.");
                         panic!("none.")
@@ -35,8 +39,12 @@ macro_rules! elf_define_type {
                 }
             }
 
-            pub fn to_bytes(&self, endianness: $crate::dtype::Endianness) -> [u8; Self::SIZE_BYTES] {
+            $vis fn to_bytes(&self, endianness: $crate::dtype::Endianness) -> [u8; Self::SIZE_BYTES] {
                 match endianness {
+                    Endianness::TODO => {
+                        $crate::info!("Endianness is TODO");
+                        panic!("TODO");
+                    },
                     Endianness::None => {
                         $crate::info!("Endianness is zeroed.");
                         panic!("none.")
@@ -54,12 +62,16 @@ macro_rules! elf_define_type {
                 }
             }
 
-            pub fn read(fd: isize, endianness: $crate::dtype::Endianness) -> Result<$name> {
+            $vis fn read(fd: isize, endianness: $crate::dtype::Endianness) -> Result<$name> {
                 let mut bytes = [0u8; <$name>::SIZE_BYTES];
                 const INNER_SIZE : isize = <$name>::SIZE_BYTES as isize;
                 match syscall::read(fd, bytes.as_mut_ptr(), <$name>::SIZE_BYTES) {
                     Ok(INNER_SIZE) => {
                         let value = match endianness {
+                            Endianness::TODO => {
+                                $crate::info!("Endianness is TODO");
+                                panic!("TODO");
+                            },
                             Endianness::None => {
                                 $crate::info!("Endianness is zeroed.");
                                 panic!("none.")
@@ -89,18 +101,6 @@ macro_rules! elf_define_type {
             }
         }
 
-        impl From<$inner> for $name {
-            fn from(value: $inner) -> Self {
-                Self(value)
-            }
-        }
-
-        impl Into<$inner> for $name {
-            fn into(self) -> $inner {
-                self.0
-            }
-        }
-
         impl core::fmt::Display for $name {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 write!(f, "{}",self.0)?;
@@ -116,8 +116,7 @@ macro_rules! elf_define_type {
         }
 
 
-        macros::impl_partial_eq_for_type!($name, $inner, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, usize, isize);
-        macros::impl_from_for_type!($name, $inner, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, usize, isize);
-        macros::impl_into_for_type!($name, $inner, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+        $crate::macros::impl_partial_eq_for_type!($name, $inner, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, usize, isize);
+        $crate::macros::impl_from_for_type!($name, $inner, u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, usize, isize);
     }
 }

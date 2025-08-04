@@ -34,7 +34,7 @@ pub enum Index {
 
 impl Index {
     pub fn from(i: T) -> Self {
-        match i {
+        match i.0 {
             0xFF00 => Self::LoProc,
             // 0xFF00..=0xFF1F => Self::Proc,
             0xFF1F => Self::HiProc,
