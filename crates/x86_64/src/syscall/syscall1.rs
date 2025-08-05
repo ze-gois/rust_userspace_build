@@ -1,8 +1,9 @@
-use crate::result::{Result, handle_result};
+use crate::result::{ErrorType, Result, handle_result};
 
 #[inline(always)]
-pub fn syscall1(n: usize, a1: usize) -> Result<isize> {
-    let syscall_return: usize;
+pub fn syscall1(n: usize, a1: usize) -> Result {
+    let syscall_return: ErrorType;
+
     unsafe {
         core::arch::asm!(
             "syscall",

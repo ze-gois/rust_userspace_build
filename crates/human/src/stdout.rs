@@ -1,6 +1,6 @@
 pub struct Stdout;
 
-fn print(msg: &str) -> crate::Result<isize> {
+fn print(msg: &str) -> crate::Result {
     crate::arch::write(1, msg.as_ptr(), msg.len())
 }
 

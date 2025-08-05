@@ -7,7 +7,7 @@ use crate::result::*;
 
 pub struct Arch;
 
-pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) -> Result<isize> {
+pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) -> Result {
     let returned_value = arch::syscall3(
         1usize,
         file_descriptor as usize,
@@ -15,5 +15,5 @@ pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) 
         byte_count as usize,
     );
 
-    handle_result(returned_value)
+    handle_result(returned_value as ErrorType)
 }

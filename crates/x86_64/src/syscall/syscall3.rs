@@ -1,23 +1,20 @@
-use crate::result::{Result, handle_result};
-
-use human::info;
+use crate::result::{ErrorType, Result, handle_result};
 
 #[inline(always)]
-pub fn syscall3(n: usize, a1: usize, a2: usize, a3: usize) -> Result<isize> {
-    let ret: usize;
-    info!("crate: syscall3: \"");
+pub fn syscall3(n: usize, a1: usize, a2: usize, a3: usize) -> Result {
+    let syscall_return: ErrorType;
+
     unsafe {
         core::arch::asm!(
             "syscall",
-            inlateout("rax") n => ret,
+            inlateout("rax") n => syscall_return,
             in("rdi") a1,
             in("rsi") a2,
             in("rdx") a3,
             out("rcx") _,
             out("r11") _,
-
         );
     }
-    info!("\" .. done\n");
-    handle_result(ret)
+
+    handle_result(syscall_return)
 }
