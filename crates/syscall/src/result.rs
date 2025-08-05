@@ -1,62 +1,114 @@
-use crate::close::Error as CloseError;
-use crate::lseek::Error as LSeekError;
-use crate::mmap::Error as MMapError;
-use crate::mprotect::Error as MProtectError;
-use crate::munmap::Error as MUnMapError;
-use crate::open::Error as OpenError;
-use crate::read::Error as ReadError;
-use crate::write::Error as WriteError;
+// use crate::close::Error as CloseError;
+// use crate::lseek::Error as LSeekError;
+// use crate::mmap::Error as MMapError;
+// use crate::mprotect::Error as MProtectError;
+// use crate::munmap::Error as MUnMapError;
+// use crate::open::Error as OpenError;
+// use crate::read::Error as ReadError;
+// use crate::write::Error as WriteError;
 
-macros::labeled_typed_enum!(
-    Error,
-    isize,
-    "Syscall Error",
+use result::define_error_nested;
+
+define_error_nested!(
+    usize,
+    "Syscall",
     [
-        [Open, OpenError, ERR_OPEN, 0, "Some Open error", "e_open"],
-        [Read, ReadError, ERR_READ, 1, "Some Read error", "e_read"],
-        [
-            Write,
-            WriteError,
-            ERR_WRITE,
-            2,
-            "Some Write error",
-            "e_write"
-        ],
-        [
-            LSeek,
-            LSeekError,
-            ERR_LSEEK,
-            3,
-            "Some LSeek error",
-            "e_lseek"
-        ],
-        [MMap, MMapError, ERR_MMAP, 4, "Some MMap error", "e_mmap"],
         [
             Close,
-            CloseError,
+            crate::close,
             ERR_CLOSE,
-            5,
-            "Some Close error",
-            "e_close"
+            1,
+            "Syscall close",
+            "E_CLOSE"
         ],
         [
-            MProtect,
-            MProtectError,
+            Lseek,
+            crate::lseek,
+            ERR_LSEEK,
+            1,
+            "Syscall lseek",
+            "E_LSEEK"
+        ],
+        [Mmap, crate::mmap, ERR_MMAP, 1, "Syscall mmap", "E_MMAP"],
+        [
+            Mprotect,
+            crate::mprotect,
             ERR_MPROTECT,
-            6,
-            "Some MProtect error",
-            "e_mprotect"
+            1,
+            "Syscall mprotect",
+            "E_MPROTECT"
         ],
         [
-            MUnMap,
-            MUnMapError,
+            Munmap,
+            crate::munmap,
             ERR_MUNMAP,
-            7,
-            "Some MUnMap error",
-            "e_munmap"
+            1,
+            "Syscall munmap",
+            "E_MUNMAP"
+        ],
+        [Open, crate::open, ERR_OPEN, 1, "Syscall open", "E_OPEN"],
+        [Read, crate::read, ERR_READ, 1, "Syscall read", "E_READ"],
+        [
+            Write,
+            crate::write,
+            ERR_WRITE,
+            1,
+            "Syscall write",
+            "E_WRITE"
         ],
     ]
 );
+
+// macros::labeled_typed_enum!(
+//     Error,
+//     isize,
+//     "Syscall Error",
+//     [
+//         [Open, OpenError, ERR_OPEN, 0, "Some Open error", "e_open"],
+//         [Read, ReadError, ERR_READ, 1, "Some Read error", "e_read"],
+//         [
+//             Write,
+//             WriteError,
+//             ERR_WRITE,
+//             2,
+//             "Some Write error",
+//             "e_write"
+//         ],
+//         [
+//             LSeek,
+//             LSeekError,
+//             ERR_LSEEK,
+//             3,
+//             "Some LSeek error",
+//             "e_lseek"
+//         ],
+//         [MMap, MMapError, ERR_MMAP, 4, "Some MMap error", "e_mmap"],
+//         [
+//             Close,
+//             CloseError,
+//             ERR_CLOSE,
+//             5,
+//             "Some Close error",
+//             "e_close"
+//         ],
+//         [
+//             MProtect,
+//             MProtectError,
+//             ERR_MPROTECT,
+//             6,
+//             "Some MProtect error",
+//             "e_mprotect"
+//         ],
+//         [
+//             MUnMap,
+//             MUnMapError,
+//             ERR_MUNMAP,
+//             7,
+//             "Some MUnMap error",
+//             "e_munmap"
+//         ],
+//     ]
+// );
 //     ,
 //     ,
 //     ,
@@ -124,4 +176,4 @@ macros::labeled_typed_enum!(
 //     }
 // }
 
-pub type Result<T> = core::result::Result<T, Error>;
+// pub type Result<T> = core::result::Result<T, Error>;

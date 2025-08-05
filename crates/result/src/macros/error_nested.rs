@@ -7,8 +7,8 @@ macro_rules! define_error_nested{
             $(
                 [
                     $variant_identifier:ident,
-                    $variant_path:ident,
-                    $variant_constant:ident
+                    $($variant_path:path,)?
+                    $variant_constant:ident,
                     $variant_discriminant:expr,
                     $variant_descriptor:expr,
                     $variant_acronym:expr,
@@ -32,14 +32,16 @@ macro_rules! define_error_nested{
         #[repr($variant)]
         #[derive(Copy, Clone, Eq, PartialEq)]
         pub enum Error {
-            $($variant_identifier(_) = $variant_discriminant,)*
+            $(
+                $variant_identifier(_) = $variant_discriminant,
+            )*
             TODO = <$variant>::MAX,
         }
 
         impl ErrorTrait<$variant> for Error {
             fn from_no(discriminant: $variant) -> Self {
                 match discriminant {
-                    $($variant_discriminant => Self::$variant_identifier::default(),)*
+                    $($variant_discriminant => Self::$variant_identifier::TODO,)*
                     <$variant>::MAX => Self::TODO,
                 }
             }
@@ -71,6 +73,15 @@ macro_rules! define_error_nested{
             use $variant_path::Error as variant_error;
             use $variant_path::ERROR_LABEL as VARIANT_ERROR_LABEL;
             use $variant_path::ErrorType as variant_error_type;
+
+            impl ErrorNestedType<ErrorType,variant_error_type> for Error {
+                fn from_no(a:ErrorType, b:variant_error_type) {
+                    // match (stringfy!())
+                    // (
+
+                    // )*
+                }
+            }
         )*
 
         impl Into<$variant> for Error {
