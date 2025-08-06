@@ -7,11 +7,11 @@ macro_rules! define_error_nested{
             $(
                 [
                     $variant_identifier:ident,
-                    $($variant_path:path,)?
+                    $($variant_path:tt)+,
                     $variant_constant:ident,
                     $variant_discriminant:expr,
                     $variant_descriptor:expr,
-                    $variant_acronym:expr,
+                    $variant_acronym:expr
                 ]
             ),*
             $(,)?
@@ -29,14 +29,7 @@ macro_rules! define_error_nested{
             )*
         }
 
-        #[repr($variant)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
-        pub enum Error {
-            $(
-                $variant_identifier(_) = $variant_discriminant,
-            )*
-            TODO = <$variant>::MAX,
-        }
+        define_error_nested!(@defined_erro_enum $variant; $(($($variant_path)+, $variant_identifier)),*);
 
         impl ErrorTrait<$variant> for Error {
             fn from_no(discriminant: $variant) -> Self {
@@ -68,6 +61,8 @@ macro_rules! define_error_nested{
             }
         }
 
+        pub type Result = core::result::Result<ErrorType, Error>;
+
         $(
             use $variant_path::Result as variant_result;
             use $variant_path::Error as variant_error;
@@ -90,6 +85,38 @@ macro_rules! define_error_nested{
             }
         }
 
-        pub type Result = core::result::Result<ErrorType, Error>;
+    };
+
+    (@define_error_enum_body $variant:ty; $(($variant_token:tt)),*) => {
+        #[repr($variant)]
+        #[derive(Copy, Clone, Eq, PartialEq)]
+        pub enum Error {
+            $(
+                $variant_identifier
+            )*
+        }
+    };
+
+    (@variant_generator $(($variant_identifier:ident, $variant_path:tt)),*) => {
+        $(
+            define_error_nested!(@variant_flexor $variant_path:tt; $variant_identifier:ident),
+        )*
+        TODO = <$variant>::MAX,
+    };
+
+    (@variant_flexor self, $variant_identifier:ident) => {
+        $variant_identifier
+    };
+
+    (@variant_flexor $variant_path:tt, $variant_identifier:ident) => {
+        $variant_identifier(<$variant_path>::Error)
+    };
+
+    (@defined_error_enum $variant:ty; $($variant_path:tt, $variant_identifier:ident),*) => {
+        define_error_nested!(
+            @define_error_enum_body
+            $variant;
+            define_error_nested!(@variant_generator $(($variant_identifier, $variant_path)),*);
+        );
     };
 }

@@ -1,0 +1,12 @@
+[package]
+name = "proc-macros"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = { version = "*" }
+quote = { version = "*" }
+proc-macro2 = { version = "*" }
+
+[lib]
+proc-macro = true

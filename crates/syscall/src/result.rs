@@ -1,18 +1,18 @@
-// use crate::close::Error as CloseError;
-// use crate::lseek::Error as LSeekError;
-// use crate::mmap::Error as MMapError;
-// use crate::mprotect::Error as MProtectError;
-// use crate::munmap::Error as MUnMapError;
-// use crate::open::Error as OpenError;
-// use crate::read::Error as ReadError;
-// use crate::write::Error as WriteError;
+use crate::close::Error as CloseError;
+use crate::lseek::Error as LSeekError;
+use crate::mmap::Error as MMapError;
+use crate::mprotect::Error as MProtectError;
+use crate::munmap::Error as MUnMapError;
+use crate::open::Error as OpenError;
+use crate::read::Error as ReadError;
+use crate::write::Error as WriteError;
 
 use result::define_error_nested;
 
 define_error_nested!(
-    usize,
     "Syscall",
     [
+        [Proc, self, ERR_PROC, 0, "Syscall process", "E_PROC"],
         [
             Close,
             crate::close,
