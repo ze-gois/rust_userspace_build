@@ -1,7 +1,6 @@
 use result::define_error;
 
 define_error!(
-    isize,
     "Human error",
     [
         [ZeEntry, 1, "Entry to ze", "ZE", ZE_ENTRY],
@@ -9,8 +8,8 @@ define_error!(
     ]
 );
 
-pub fn handle_result(result: ErrorType) -> Result {
-    if result < 0 {
+pub fn handle_result(result: usize) -> Result {
+    if (result as isize) < 0 {
         Err(Error::from_no(result))
     } else {
         Ok(result)

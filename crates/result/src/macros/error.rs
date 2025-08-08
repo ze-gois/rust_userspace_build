@@ -1,7 +1,6 @@
 #[macro_export]
 macro_rules! define_error{
     (
-        $variant:ty,
         $label:expr,
         [
             $(
@@ -18,34 +17,33 @@ macro_rules! define_error{
     ) => {
         use $crate::ErrorTrait;
 
-        pub type ErrorType = $variant;
-        pub const ERROR_LABEL : &str = $label;
+        pub const LABEL : &str = $label;
 
         pub mod constant {
             $(
-                const $variant_constant : $variant = $variant_discriminant;
+                const $variant_constant : usize = $variant_discriminant;
             )*
         }
 
-        #[repr($variant)]
+        #[repr(usize)]
         #[derive(Copy, Clone, Eq, PartialEq)]
         pub enum Error {
             $($variant_identifier = $variant_discriminant,)*
-            TODO,
+            TODO = <usize>::MAX,
         }
 
-        impl ErrorTrait<$variant> for Error {
-            fn from_no(discriminant: $variant) -> Self {
+        impl ErrorTrait for Error {
+            fn from_no(discriminant: usize) -> Self {
                 match discriminant {
                     $($variant_discriminant => Self::$variant_identifier,)*
                     _ => Self::TODO,
                 }
             }
 
-            fn to_no(&self) -> $variant {
+            fn to_no(&self) -> usize {
                 match *self {
                     $(Self::$variant_identifier => $variant_discriminant,)*
-                    _ => <$variant>::MAX,
+                    _ => <usize>::MAX,
                 }
             }
 
@@ -64,9 +62,15 @@ macro_rules! define_error{
             }
         }
 
-        impl Into<$variant> for Error {
-            fn into(self) -> $variant {
+        impl Into<usize> for Error {
+            fn into(self) -> usize {
                 self.to_no()
+            }
+        }
+
+        impl Into<isize> for Error {
+            fn into(self) -> isize {
+                self.to_no() as isize
             }
         }
 
@@ -75,6 +79,6 @@ macro_rules! define_error{
                 Self::TODO
             }
         }
-        pub type Result = core::result::Result<ErrorType, Error>;
+        pub type Result = core::result::Result<usize, Error>;
     };
 }

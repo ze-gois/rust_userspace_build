@@ -1,6 +1,6 @@
 #![no_std]
 pub mod result;
-pub use result::*;
+pub use result::{Error, Result};
 
 #[macro_use]
 pub mod macros;

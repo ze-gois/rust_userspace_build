@@ -1,61 +1,53 @@
-use crate::close::Error as CloseError;
-use crate::lseek::Error as LSeekError;
-use crate::mmap::Error as MMapError;
-use crate::mprotect::Error as MProtectError;
-use crate::munmap::Error as MUnMapError;
-use crate::open::Error as OpenError;
-use crate::read::Error as ReadError;
-use crate::write::Error as WriteError;
+mod error {
+    result::define_error!("Syscall", []);
+}
 
-use result::define_error_nested;
-
-define_error_nested!(
+result::define_error_nested!(
     "Syscall",
     [
-        [Proc, self, ERR_PROC, 0, "Syscall process", "E_PROC"],
         [
-            Close,
-            crate::close,
+            Close;
+            crate::close;
             ERR_CLOSE,
-            1,
+            2,
             "Syscall close",
             "E_CLOSE"
         ],
         [
-            Lseek,
-            crate::lseek,
+            LSeek;
+            crate::lseek;
             ERR_LSEEK,
-            1,
+            3,
             "Syscall lseek",
             "E_LSEEK"
         ],
-        [Mmap, crate::mmap, ERR_MMAP, 1, "Syscall mmap", "E_MMAP"],
+        [MMap; crate::mmap; ERR_MMAP, 4, "Syscall mmap", "E_MMAP"],
         [
-            Mprotect,
-            crate::mprotect,
+            MProtect;
+            crate::mprotect;
             ERR_MPROTECT,
-            1,
+            5,
             "Syscall mprotect",
             "E_MPROTECT"
         ],
         [
-            Munmap,
-            crate::munmap,
+            MUnmap;
+            crate::munmap;
             ERR_MUNMAP,
-            1,
+            6,
             "Syscall munmap",
             "E_MUNMAP"
         ],
-        [Open, crate::open, ERR_OPEN, 1, "Syscall open", "E_OPEN"],
-        [Read, crate::read, ERR_READ, 1, "Syscall read", "E_READ"],
+        [Open; crate::open; ERR_OPEN, 7, "Syscall open", "E_OPEN"],
+        [Read; crate::read; ERR_READ, 8, "Syscall read", "E_READ"],
         [
-            Write,
-            crate::write,
+            Write;
+            crate::write;
             ERR_WRITE,
-            1,
+            9,
             "Syscall write",
             "E_WRITE"
-        ],
+        ]
     ]
 );
 

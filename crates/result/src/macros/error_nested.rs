@@ -1,122 +1,150 @@
 #[macro_export]
-macro_rules! define_error_nested{
+macro_rules! define_error_nested {
     (
-        $variant:ty,
         $label:expr,
         [
             $(
                 [
-                    $variant_identifier:ident,
-                    $($variant_path:tt)+,
+                    $variant_identifier:ident;
+                    $($variant_path:tt)::+;
                     $variant_constant:ident,
                     $variant_discriminant:expr,
                     $variant_descriptor:expr,
                     $variant_acronym:expr
                 ]
             ),*
-            $(,)?
         ]
     ) => {
-        use $crate::ErrorNestedTrait;
-        use $crate::ErrorTrait;
+        // use $crate::ErrorNestedTrait;
+        // use $crate::ErrorTrait;
 
-        pub type ErrorType = $variant;
-        pub const ERROR_LABEL : &str = $label;
+        pub const LABEL : &str = $label;
 
         pub mod constant {
             $(
-                const $variant_constant : $variant = $variant_discriminant;
+                const $variant_constant : usize = $variant_discriminant;
             )*
         }
 
-        define_error_nested!(@defined_erro_enum $variant; $(($($variant_path)+, $variant_identifier)),*);
+        #[repr(usize)]
+        #[derive(Copy, Clone, Eq, PartialEq)]
+        pub enum Error {
+            $(
+                $variant_identifier($($variant_path)::+::Error),
+            )+
+            TODO
+        }
 
-        impl ErrorTrait<$variant> for Error {
-            fn from_no(discriminant: $variant) -> Self {
+        impl $crate::ErrorTrait for Error {
+            fn from_no(discriminant: usize) -> Error {
                 match discriminant {
-                    $($variant_discriminant => Self::$variant_identifier::TODO,)*
-                    <$variant>::MAX => Self::TODO,
+                    $($variant_discriminant => Error::$variant_identifier($($variant_path)::+::Error::TODO),)*
+                    _ => Self::TODO,
                 }
             }
 
-            fn to_no(&self) -> $variant {
+            fn to_no(&self) -> usize {
                 match *self {
-                    $(Self::$variant_identifier(_) => $variant_discriminant,)*
-                    _ => <$variant>::MAX,
+                    $(Error::$variant_identifier(_) => $variant_discriminant,)*
+                    _ => <usize>::MAX,
                 }
             }
 
             fn description(&self) -> &str {
                 match *self {
-                    $(Self::$variant_identifier(_) => $variant_descriptor,)*
+                    $(Error::$variant_identifier(_) => $variant_descriptor,)*
                     _ => "TODO",
                 }
             }
 
             fn acronym(&self) -> &str {
                 match *self {
-                    $(Self::$variant_identifier(_) => $variant_acronym,)*
+                    $(Error::$variant_identifier(_) => $variant_acronym,)*
                     _ => "TODO",
                 }
             }
         }
 
-        pub type Result = core::result::Result<ErrorType, Error>;
-
-        $(
-            use $variant_path::Result as variant_result;
-            use $variant_path::Error as variant_error;
-            use $variant_path::ERROR_LABEL as VARIANT_ERROR_LABEL;
-            use $variant_path::ErrorType as variant_error_type;
-
-            impl ErrorNestedType<ErrorType,variant_error_type> for Error {
-                fn from_no(a:ErrorType, b:variant_error_type) {
-                    // match (stringfy!())
-                    // (
-
-                    // )*
+        impl $crate::ErrorNestedTrait for Error {
+            fn from_no(a:usize, b:usize) -> Error{
+                use $crate::ErrorTrait;
+                match <Error as ErrorTrait>::from_no(a) {
+                    $(
+                        Error::$variant_identifier($($variant_path)::+::Error::TODO) => Error::$variant_identifier($($variant_path)::+::Error::from_no(b)),
+                    )+
+                    _ => Error::TODO
                 }
             }
-        )*
+            fn to_no(&self) -> (usize, usize) {
+                use $crate::ErrorTrait;
+                match self {
+                    $(
+                        Error::$variant_identifier(variant) => {
+                            ($crate::ErrorTrait::to_no(self), variant.to_no())
+                        }
+                    ),*
+                    _ => (<usize>::MAX, <usize>::MAX)
+                }
+            }
 
-        impl Into<$variant> for Error {
-            fn into(self) -> $variant {
+            fn description(&self) -> &str {
+                match self {
+                    $(
+                        Error::$variant_identifier(variant) => {
+                            // concat!(self.description(), "(", variant.description(), ")")
+                            concat!($label, "(", $variant_descriptor, ")")
+                        }
+                    ),*
+                    _ => "TODO"
+                }
+            }
+
+            fn acronym(&self) -> &str {
+                match self {
+                    $(
+                        Error::$variant_identifier(variant) => {
+                            // concat!(self.acronym(), "(", variant.acronym(), ")")
+                            concat!($label, "(", $variant_acronym, ")")
+                        }
+                    ),*
+                    _ => "TODO"
+                }
+            }
+        }
+
+        impl Into<usize> for Error {
+            fn into(self) -> usize {
+                use $crate::ErrorTrait;
                 self.to_no()
             }
         }
 
-    };
-
-    (@define_error_enum_body $variant:ty; $(($variant_token:tt)),*) => {
-        #[repr($variant)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
-        pub enum Error {
-            $(
-                $variant_identifier
-            )*
+        impl Into<(usize,usize)> for Error {
+            fn into(self) -> (usize,usize) {
+                use $crate::ErrorTrait;
+                match self {
+                    $(
+                        Error::$variant_identifier(variant) => (self.to_no(), variant.to_no()),
+                    )*
+                    _ => (<usize>::MAX,<usize>::MAX)
+                }
+            }
         }
-    };
 
-    (@variant_generator $(($variant_identifier:ident, $variant_path:tt)),*) => {
-        $(
-            define_error_nested!(@variant_flexor $variant_path:tt; $variant_identifier:ident),
-        )*
-        TODO = <$variant>::MAX,
-    };
+        impl From<usize> for Error {
+            fn from(a:usize) -> Error {
+                use result::ErrorTrait;
+                Error::from_no(a)
+            }
+        }
 
-    (@variant_flexor self, $variant_identifier:ident) => {
-        $variant_identifier
-    };
+        impl From<(usize,usize)> for Error {
+            fn from(a: (usize,usize)) -> Error {
+                use $crate::ErrorNestedTrait;
+                Error::from_no(a.0, a.1)
+            }
+        }
 
-    (@variant_flexor $variant_path:tt, $variant_identifier:ident) => {
-        $variant_identifier(<$variant_path>::Error)
-    };
-
-    (@defined_error_enum $variant:ty; $($variant_path:tt, $variant_identifier:ident),*) => {
-        define_error_nested!(
-            @define_error_enum_body
-            $variant;
-            define_error_nested!(@variant_generator $(($variant_identifier, $variant_path)),*);
-        );
+        pub type Result = core::result::Result<(usize,usize), Error>;
     };
 }

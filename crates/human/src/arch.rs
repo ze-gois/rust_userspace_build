@@ -15,5 +15,5 @@ pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) 
         byte_count as usize,
     );
 
-    handle_result(returned_value as ErrorType)
+    handle_result(returned_value)
 }

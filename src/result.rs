@@ -1,17 +1,29 @@
+use result::{define_error, define_error_nested};
+
 use crate::dtype::Error as DTypeError;
+
 // use human::result::Error as HumanError;
 // use syscall::result::Error as SyscallError;
 
-// macros::labeled_typed_enum!(
-//     Error,
-//     isize,
-//     "ELF Error",
-//     [
-//         [DType, DTypeError, ELF_ERR_DTYPE, 0, "", ""],
-//         [Syscall, SyscallError, ELF_ERR_SYS, 1, "", ""],
-//         [Human, HumanError, ELF_ERR_HUM, 2, "", ""],
-//     ]
-// );
+mod result {
+    define_error!();
+}
+
+define_error_nested!(
+    "ELF",
+    [
+        [Elf, self::result, ELF, 0, "Local error", ELF_ERR],
+        [Human, human::result, HUMAN, 1, "Human error", HUMAN_ERR],
+        [
+            Syscall,
+            syscall::result,
+            SYSCALL,
+            2,
+            "Syscall error",
+            SYSCALL_ERR
+        ],
+    ]
+);
 
 // macros::labeled_typed_enum!(
 //     Error,

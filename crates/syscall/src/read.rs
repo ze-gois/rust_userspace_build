@@ -6,30 +6,29 @@ static NUMBER: usize = Number::Read as usize;
 use result::define_error;
 
 define_error!(
-    isize,
     "Read",
     [
-        [BadFileDescriptor, -9, "Bad file descriptor", "EBADF", EBADF],
+        [BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],
         [
             InvalidBuffer,
-            -14,
+            14,
             "Invalid buffer pointer",
             "EFAULT",
             EFAULT
         ],
-        [InvalidCount, -22, "Invalid count", "EINVAL", EINVAL],
+        [InvalidCount, 22, "Invalid count", "EINVAL", EINVAL],
         [
             Interrupted,
-            -4,
+            4,
             "System call was interrupted",
             "EINTR",
             EINTR
         ],
-        [IOError, -5, "Input/output error", "EIO", EIO],
-        [IsDirectory, -21, "Is a directory", "EISDIR", EISDIR],
+        [IOError, 5, "Input/output error", "EIO", EIO],
+        [IsDirectory, 21, "Is a directory", "EISDIR", EISDIR],
         [
             NotReadable,
-            -13,
+            13,
             "File not open for reading",
             "EACCES",
             EACCES
@@ -37,14 +36,16 @@ define_error!(
     ]
 );
 
-pub fn handle_result(arch_result: arch::Result) -> Result {
+pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
-        Err(arch::Error::TODO) => Err(Error::NotReadable),
-        Ok(no) => Ok(no as isize),
+        Err(arch::Error::TODO) => Err(crate::Error::Read(Error::TODO)),
+        Ok(no) => match no {
+            _ => Ok((no, no)),
+        },
     }
 }
 
-pub fn read(file_descriptor: isize, byte_buffer: *const u8, byte_length: usize) -> Result {
+pub fn read(file_descriptor: isize, byte_buffer: *const u8, byte_length: usize) -> crate::Result {
     let arch_result = Arch::syscall3(
         NUMBER,
         file_descriptor as usize,

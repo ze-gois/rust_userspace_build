@@ -3,27 +3,43 @@ use arch::{Arch, Callable};
 
 static NUMBER: usize = Number::Write as usize;
 
-define_syscall_error!(
-    Error,
-    Write,
+use result::define_error;
+
+define_error!(
     "write",
     [
-        [BadFileDescriptor, -9, "Bad file descriptor", EBADF],
-        [InvalidBuffer, -14, "Invalid buffer pointer", EFAULT],
-        [BufferTooLarge, -27, "Buffer too large", EFBIG],
-        [Interrupted, -4, "System call was interrupted", EINTR],
-        [IOError, -5, "Input/output error", EIO],
-        [NoSpaceLeft, -28, "No space left on device", ENOSPC],
-        [BrokenPipe, -32, "Broken pipe", EPIPE]
+        [BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],
+        [
+            InvalidBuffer,
+            14,
+            "Invalid buffer pointer",
+            "EFAULT",
+            EFAULT
+        ],
+        [BufferTooLarge, 27, "Buffer too large", "EFBIG", EFBIG],
+        [
+            Interrupted,
+            4,
+            "System call was interrupted",
+            "EINTR",
+            EINTR
+        ],
+        [IOError, 5, "Input/output error", "EIO", EIO],
+        [NoSpaceLeft, 28, "No space left on device", "ENOSPC", ENOSPC],
+        [BrokenPipe, 32, "Broken pipe", "EPIPE", EPIPE]
     ]
 );
 
-pub fn write(
-    file_descriptor: isize,
-    byte_buffer: *const u8,
-    byte_count: usize,
-) -> crate::result::Result<isize> {
-    // For demonstration purposes - force EBADF error when fd > 10
+pub fn handle_result(arch_result: arch::Result) -> crate::Result {
+    match arch_result {
+        Err(arch::Error::TODO) => Err(crate::Error::Write(Error::TODO)),
+        Ok(no) => match no {
+            _ => Ok((no, no)),
+        },
+    }
+}
+
+pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) -> crate::Result {
     let syscall_result = Arch::syscall3(
         NUMBER,
         file_descriptor as usize,
@@ -33,5 +49,3 @@ pub fn write(
 
     handle_result(syscall_result)
 }
-
-// type Result<T> = core::result::Result<T, Error>;
