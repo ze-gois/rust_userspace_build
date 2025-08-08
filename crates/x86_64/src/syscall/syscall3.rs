@@ -15,6 +15,6 @@ pub fn syscall3(n: usize, a1: usize, a2: usize, a3: usize) -> Result {
             out("r11") _,
         );
     }
-
+    human::info!("syscall3 from x86_64: {}", syscall_return);
     handle_result(syscall_return)
 }

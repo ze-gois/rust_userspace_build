@@ -51,13 +51,13 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
             info!("opening\n");
             let license_fd = syscall::openat(
                 syscall::open::flags::AtFlag::FDCWD.into(),
-                "build.rs".as_ptr(),
+                "./build.rs".as_ptr(),
                 syscall::open::flags::Flag::RDONLY.into(),
             );
             info!("opening the egg");
             fd = match license_fd {
                 Ok(fd) => {
-                    info!("\nwedo\n");
+                    info!("\nwedo{:?}\n", fd);
                     fd.1
                 }
                 Err(e) => {
@@ -80,7 +80,7 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
         break 'license;
     }
 
-    xelf::info!("\nDemonstration complete\n");
+    xelf::info!("Demonstration complete\n");
 
     // stack.print();
     panic!("Stack demonstration completed successfully!");
