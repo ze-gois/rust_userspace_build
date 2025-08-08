@@ -15,7 +15,6 @@ members = [
     "crates/arch",
     "crates/human",
     "crates/macros",
-    "crates/proc-macros",
     "crates/result",
     "crates/syscall",
     "crates/x86_64",

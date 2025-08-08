@@ -45,39 +45,37 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
     //     }
     // }
 
-    let mut fd;
-    'license: loop {
-        'opening: loop {
-            info!("opening\n");
-            let license_fd = syscall::openat(
-                syscall::open::flags::AtFlag::FDCWD as isize,
-                "LICENSE".as_ptr(),
-                syscall::open::flags::Flag::RDONLY as i32,
-            );
-            info!("opening the egg");
-            fd = match license_fd {
-                Ok(fd) => {
-                    info!("\nwedo{:?}\n", fd);
-                    fd.1
-                }
-                Err(e) => {
-                    use result::ErrorNestedTrait;
-                    info!("{:?}", e.to_no());
-                    break 'opening;
-                }
-            };
-            info!("---------------");
+    'opening: loop {
+        let fd = match syscall::openat(
+            syscall::open::flags::AtFlag::FDCWD as isize,
+            "LICENSE".as_ptr(),
+            syscall::open::flags::Flag::RDONLY as i32,
+        ) {
+            Ok(fd) => fd.1,
+            Err(e) => {
+                info!("{:?}\n", e);
+                break 'opening;
+            }
+        };
 
-            let x = &[0_u8; 100];
-            let r = syscall::read(fd as isize, x.as_ptr(), 100);
-            let xx = x.as_ptr();
-            info!("\n\n>>>>>\n");
-            let w = syscall::write(1, xx, 100);
-            info!("\n>>>>>\n\n");
-            let _ = syscall::close(fd as i32);
-            break 'opening;
-        }
-        break 'license;
+        let mapeado = match syscall::mmap(
+            core::ptr::null_mut(),
+            100,
+            syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
+            syscall::mmap::Flag::Anonymous as i32,
+            -1,
+            0,
+        ) {
+            Ok(m) => m.0 as *const u8,
+            Err(e) => {
+                panic!("k");
+            }
+        };
+
+        let r = syscall::read(fd as isize, mapeado, 100);
+        let w = syscall::write(1, mapeado, 100);
+        let _ = syscall::close(fd as i32);
+        break 'opening;
     }
 
     xelf::info!("Demonstration complete\n");
