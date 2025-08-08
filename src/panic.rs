@@ -7,7 +7,7 @@ pub fn panic(_info: &PanicInfo) -> ! {
     let mut count = 5;
     loop {
         count -= 1;
-        info!(".");
+        info!("x.");
         if count == 0 {
             info!("\n");
             syscall::exit(23);

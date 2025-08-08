@@ -26,6 +26,12 @@ impl Into<usize> for Flag {
     }
 }
 
+impl Into<i32> for Flag {
+    fn into(self) -> i32 {
+        self as i32
+    }
+}
+
 #[repr(isize)]
 #[derive(Clone, Copy)]
 pub enum AtFlag {
@@ -39,6 +45,12 @@ pub enum AtFlag {
 impl Into<usize> for AtFlag {
     fn into(self) -> usize {
         self as usize
+    }
+}
+
+impl Into<isize> for AtFlag {
+    fn into(self) -> isize {
+        self as isize
     }
 }
 

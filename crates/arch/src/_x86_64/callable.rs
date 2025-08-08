@@ -18,6 +18,10 @@ impl Callable for Arch {
 
     fn _syscall3(n: usize, a1: usize, a2: usize, a3: usize) -> Result {
         let syscall_result = syscall3(n, a1, a2, a3);
+        match syscall_result {
+            Ok(e) => info!("{:?}", e),
+            _ => {}
+        };
         syscall_result
     }
 

@@ -25,7 +25,7 @@ macro_rules! define_error_nested {
         }
 
         #[repr(usize)]
-        #[derive(Copy, Clone, Eq, PartialEq)]
+        #[derive(Debug, Copy, Clone, Eq, PartialEq)]
         pub enum Error {
             $(
                 $variant_identifier($($variant_path)::+::Error),
