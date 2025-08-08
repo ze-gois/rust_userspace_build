@@ -50,9 +50,9 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
         'opening: loop {
             info!("opening\n");
             let license_fd = syscall::openat(
-                syscall::open::flags::AtFlag::FDCWD.into(),
-                "./build.rs".as_ptr(),
-                syscall::open::flags::Flag::RDONLY.into(),
+                syscall::open::flags::AtFlag::FDCWD as isize,
+                "LICENSE".as_ptr(),
+                syscall::open::flags::Flag::RDONLY as i32,
             );
             info!("opening the egg");
             fd = match license_fd {
