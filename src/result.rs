@@ -1,27 +1,28 @@
-use result::{define_error, define_error_nested};
-
-use crate::dtype::Error as DTypeError;
-
-// use human::result::Error as HumanError;
-// use syscall::result::Error as SyscallError;
-
-mod result {
-    define_error!();
+pub mod error {
+    ::result::define_error!("ELF", []);
 }
 
-define_error_nested!(
+::result::define_error_nested!(
     "ELF",
     [
-        [Elf, self::result, ELF, 0, "Local error", ELF_ERR],
-        [Human, human::result, HUMAN, 1, "Human error", HUMAN_ERR],
+        [Elf; self::error; ELF; 0; "Local error"; "ELF_ERR"],
+        [Human; human::result; ERR_HUMAN; 1; "Human error"; "HUMAN_ERR"],
         [
-            Syscall,
-            syscall::result,
-            SYSCALL,
-            2,
-            "Syscall error",
-            SYSCALL_ERR
+            Syscall;
+            syscall::result;
+            SYSCALL;
+            2;
+            "Syscall error";
+            "SYSCALL_ERR"
         ],
+        [
+            DType;
+            crate::dtype;
+            DTYPE;
+            3;
+            "Error ocurring from a datatype";
+            "DType"
+        ]
     ]
 );
 
@@ -97,4 +98,4 @@ define_error_nested!(
 //     }
 // }
 
-pub type Result<T> = core::result::Result<T, Error>;
+// pub type Result<T> = core::result::Result<T, Error>;

@@ -1,8 +1,6 @@
 #![no_std]
 #![no_main]
 
-use core::default;
-
 use xelf;
 
 #[unsafe(no_mangle)]
@@ -17,7 +15,7 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
     let x = xelf::dtype::Half::from(32);
     xelf::info!("{}", x);
 
-    let xer = xelf::result::Error::DType(xelf::dtype::Error::InvalidType(3));
+    let xer = xelf::result::Error::DType(xelf::dtype::Error::InvalidType);
 
     panic!("Stack demonstration completed successfully!");
 }

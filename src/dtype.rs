@@ -1,6 +1,5 @@
 pub mod macros;
 
-use crate::Result;
 use crate::elf_define_type;
 
 pub mod endianness {
@@ -20,22 +19,15 @@ pub mod endianness {
 
 pub use endianness::Endianness;
 
-pub mod error {
-    macros::labeled_enum_typed!(
-        Error,
-        isize,
-        isize,
-        "dtype error",
-        [
-            [InvalidData, NONE, 0, "No ", "no"],
-            [InvalidEndian, LSB, 1, "No endianness provided", "no"],
-            [InvalidType, MSB, 2, "No endianness provided", "no"],
-            [ShorterData, NUM, 3, "No endianness provided", "no"],
-        ]
-    );
-}
-
-pub use error::Error;
+result::define_error!(
+    "DType",
+    [
+        [InvalidData, 0, "No ", "NONE", NONE],
+        [InvalidEndian, 1, "No endianness provided", "LSB", LSB],
+        [InvalidType, 2, "No endianness provided", "MSB", MSB],
+        [ShorterData, 3, "No endianness provided", "NUM", NUM],
+    ]
+);
 
 pub trait ELFType {
     type Inner;

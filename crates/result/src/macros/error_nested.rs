@@ -7,17 +7,15 @@ macro_rules! define_error_nested {
                 [
                     $variant_identifier:ident;
                     $($variant_path:tt)::+;
-                    $variant_constant:ident,
-                    $variant_discriminant:expr,
-                    $variant_descriptor:expr,
+                    $variant_constant:ident;
+                    $variant_discriminant:expr;
+                    $variant_descriptor:expr;
                     $variant_acronym:expr
                 ]
             ),*
+            $(,)?
         ]
     ) => {
-        // use $crate::ErrorNestedTrait;
-        // use $crate::ErrorTrait;
-
         pub const LABEL : &str = $label;
 
         pub mod constant {
@@ -70,7 +68,10 @@ macro_rules! define_error_nested {
                 use $crate::ErrorTrait;
                 match <Error as ErrorTrait>::from_no(a) {
                     $(
-                        Error::$variant_identifier($($variant_path)::+::Error::TODO) => Error::$variant_identifier($($variant_path)::+::Error::from_no(b)),
+                        Error::$variant_identifier(_) =>{
+                            let variant = <$($variant_path)::+::Error as ErrorTrait>::from_no(b);
+                            Error::$variant_identifier(variant)
+                        }
                     )+
                     _ => Error::TODO
                 }
@@ -80,7 +81,7 @@ macro_rules! define_error_nested {
                 match self {
                     $(
                         Error::$variant_identifier(variant) => {
-                            ($crate::ErrorTrait::to_no(self), variant.to_no())
+                            (ErrorTrait::to_no(self), ErrorTrait::to_no(variant))
                         }
                     ),*
                     _ => (<usize>::MAX, <usize>::MAX)

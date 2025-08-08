@@ -62,11 +62,11 @@ macro_rules! elf_define_type {
                 }
             }
 
-            $vis fn read(fd: isize, endianness: $crate::dtype::Endianness) -> Result<$name> {
+            $vis fn read(fd: isize, endianness: $crate::dtype::Endianness) -> $crate::Result {
                 let mut bytes = [0u8; <$name>::SIZE_BYTES];
-                const INNER_SIZE : isize = <$name>::SIZE_BYTES as isize;
+                const INNER_SIZE : usize = <$name>::SIZE_BYTES;
                 match syscall::read(fd, bytes.as_mut_ptr(), <$name>::SIZE_BYTES) {
-                    Ok(INNER_SIZE) => {
+                    Ok((INNER_SIZE,_)) => {
                         let value = match endianness {
                             Endianness::TODO => {
                                 $crate::info!("Endianness is TODO");
@@ -87,10 +87,10 @@ macro_rules! elf_define_type {
                                 panic!("none.")
                             },
                         };
-                        Ok($name::from(value))
+                        Ok((0,$name::from(value).into()))
                     },
-                    Ok(e) => Err($crate::result::Error::DType(Error::ShorterData(e))),
-                    Err(e) => Err($crate::result::Error::DType(Error::InvalidData(e.into()))),
+                    Ok(_) => Err($crate::Error::DType(Error::ShorterData)), // usize::MAX - payload required.
+                    Err(_) => Err($crate::Error::DType(Error::InvalidData)),
                 }
             }
         }
