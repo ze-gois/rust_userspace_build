@@ -13,6 +13,7 @@ macros = { path = "crates/macros" }
 [workspace]
 members = [
     "crates/arch",
+    "crates/building",
     "crates/human",
     "crates/macros",
     "crates/result",
@@ -39,3 +40,4 @@ test = false
 
 [build-dependencies]
 cc = "1.0"
+building = { path = "crates/building" }

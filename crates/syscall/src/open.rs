@@ -51,10 +51,7 @@ pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
         Err(arch::Error::TODO) => Err(crate::Error::Open(Error::TODO)),
         Ok(no) => match no {
-            _ => {
-                human::info!("273498374 +++{}n", no);
-                Ok((no, no))
-            }
+            _ => Ok((no, no)),
         },
     }
 }

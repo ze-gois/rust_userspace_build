@@ -1,4 +1,6 @@
 #![no_std]
+pub use human::info;
+
 pub mod result;
 pub use result::{Error, Result};
 

@@ -32,7 +32,10 @@ define_error!(
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
-        Err(arch::Error::TODO) => Err(crate::Error::Write(Error::TODO)),
+        Err(arch::Error::TODO) => {
+            crate::info!("<<<=== {}", -31);
+            Err(crate::Error::Write(Error::TODO))
+        }
         Ok(no) => match no {
             _ => Ok((no, no)),
         },
@@ -46,6 +49,8 @@ pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) 
         byte_buffer as usize,
         byte_count as usize,
     );
+
+    crate::info!("\n<inside write => {:?}\n", syscall_result);
 
     handle_result(syscall_result)
 }

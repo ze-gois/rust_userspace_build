@@ -53,27 +53,29 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
         ) {
             Ok(fd) => fd.1,
             Err(e) => {
-                info!("{:?}\n", e);
+                info!("-----{:?}\n", e);
                 break 'opening;
             }
         };
 
-        let mapeado = match syscall::mmap(
-            core::ptr::null_mut(),
-            100,
-            syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
-            syscall::mmap::Flag::Anonymous as i32,
-            -1,
-            0,
-        ) {
-            Ok(m) => m.0 as *const u8,
-            Err(e) => {
-                panic!("k");
-            }
-        };
+        // let mapeado = match syscall::mmap(
+        //     core::ptr::null_mut(),
+        //     100,
+        //     syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
+        //     syscall::mmap::Flag::Anonymous as i32,
+        //     -1,
+        //     0,
+        // ) {
+        //     Ok(m) => m.0 as *const u8,
+        //     Err(e) => {
+        //         panic!("k");
+        //     }
+        // };
 
-        let r = syscall::read(fd as isize, mapeado, 100);
-        let w = syscall::write(1, mapeado, 100);
+        // let r = syscall::read(fd as isize, mapeado, 100);
+        // info!("\n\n === ");
+        // let w = syscall::write(1, mapeado, 100);
+        // info!("\n\n === ");
         let _ = syscall::close(fd as i32);
         break 'opening;
     }
