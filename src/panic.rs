@@ -9,7 +9,7 @@ pub fn panic(_info: &PanicInfo) -> ! {
         count -= 1;
         info!("x.");
         if count == 0 {
-            info!("\n");
+            info!("..:");
             syscall::exit(23);
         }
     }

@@ -20,7 +20,7 @@ pub enum Flag {
 }
 
 impl Flag {
-    fn to(self) -> i32 {
+    pub fn to(self) -> i32 {
         self as i32
     }
 }
@@ -51,7 +51,7 @@ pub enum Prot {
 }
 
 impl Prot {
-    fn to(self) -> i32 {
+    pub fn to(self) -> i32 {
         self as i32
     }
 }

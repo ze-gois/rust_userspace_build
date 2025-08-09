@@ -1,12 +1,13 @@
 #![no_std]
 #![no_main]
 
-use arch::info;
+use core::usize;
+
 use xelf;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
-    // xelf::info!("eXecuting Executable and Linkable Format\n");
+    xelf::info!("eXecuting Executable and Linkable Format\n");
 
     // Create a Stack instance from the provided pointer
     // let mut stack = unsafe { arch::memory::Stack::from_pointer(stack_pointer) };
@@ -45,43 +46,48 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
     //     }
     // }
 
+    let mut mapeado: *const u8 = core::ptr::null_mut();
+
     'opening: loop {
-        let fd = match syscall::openat(
-            syscall::open::flags::AtFlag::FDCWD as isize,
-            "LICENSE".as_ptr(),
-            syscall::open::flags::Flag::RDONLY as i32,
-        ) {
-            Ok(fd) => fd.1,
-            Err(e) => {
-                info!("-----{:?}\n", e);
-                break 'opening;
-            }
-        };
+        let fd: usize = usize::MAX;
+        'closing: loop {
+            let fd = match syscall::openat(
+                syscall::open::flags::AtFlag::FDCWD as isize,
+                "LICENSE".as_ptr(),
+                syscall::open::flags::Flag::RDONLY as i32,
+            ) {
+                Ok(fd) => fd.1,
+                Err(e) => {
+                    break 'opening;
+                }
+            };
 
-        // let mapeado = match syscall::mmap(
-        //     core::ptr::null_mut(),
-        //     100,
-        //     syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
-        //     syscall::mmap::Flag::Anonymous as i32,
-        //     -1,
-        //     0,
-        // ) {
-        //     Ok(m) => m.0 as *const u8,
-        //     Err(e) => {
-        //         panic!("k");
-        //     }
-        // };
+            mapeado = match syscall::mmap(
+                core::ptr::null_mut(),
+                4096,
+                syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
+                syscall::mmap::Flag::Anonymous | syscall::mmap::Flag::Shared,
+                -1,
+                0,
+            ) {
+                Ok(m) => m.0 as *const u8,
+                Err(e) => panic!("k"),
+            };
 
-        // let r = syscall::read(fd as isize, mapeado, 100);
-        // info!("\n\n === ");
-        // let w = syscall::write(1, mapeado, 100);
-        // info!("\n\n === ");
-        let _ = syscall::close(fd as i32);
+            let r = syscall::read(fd as isize, mapeado, 4096);
+            break 'closing;
+        }
+        if fd != usize::MAX {
+            let _ = syscall::close(fd as i32);
+        }
         break 'opening;
+    }
+
+    if !mapeado.is_null() {
+        let _ = syscall::write(1, mapeado, 4096);
     }
 
     xelf::info!("Demonstration complete\n");
 
-    // stack.print();
     panic!("Stack demonstration completed successfully!");
 }
