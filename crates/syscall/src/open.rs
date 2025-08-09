@@ -5,7 +5,7 @@ pub use flags::{AtFlag, Flag};
 
 pub const NUMBER: usize = super::numbers::OPEN;
 pub const LABEL: &str = super::labels::OPEN;
-pub type SIGNATURE = super::signatures::OPEN;
+// pub type SIGNATURE = super::signatures::OPEN;
 
 use result::define_error;
 

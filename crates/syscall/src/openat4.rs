@@ -1,9 +1,9 @@
-use arch::{Arch, Callable};
-
-static NUMBER: usize = super::numbers::OPENAT4;
+use arch::{Arch, traits::Callable};
 
 pub use crate::open::flags;
 pub use crate::open::{Error, Result};
+
+static NUMBER: usize = super::numbers::OPENAT4;
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {

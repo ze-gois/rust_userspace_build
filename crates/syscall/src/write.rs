@@ -1,7 +1,6 @@
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = Number::Write as usize;
+pub const NUMBER: usize = super::numbers::WRITE;
 
 use result::define_error;
 

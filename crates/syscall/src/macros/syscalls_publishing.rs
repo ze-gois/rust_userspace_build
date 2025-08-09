@@ -21,9 +21,9 @@ macro_rules! syscalls_publishing {
             $(pub const $syscall_ident : &str = $syscall_label;)*
         }
 
-        pub mod signatures {
-            $(pub type $syscall_ident = $($syscall_signature)::+;)*
-        }
+        // pub mod signatures {
+        //     $(pub type $syscall_ident = <$($syscall_signature)::+> ;)*
+        // }
 
         #[repr(usize)]
         enum Syscall {

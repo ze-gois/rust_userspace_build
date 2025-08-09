@@ -1,6 +1,6 @@
 use arch::{Arch, Callable};
 
-static NUMBER: usize = super::numbers::READ;
+pub const NUMBER: usize = super::numbers::READ;
 
 use result::define_error;
 
