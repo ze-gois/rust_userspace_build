@@ -4,7 +4,7 @@ pub use flags::*;
 
 use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = super::numbers::MMAP;
+hooking!(MMAP);
 
 use result::define_error;
 

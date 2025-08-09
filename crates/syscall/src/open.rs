@@ -3,9 +3,7 @@ use arch::{Arch, traits::Callable};
 pub mod flags;
 pub use flags::{AtFlag, Flag};
 
-pub const NUMBER: usize = super::numbers::OPEN;
-pub const LABEL: &str = super::labels::OPEN;
-// pub type SIGNATURE = super::signatures::OPEN;
+hooking!(OPEN);
 
 use result::define_error;
 

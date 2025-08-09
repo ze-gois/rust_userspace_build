@@ -2,7 +2,7 @@ pub mod flags;
 
 use arch::{Arch, Callable};
 
-static NUMBER: usize = super::numbers::MPROTECT;
+hooking!(MPROTECT);
 
 use result::define_error;
 

@@ -1,6 +1,6 @@
 use arch::{Arch, traits::Callable};
 
-pub static NUMBER: usize = super::numbers::CLOSE;
+hooking!(CLOSE);
 
 use result::define_error;
 

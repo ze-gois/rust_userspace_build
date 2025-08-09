@@ -1,6 +1,6 @@
 use arch::{Arch, traits::Callable};
 
-pub const NUMBER: usize = super::numbers::WRITE;
+hooking!(WRITE);
 
 use result::define_error;
 

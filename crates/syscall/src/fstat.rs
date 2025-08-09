@@ -1,9 +1,10 @@
 //TODO
 use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = super::numbers::FSTAT;
+hooking!(FSTAT);
 
 use result::define_error;
+
 define_error!(
     "fstat",
     [[BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],]

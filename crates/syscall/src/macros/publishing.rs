@@ -1,4 +1,4 @@
-macro_rules! syscalls_publishing {
+macro_rules! publishing {
     (
         $(
             [

@@ -1,6 +1,6 @@
 use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = super::numbers::MUNMAP;
+hooking!(MUNMAP);
 
 use result::define_error;
 

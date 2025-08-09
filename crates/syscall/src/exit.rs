@@ -1,6 +1,6 @@
 use arch::{Arch, traits::Callable};
 
-const NUMBER: usize = super::numbers::EXIT;
+hooking!(EXIT);
 
 pub fn exit(status_code: i32) -> ! {
     let status_code = status_code as usize;

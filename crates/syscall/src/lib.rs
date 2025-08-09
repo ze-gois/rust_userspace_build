@@ -9,7 +9,7 @@ pub mod macros;
 
 pub use arch::traits::callable;
 
-syscalls_publishing!(
+publishing!(
     [0; "Read"; READ; read; callable::Syscall3],
     [1; "Write"; WRITE; write; callable::Syscall3],
     [2; "Open"; OPEN; open; callable::Syscall3],

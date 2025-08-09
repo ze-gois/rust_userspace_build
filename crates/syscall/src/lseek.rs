@@ -3,7 +3,7 @@ pub use flags::Flag;
 
 use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = super::numbers::LSEEK;
+hooking!(LSEEK);
 
 use result::define_error;
 
