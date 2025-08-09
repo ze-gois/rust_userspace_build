@@ -46,14 +46,15 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
     //     }
     // }
 
-    let mut mapeado: *const u8 = core::ptr::null_mut();
+    pub const LICENSE_PATH: &str = "./LICENSE";
+    let mut license_mapping: *const u8 = core::ptr::null_mut();
 
     'opening: loop {
         let fd: usize = usize::MAX;
         'closing: loop {
             let fd = match syscall::openat(
                 syscall::open::flags::AtFlag::FDCWD as isize,
-                "LICENSE".as_ptr(),
+                LICENSE_PATH.as_ptr(),
                 syscall::open::flags::Flag::RDONLY as i32,
             ) {
                 Ok(fd) => fd.1,
@@ -62,7 +63,7 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
                 }
             };
 
-            mapeado = match syscall::mmap(
+            license_mapping = match syscall::mmap(
                 core::ptr::null_mut(),
                 4096,
                 syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
@@ -74,7 +75,7 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
                 Err(e) => panic!("k"),
             };
 
-            let r = syscall::read(fd as isize, mapeado, 4096);
+            let r = syscall::read(fd as isize, license_mapping, 4096);
             break 'closing;
         }
         if fd != usize::MAX {
@@ -83,8 +84,8 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
         break 'opening;
     }
 
-    if !mapeado.is_null() {
-        let _ = syscall::write(1, mapeado, 4096);
+    if !license_mapping.is_null() {
+        let _ = syscall::write(1, license_mapping, 4096);
     }
 
     xelf::info!("Demonstration complete\n");
