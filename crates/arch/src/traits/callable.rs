@@ -1,5 +1,23 @@
 type C = usize;
 
+pub type Syscall0 = fn(C) -> crate::Result;
+pub type Syscall1 = fn(C, C) -> crate::Result;
+pub type Syscall2 = fn(C, C, C) -> crate::Result;
+pub type Syscall3 = fn(C, C, C, C) -> crate::Result;
+pub type Syscall4 = fn(C, C, C, C, C) -> crate::Result;
+pub type Syscall5 = fn(C, C, C, C, C, C) -> crate::Result;
+pub type Syscall6 = fn(C, C, C, C, C, C, C) -> crate::Result;
+
+enum Syscall {
+    Syscall0,
+    Syscall1,
+    Syscall2,
+    Syscall3,
+    Syscall4,
+    Syscall5,
+    Syscall6,
+}
+
 pub trait Callable {
     fn _syscall0(n: C) -> crate::Result;
     fn _syscall1(n: C, a1: C) -> crate::Result;

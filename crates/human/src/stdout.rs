@@ -13,7 +13,7 @@ impl core::fmt::Write for Stdout {
 
 #[macro_export]
 macro_rules! info {
-    (D$($arg:tt)*) => {{
+    (S $($arg:tt)*) => {{
         use core::fmt::Write;
         let mut writer = $crate::stdout::Stdout;
         let _ = write!(&mut writer, $($arg)*);

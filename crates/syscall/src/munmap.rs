@@ -1,7 +1,6 @@
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = Number::MUnMap as usize;
+static NUMBER: usize = super::numbers::MUNMAP;
 
 use result::define_error;
 

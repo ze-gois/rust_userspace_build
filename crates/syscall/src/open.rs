@@ -1,10 +1,11 @@
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
 pub mod flags;
 pub use flags::{AtFlag, Flag};
 
-static NUMBER: usize = Number::OpenAt as usize;
+pub const NUMBER: usize = super::numbers::OPEN;
+pub const LABEL: &str = super::labels::OPEN;
+pub type SIGNATURE = super::signatures::OPEN;
 
 use result::define_error;
 
@@ -56,7 +57,7 @@ pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     }
 }
 
-pub fn openat(
+pub fn open(
     directory_file_descriptor: isize,
     file_pathname: *const u8,
     flags: i32,
@@ -68,21 +69,5 @@ pub fn openat(
         flags as usize,
     );
 
-    handle_result(syscall_result)
-}
-
-pub fn openat4(
-    directory_file_descriptor: isize,
-    file_pathname: *const u8,
-    flags: i32,
-    mode: i32,
-) -> crate::Result {
-    let syscall_result = Arch::syscall4(
-        NUMBER,
-        directory_file_descriptor as usize,
-        file_pathname as usize,
-        flags as usize,
-        mode as usize,
-    );
     handle_result(syscall_result)
 }

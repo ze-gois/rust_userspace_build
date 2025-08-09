@@ -88,6 +88,16 @@ pub extern "C" fn entry(stack_pointer: *mut u64) -> ! {
         let _ = syscall::write(1, license_mapping, 4096);
     }
 
+    let mut pointer = license_mapping;
+    while unsafe { *pointer as char != '\0' } {
+        xelf::info!(S "{}", unsafe { *pointer } as char);
+        unsafe {
+            pointer = pointer.add(1);
+        }
+    }
+
+    syscall::munmap(license_mapping as *mut u8, 4096);
+
     xelf::info!("Demonstration complete\n");
 
     panic!("Stack demonstration completed successfully!");

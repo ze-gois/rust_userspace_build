@@ -2,10 +2,9 @@ pub mod flags;
 
 pub use flags::*;
 
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = Number::MMap as usize;
+static NUMBER: usize = super::numbers::MMAP;
 
 use result::define_error;
 

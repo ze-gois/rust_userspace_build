@@ -1,9 +1,8 @@
 pub mod flags;
 
-use super::Number;
 use arch::{Arch, Callable};
 
-static NUMBER: usize = Number::MProtect as usize;
+static NUMBER: usize = super::numbers::MPROTECT;
 
 use result::define_error;
 

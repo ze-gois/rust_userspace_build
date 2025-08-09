@@ -1,7 +1,6 @@
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = Number::Close as usize;
+pub static NUMBER: usize = super::numbers::CLOSE;
 
 use result::define_error;
 

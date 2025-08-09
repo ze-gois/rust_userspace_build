@@ -1,4 +1,6 @@
-use crate::*;
+use crate::Arch;
+use crate::arch::*;
+use crate::traits::callable::Callable;
 
 impl Callable for Arch {
     fn _syscall0(n: usize) -> Result {

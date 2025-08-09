@@ -1,7 +1,6 @@
-use super::Number;
 use arch::{Arch, Callable};
 
-static NUMBER: usize = Number::Read as usize;
+static NUMBER: usize = super::numbers::READ;
 
 use result::define_error;
 

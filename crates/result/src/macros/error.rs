@@ -17,7 +17,7 @@ macro_rules! define_error{
     ) => {
         use $crate::ErrorTrait;
 
-        pub const LABEL : &str = $label;
+        // pub const LABEL : &str = $label;
 
         pub mod constant {
             $(

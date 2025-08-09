@@ -48,6 +48,14 @@ result::define_error_nested!(
             9;
             "Syscall write";
             "E_WRITE"
-        ]
+        ],
+        [
+            FStat;
+            crate::fstat;
+            ERR_FSTAT;
+            10;
+            "Syscall fstat";
+            "E_FSTAT"
+        ],
     ]
 );

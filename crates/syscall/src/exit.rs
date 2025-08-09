@@ -1,7 +1,6 @@
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-const NUMBER: usize = Number::Exit as usize;
+const NUMBER: usize = super::numbers::EXIT;
 
 pub fn exit(status_code: i32) -> ! {
     let status_code = status_code as usize;

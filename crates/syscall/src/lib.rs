@@ -7,57 +7,19 @@ pub use result::{Error, Result};
 #[macro_use]
 pub mod macros;
 
-pub mod close;
-pub mod exit;
-pub mod lseek;
-pub mod mmap;
-pub mod mprotect;
-pub mod munmap;
-pub mod open;
-pub mod read;
-pub mod write;
+pub use arch::traits::callable;
 
-pub use close::close;
-pub use exit::exit;
-pub use lseek::lseek;
-pub use mmap::mmap;
-pub use mprotect::mprotect;
-pub use munmap::munmap;
-pub use open::{openat, openat4};
-pub use read::read;
-pub use write::write;
-
-pub enum Number {
-    Read = 0,
-    Write = 1,
-    Open = 2,
-    Close = 3,
-    Stat = 4,
-    FStat = 5,
-    LStat = 6,
-    Poll = 7,
-    LSeek = 8,
-    MMap = 9,
-    MProtect = 10,
-    MUnMap = 11,
-    Brk = 12,
-    Exit = 60,
-    OpenAt = 257,
-}
-
-impl Number {
-    pub fn from(n: usize) -> Option<Number> {
-        match n {
-            60 => Some(Number::Exit),
-            1 => Some(Number::Write),
-            257 => Some(Number::OpenAt),
-            _ => None,
-        }
-    }
-}
-
-impl Into<usize> for Number {
-    fn into(self) -> usize {
-        self as usize
-    }
-}
+syscalls_publishing!(
+    [0; "Read"; READ; read; callable::Syscall3],
+    [1; "Write"; WRITE; write; callable::Syscall3],
+    [2; "Open"; OPEN; open; callable::Syscall3],
+    [3; "Close"; CLOSE; close; callable::Syscall1],
+    [5; "FStat"; FSTAT; fstat; callable::Syscall3],
+    [8; "LSeek"; LSEEK; lseek; callable::Syscall3],
+    [9; "MMap"; MMAP; mmap; callable::Syscall6],
+    [10; "MProtect"; MPROTECT; mprotect; callable::Syscall3],
+    [11; "MUnMap"; MUNMAP; munmap; callable::Syscall2],
+    [60; "Exit"; EXIT; exit; callable::Syscall1],
+    [257; "OpenAt"; OPENAT; openat; callable::Syscall3],
+    [258; "OpenAt4"; OPENAT4; openat4; callable::Syscall4]
+);

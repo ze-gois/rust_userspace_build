@@ -1,5 +1,4 @@
 fn main() {
-    building::info!("We do info with build\n");
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=linker.ld");
     println!("cargo:rerun-if-changed=src/");

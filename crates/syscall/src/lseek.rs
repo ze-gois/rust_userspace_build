@@ -1,13 +1,12 @@
 pub mod flags;
-
 pub use flags::Flag;
 
-use super::Number;
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
-static NUMBER: usize = Number::LSeek as usize;
+static NUMBER: usize = super::numbers::LSEEK;
 
 use result::define_error;
+
 define_error!(
     "lseek",
     [[BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],]
