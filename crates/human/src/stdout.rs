@@ -13,6 +13,11 @@ impl core::fmt::Write for Stdout {
 
 #[macro_export]
 macro_rules! info {
+    (X $($arg:tt)*) => {{
+        // use core::fmt::Write;
+        // let mut writer = $crate::stdout::Stdout;
+        // let _ = write!(&mut writer, $($arg)*);
+    }};
     (S $($arg:tt)*) => {{
         use core::fmt::Write;
         let mut writer = $crate::stdout::Stdout;
@@ -21,7 +26,7 @@ macro_rules! info {
     ($($arg:tt)*) => {{
         use core::fmt::Write;
         let mut writer = $crate::stdout::Stdout;
-        let _ = write!(&mut writer, "\n[ {}:{}:{} ] ",file!(),line!(),column!());
+        // let _ = write!(&mut writer, "\n[ {}:{}:{} ] ",file!(),line!(),column!());
         let _ = write!(&mut writer, $($arg)*);
     }};
 }

@@ -13,6 +13,12 @@ macro_rules! publishing {
         $(pub mod $($syscall_path)::+;)*
         $(pub use $($syscall_path)::+::$($syscall_path)::+;)*
 
+        // $(
+        //     pub mod $($syscall_path)::+ {
+        //         $(pub use super::$($syscall_path)::+::$($syscall_path)::+;)*
+        //     }
+        // )*
+
         pub mod numbers {
             $(pub const $syscall_ident : usize = $syscall_number;)*
         }

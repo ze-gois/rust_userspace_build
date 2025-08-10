@@ -1,61 +1,19 @@
-mod error {
-    ::macros::define_error!("Syscall", []);
+mod auxiliar {
+    ::macros::define_error!("auxiliar", []);
 }
 
 ::macros::define_error_nested!(
     "Syscall",
     [
-        [Syscall; self::error; ERR_SYSCALL; 0; "Syscall auxiliary error"; "AUX"],
-        [
-            Close;
-            crate::close;
-            ERR_CLOSE;
-            2;
-            "Syscall close";
-            "E_CLOSE"
-        ],
-        [
-            LSeek;
-            crate::lseek;
-            ERR_LSEEK;
-            3;
-            "Syscall lseek";
-            "E_LSEEK"
-        ],
-        [MMap; crate::mmap; ERR_MMAP; 4; "Syscall mmap"; "E_MMAP"],
-        [
-            MProtect;
-            crate::mprotect;
-            ERR_MPROTECT;
-            5;
-            "Syscall mprotect";
-            "E_MPROTECT"
-        ],
-        [
-            MUnmap;
-            crate::munmap;
-            ERR_MUNMAP;
-            6;
-            "Syscall munmap";
-            "E_MUNMAP"
-        ],
-        [Open; crate::open; ERR_OPEN; 7; "Syscall open"; "E_OPEN"],
-        [Read; crate::read; ERR_READ; 8; "Syscall read"; "E_READ"],
-        [
-            Write;
-            crate::write;
-            ERR_WRITE;
-            9;
-            "Syscall write";
-            "E_WRITE"
-        ],
-        [
-            FStat;
-            crate::fstat;
-            ERR_FSTAT;
-            10;
-            "Syscall fstat";
-            "E_FSTAT"
-        ],
+        [999; Auxiliar; self::auxiliar;  ERR_AUXILIAR; "auxiliary"; "E_AUX"],
+        [2;   Close;    crate::close;    ERR_CLOSE;    "close";     "E_CLOSE" ],
+        [3;   LSeek;    crate::lseek;    ERR_LSEEK;    "lseek";     "E_LSEEK"],
+        [4;   MMap;     crate::mmap;     ERR_MMAP;     "mmap";      "E_MMAP"],
+        [5;   MProtect; crate::mprotect; ERR_MPROTECT; "mprotect";  "E_MPROTECT"],
+        [6;   MUnmap;   crate::munmap;   ERR_MUNMAP;   "munmap";    "E_MUNMAP"],
+        [7;   Open;     crate::open;     ERR_OPEN;     "open";      "E_OPEN"],
+        [8;   Read;     crate::read;     ERR_READ;     "read";      "E_READ"],
+        [9;   Write;    crate::write;    ERR_WRITE;    "write";     "E_WRITE"],
+        [10;  FStat;    crate::fstat;    ERR_FSTAT;    "fstat";     "E_FSTAT"]
     ]
 );

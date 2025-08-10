@@ -1,6 +1,9 @@
 #![no_std]
 
 #[macro_use]
+pub mod chain;
+
+#[macro_use]
 pub mod r#enum;
 
 #[macro_use]

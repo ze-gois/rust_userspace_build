@@ -1,24 +1,26 @@
 #[macro_export]
+#[rustfmt::skip]
 macro_rules! define_error_nested {
     (
         $label:expr,
         [
             $(
                 [
+                    $variant_discriminant:expr;
                     $variant_identifier:ident;
                     $($variant_path:tt)::+;
                     $variant_constant:ident;
-                    $variant_discriminant:expr;
                     $variant_descriptor:expr;
                     $variant_acronym:expr
                 ]
             ),*
-            $(,)?
+            $(,)*
         ]
     ) => {
-        pub const LABEL : &str = $label;
 
         pub mod constant {
+            pub const LABEL : &str = $label;
+
             $(
                 const $variant_constant : usize = $variant_discriminant;
             )*

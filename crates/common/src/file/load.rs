@@ -1,5 +1,3 @@
-use core::isize;
-
 pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> {
     let filepath = crate::str::terminate(filepath);
     let license_mapping;

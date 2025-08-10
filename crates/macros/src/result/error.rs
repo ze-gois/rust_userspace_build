@@ -24,6 +24,7 @@
 /// ]);
 /// ```
 #[macro_export]
+#[rustfmt::skip]
 macro_rules! define_error{
     (
         $label:expr,
@@ -42,11 +43,11 @@ macro_rules! define_error{
     ) => {
         use ::macros::result::ErrorTrait;
 
-        // pub const LABEL : &str = $label;
-
         pub mod constant {
+            pub const LABEL : &str = $label;
+
             $(
-                const $variant_constant : usize = $variant_discriminant;
+                pub const $variant_constant : usize = $variant_discriminant;
             )*
         }
 
