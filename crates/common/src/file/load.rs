@@ -1,24 +1,30 @@
-pub fn load(filepath: &str) -> Option<*const u8> {
+use core::isize;
+
+pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> {
     let filepath = crate::str::terminate(filepath);
     let license_mapping;
     'opening: loop {
         #[allow(unused_assignments)]
-        let mut fd: usize = usize::MAX;
+        let mut fd: isize = isize::MIN;
+        let stat;
         'closing: loop {
             fd = match syscall::openat(
                 syscall::open::flags::AtFlag::FDCWD as isize,
                 filepath,
                 syscall::open::flags::Flag::RDONLY as i32,
             ) {
-                Ok(fd) => fd.1,
+                Ok(fd) => fd.1 as isize,
                 Err(_) => {
                     break 'opening None;
                 }
             };
 
+            stat = crate::file::fstat(fd);
+
+            ::human::info!("{:?}\n", stat);
             license_mapping = match syscall::mmap(
                 core::ptr::null_mut(),
-                4096,
+                stat.st_size as usize,
                 syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
                 syscall::mmap::Flag::Anonymous | syscall::mmap::Flag::Private,
                 -1,
@@ -28,12 +34,12 @@ pub fn load(filepath: &str) -> Option<*const u8> {
                 Err(_) => panic!("k"),
             };
 
-            let _ = syscall::read(fd as isize, license_mapping, 4096);
+            let _ = syscall::read(fd, license_mapping, stat.st_size as usize);
             break 'closing;
         }
-        if fd != usize::MAX {
+        if fd >= 0 {
             // let _ = syscall::close(fd as i32);
-            break 'opening Some(license_mapping);
+            break 'opening Some((fd, stat, license_mapping));
         }
         break 'opening None;
     }

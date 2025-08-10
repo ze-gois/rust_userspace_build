@@ -1,8 +1,10 @@
+use ::macros::define_error;
 use arch::{Arch, traits::Callable};
 
-hooking!(FSTAT);
+pub mod stat;
+pub use stat::Stat;
 
-use ::macros::define_error;
+hooking!(FSTAT);
 
 define_error!(
     "fstat",
@@ -23,7 +25,7 @@ pub fn handle_result(arch_result: arch::Result) -> crate::Result {
 }
 
 #[inline(always)]
-pub fn fstat(fd: isize, stat: *const u8) -> crate::Result {
+pub fn fstat(fd: isize, stat: *const Stat) -> crate::Result {
     let arch_result = Arch::syscall2(NUMBER, fd as usize, stat as usize);
     handle_result(arch_result)
 }
