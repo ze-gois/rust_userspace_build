@@ -5,7 +5,7 @@ pub use flags::{AtFlag, Flag};
 
 hooking!(OPEN);
 
-use result::define_error;
+use ::macros::define_error;
 
 define_error!(
     "openat",

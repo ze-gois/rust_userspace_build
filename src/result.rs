@@ -1,8 +1,8 @@
 pub mod error {
-    ::result::define_error!("ELF", []);
+    ::macros::define_error!("ELF", []);
 }
 
-::result::define_error_nested!(
+::macros::define_error_nested!(
     "ELF",
     [
         [Elf; self::error; ELF; 0; "Local error"; "ELF_ERR"],

@@ -1,7 +1,5 @@
-#![no_std]
-
 #[macro_use]
-pub mod macros;
+pub mod error;
 
 /// A trait that standardizes error handling across the xelf crates
 ///
@@ -20,6 +18,9 @@ pub trait ErrorTrait {
 
     fn acronym(&self) -> &str;
 }
+
+#[macro_use]
+pub mod error_nested;
 
 pub trait ErrorNestedTrait {
     fn from_no(errno_holder: usize, errno_held: usize) -> Self;

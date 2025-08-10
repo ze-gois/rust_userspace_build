@@ -7,19 +7,17 @@ pub use result::{Error, Result};
 #[macro_use]
 pub mod macros;
 
-pub use arch::traits::callable;
-
 publishing!(
-    [0; "Read"; READ; read; callable::Syscall3],
-    [1; "Write"; WRITE; write; callable::Syscall3],
-    [2; "Open"; OPEN; open; callable::Syscall3],
-    [3; "Close"; CLOSE; close; callable::Syscall1],
-    [5; "FStat"; FSTAT; fstat; callable::Syscall3],
-    [8; "LSeek"; LSEEK; lseek; callable::Syscall3],
-    [9; "MMap"; MMAP; mmap; callable::Syscall6],
-    [10; "MProtect"; MPROTECT; mprotect; callable::Syscall3],
-    [11; "MUnMap"; MUNMAP; munmap; callable::Syscall2],
-    [60; "Exit"; EXIT; exit; callable::Syscall1],
-    [257; "OpenAt"; OPENAT; openat; callable::Syscall3],
-    [258; "OpenAt4"; OPENAT4; openat4; callable::Syscall4]
+    [Syscall3; 0; READ; read ; "Read"],
+    [Syscall3; 1; WRITE; write ; "Write"],
+    [Syscall3; 2; OPEN; open ; "Open"],
+    [Syscall1; 3; CLOSE; close ; "Close"],
+    [Syscall2; 5; FSTAT; fstat ; "FStat"],
+    [Syscall3; 8; LSEEK; lseek ; "LSeek"],
+    [Syscall6; 9; MMAP; mmap ; "MMap"],
+    [Syscall3; 10; MPROTECT; mprotect ; "MProtect"],
+    [Syscall2; 11; MUNMAP; munmap ; "MUnMap"],
+    [Syscall1; 60; EXIT; exit ; "Exit"],
+    [Syscall3; 257; OPENAT; openat ; "OpenAt"],
+    [Syscall4; 258; OPENAT4; openat4; "OpenAt4"]
 );

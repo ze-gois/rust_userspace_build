@@ -1,3 +1,28 @@
+/// A macro that defines an error type and error handling for syscalls.
+///
+/// This macro generates:
+/// 1. An Error enum with the specified variants and their associated errno values
+/// 2. ErrorTrait implementation for the Error type with proper errno mapping
+/// 3. An errno module with standard Linux error constants
+/// 4. Into<isize> implementation for the Error type
+/// 5. A handle_result function that maps arch errors to syscall errors
+///
+/// # Arguments
+///
+/// * `$error_enum_name` - The name of the error enum (usually Error)
+/// * `$result_variant` - The variant name in the crate::result::Error enum (e.g., Open, Read, Write)
+/// * `$syscall_name` - String slice with the syscall name
+/// * A list of error variants with their descriptions, errno values and Linux standard constant names
+///   [VariantName, errno_value, "description", "LINUX_CONSTANT"]
+///
+/// # Example
+///
+/// ```
+/// define_error!(Error, Read, "read", [
+///     [BadFileDescriptor, -9, "Bad file descriptor", "EBADF"],
+///     [InvalidBuffer, -14, "Invalid buffer pointer", "EFAULT"]
+/// ]);
+/// ```
 #[macro_export]
 macro_rules! define_error{
     (
@@ -15,7 +40,7 @@ macro_rules! define_error{
             $(,)?
         ]
     ) => {
-        use $crate::ErrorTrait;
+        use ::macros::result::ErrorTrait;
 
         // pub const LABEL : &str = $label;
 

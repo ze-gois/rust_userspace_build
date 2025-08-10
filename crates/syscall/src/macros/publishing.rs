@@ -2,11 +2,11 @@ macro_rules! publishing {
     (
         $(
             [
+                $syscall_signature:ident;
                 $syscall_number:expr;
-                $syscall_label:expr;
                 $syscall_ident:ident;
                 $($syscall_path:tt)::+;
-                $($syscall_signature:tt)::+
+                $syscall_label:expr
             ]
         ),
         *) => {
@@ -21,12 +21,12 @@ macro_rules! publishing {
             $(pub const $syscall_ident : &str = $syscall_label;)*
         }
 
-        // pub mod signatures {
-        //     $(pub type $syscall_ident = <$($syscall_signature)::+> ;)*
-        // }
+        pub mod signatures {
+            $(pub type $syscall_ident = ::arch::traits::callable::$syscall_signature;)*
+        }
 
         #[repr(usize)]
-        enum Syscall {
+        pub enum Syscall {
             $(
                 $syscall_ident = $syscall_number,
             )*
@@ -34,21 +34,20 @@ macro_rules! publishing {
         }
 
         impl Syscall {
-            fn to_no(&self) -> usize {
+            pub fn to_no(&self) -> usize {
                 match self {
                     $(Syscall::$syscall_ident => $syscall_number,)*
                     Syscall::TODO => <usize>::MAX,
                 }
             }
 
-            fn from_no(n: usize) -> Syscall {
+            pub fn from_no(n: usize) -> Syscall {
                 match n {
                     $($syscall_number => Syscall::$syscall_ident,)*
                     _ => Syscall::TODO,
                 }
             }
         }
-
 
         impl Into<usize> for Syscall {
             fn into(self) -> usize {

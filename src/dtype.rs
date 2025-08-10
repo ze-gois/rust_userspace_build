@@ -3,7 +3,7 @@ pub mod macros;
 use crate::elf_define_type;
 
 pub mod endianness {
-    macros::labeled_enum!(
+    ::macros::labeled_enum!(
         Endianness,
         isize,
         "endianness",
@@ -19,7 +19,7 @@ pub mod endianness {
 
 pub use endianness::Endianness;
 
-result::define_error!(
+::macros::define_error!(
     "DType",
     [
         [InvalidData, 0, "No ", "NONE", NONE],

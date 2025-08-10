@@ -5,4 +5,4 @@ edition = "2024"
 
 [dependencies]
 human = { path = "../human" }
-result = { path = "../result" }
+macros = { path = "../macros" }

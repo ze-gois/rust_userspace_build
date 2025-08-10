@@ -5,20 +5,20 @@ edition = "2024"
 
 [dependencies]
 arch = { path = "crates/arch" }
+common = { path = "crates/common" }
 human = { path = "crates/human" }
-syscall = { path = "crates/syscall" }
-result = { path = "crates/result" }
 macros = { path = "crates/macros" }
+syscall = { path = "crates/syscall" }
 
 [workspace]
 members = [
     "crates/arch",
     "crates/building",
+    "crates/common",
     "crates/human",
-    "crates/macros",
-    "crates/result",
     "crates/syscall",
     "crates/x86_64",
+    "crates/macros",
 ]
 
 [lib]

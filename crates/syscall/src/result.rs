@@ -1,11 +1,11 @@
 mod error {
-    result::define_error!("Syscall", []);
+    ::macros::define_error!("Syscall", []);
 }
 
-result::define_error_nested!(
+::macros::define_error_nested!(
     "Syscall",
     [
-        [Syscall; error; ERR_SYSCALL; 0; "Syscall auxiliary error"; "AUX"],
+        [Syscall; self::error; ERR_SYSCALL; 0; "Syscall auxiliary error"; "AUX"],
         [
             Close;
             crate::close;

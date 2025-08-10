@@ -1,10 +1,10 @@
-pub mod flags;
+use arch::{Arch, traits::Callable};
 
-use arch::{Arch, Callable};
+pub mod flags;
 
 hooking!(MPROTECT);
 
-use result::define_error;
+use ::macros::define_error;
 
 define_error!(
     "mprotect",

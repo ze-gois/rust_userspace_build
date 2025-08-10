@@ -6,5 +6,4 @@ edition = "2024"
 [dependencies]
 arch = { path = "../arch" }
 human = { path = "../human" }
-result = { path = "../result" }
 macros = { path = "../macros" }

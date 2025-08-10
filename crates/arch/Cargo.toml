@@ -6,4 +6,4 @@ edition = "2024"
 [dependencies]
 human = { path = "../human" }
 x86_64 = { path = "../x86_64" }
-result = { path = "../result" }
+macros = { path = "../macros" }

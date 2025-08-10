@@ -1,7 +1,9 @@
 [package]
-name = "human"
+name = "common"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+human = { path = "../human" }
 macros = { path = "../macros" }
+syscall = { path = "../syscall" }

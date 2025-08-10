@@ -59,7 +59,7 @@ impl Stack {
     pub unsafe fn current() -> Self {
         let mut stack_pointer: *mut u64;
         unsafe { core::arch::asm!("mov {}, rsp", out(reg) stack_pointer) };
-        
+
         // We need to adjust the stack pointer to find the real program arguments
         // This requires walking up the stack frames until we find something that looks
         // like the program entry point stack layout
@@ -71,21 +71,21 @@ impl Stack {
         if index >= self.argc {
             return None;
         }
-        
+
         let arg = unsafe { core::ptr::read(self.argv.offset(index as isize)) };
-        let len = unsafe { super::misc::length(arg) };
+        let len = unsafe { core::ffi::CStr::from_ptr(arg as *const i8).to_bytes().len() };
         let s = unsafe { core::slice::from_raw_parts(arg, len) };
-        
+
         core::str::from_utf8(s).ok()
     }
-    
+
     /// Print all command line arguments
     pub fn print_args(&self) {
         info!("Arguments {{");
         for i in 0..self.argc {
             info!("\n\tArgument #{i}: \"");
             let arg = unsafe { core::ptr::read(self.argv.offset(i as isize)) };
-            let len = unsafe { super::misc::length(arg) };
+            let len = unsafe { core::ffi::CStr::from_ptr(arg as *const i8).to_bytes().len() };
 
             // Print the entire string
             let s = unsafe { core::slice::from_raw_parts(arg, len) };
@@ -103,42 +103,50 @@ impl Stack {
         if index >= self.envc {
             return None;
         }
-        
+
         let mut envp_pointer = self.envp;
         let mut current_index = 0;
-        
+
         while !envp_pointer.is_null() {
             if unsafe { (*envp_pointer).is_null() } {
                 break;
             }
-            
+
             if current_index == index {
                 let env_ptr = unsafe { *envp_pointer };
-                let len = unsafe { super::misc::length(env_ptr) };
+                let len = unsafe {
+                    core::ffi::CStr::from_ptr(env_ptr as *const i8)
+                        .to_bytes()
+                        .len()
+                };
                 let s = unsafe { core::slice::from_raw_parts(env_ptr, len) };
                 return core::str::from_utf8(s).ok();
             }
-            
+
             current_index += 1;
             envp_pointer = unsafe { envp_pointer.add(1) };
         }
-        
+
         None
     }
-    
+
     /// Get an environment variable by name
     pub unsafe fn get_env_by_name(&self, name: &str) -> Option<&'static str> {
         let mut envp_pointer = self.envp;
-        
+
         while !envp_pointer.is_null() {
             if unsafe { (*envp_pointer).is_null() } {
                 break;
             }
-            
+
             let env_ptr = unsafe { *envp_pointer };
-            let len = unsafe { super::misc::length(env_ptr) };
+            let len = unsafe {
+                core::ffi::CStr::from_ptr(env_ptr as *const i8)
+                    .to_bytes()
+                    .len()
+            };
             let s = unsafe { core::slice::from_raw_parts(env_ptr, len) };
-            
+
             if let Ok(env_str) = core::str::from_utf8(s) {
                 if let Some((key, value)) = env_str.split_once('=') {
                     if key == name {
@@ -146,13 +154,13 @@ impl Stack {
                     }
                 }
             }
-            
+
             envp_pointer = unsafe { envp_pointer.add(1) };
         }
-        
+
         None
     }
-    
+
     /// Print all environment variables
     pub fn print_env(&self) {
         info!("Environment {{");
@@ -166,7 +174,11 @@ impl Stack {
             envc += 1;
             info!("\n\tEnv: '");
             let env_ptr = unsafe { *envp_pointer };
-            let len = unsafe { super::misc::length(env_ptr) };
+            let len = unsafe {
+                core::ffi::CStr::from_ptr(env_ptr as *const i8)
+                    .to_bytes()
+                    .len()
+            };
 
             // Print the actual environment variable string
             let s = unsafe { core::slice::from_raw_parts(env_ptr, len) };
@@ -208,7 +220,8 @@ impl Stack {
                 // AT_PLATFORM or AT_EXECFN
                 let ptr = auxv_entry.value as *const u8;
                 if !ptr.is_null() {
-                    let len = unsafe { super::misc::length(ptr) };
+                    let len =
+                        unsafe { core::ffi::CStr::from_ptr(ptr as *const i8).to_bytes().len() };
                     let s = unsafe { core::slice::from_raw_parts(ptr, len) };
                     if let Ok(str_value) = core::str::from_utf8(s) {
                         info!("{}", str_value);
@@ -232,47 +245,47 @@ impl Stack {
     /// Get a specific auxiliary vector entry by type
     pub unsafe fn get_auxv_by_type(&self, atype: usize) -> Option<usize> {
         let mut auxv_pointer = self.auxv;
-        
+
         while !auxv_pointer.is_null() {
             let auxv_entry = unsafe { *auxv_pointer };
-            
+
             if auxv_entry.atype == 0 && auxv_entry.value == 0 {
                 break;
             }
-            
+
             if auxv_entry.atype == atype {
                 return Some(auxv_entry.value);
             }
-            
+
             auxv_pointer = unsafe { auxv_pointer.add(1) };
         }
-        
+
         None
     }
-    
+
     /// Set a specific auxiliary vector entry value
     pub unsafe fn set_auxv_by_type(&mut self, atype: usize, value: usize) -> bool {
         let mut auxv_pointer = self.auxv;
-        
+
         while !auxv_pointer.is_null() {
             let auxv_entry_ptr = auxv_pointer;
             let auxv_entry = unsafe { *auxv_entry_ptr };
-            
+
             if auxv_entry.atype == 0 && auxv_entry.value == 0 {
                 break;
             }
-            
+
             if auxv_entry.atype == atype {
                 unsafe { (*auxv_pointer).value = value };
                 return true;
             }
-            
+
             auxv_pointer = unsafe { auxv_pointer.add(1) };
         }
-        
+
         false
     }
-    
+
     /// Print full stack contents (arguments, environment variables, and auxiliary vector)
     pub fn print(&self) {
         self.print_args();

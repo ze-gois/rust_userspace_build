@@ -1,4 +1,4 @@
-use result::define_error;
+use ::macros::define_error;
 
 define_error!(
     "Human error",

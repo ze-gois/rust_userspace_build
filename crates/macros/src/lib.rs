@@ -1,8 +1,10 @@
 #![no_std]
 
-pub mod labeled_enum;
-pub mod labeled_enum_typed;
-pub mod labeled_typed_enum;
+#[macro_use]
+pub mod r#enum;
+
+#[macro_use]
+pub mod result;
 
 #[macro_export]
 macro_rules! impl_partial_eq_for_type {

@@ -21,7 +21,7 @@ macro_rules! info {
     ($($arg:tt)*) => {{
         use core::fmt::Write;
         let mut writer = $crate::stdout::Stdout;
-        let _ = write!(&mut writer, "\n[ {}:{}:{} ]",file!(),line!(),column!());
+        let _ = write!(&mut writer, "\n[ {}:{}:{} ] ",file!(),line!(),column!());
         let _ = write!(&mut writer, $($arg)*);
     }};
 }

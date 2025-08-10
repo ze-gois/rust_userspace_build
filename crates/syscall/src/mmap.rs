@@ -1,12 +1,12 @@
+use arch::{Arch, traits::Callable};
+
 pub mod flags;
 
 pub use flags::*;
 
-use arch::{Arch, traits::Callable};
-
 hooking!(MMAP);
 
-use result::define_error;
+use ::macros::define_error;
 
 define_error!(
     "mmap",

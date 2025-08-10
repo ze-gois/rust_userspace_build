@@ -33,7 +33,7 @@ macro_rules! define_error_nested {
             TODO
         }
 
-        impl $crate::ErrorTrait for Error {
+        impl ::macros::result::ErrorTrait for Error {
             fn from_no(discriminant: usize) -> Error {
                 match discriminant {
                     $($variant_discriminant => Error::$variant_identifier($($variant_path)::+::Error::TODO),)*
@@ -63,9 +63,9 @@ macro_rules! define_error_nested {
             }
         }
 
-        impl $crate::ErrorNestedTrait for Error {
+        impl ::macros::result::ErrorNestedTrait for Error {
             fn from_no(a:usize, b:usize) -> Error{
-                use $crate::ErrorTrait;
+                use ::macros::result::ErrorTrait;
                 match <Error as ErrorTrait>::from_no(a) {
                     $(
                         Error::$variant_identifier(_) =>{
@@ -77,7 +77,7 @@ macro_rules! define_error_nested {
                 }
             }
             fn to_no(&self) -> (usize, usize) {
-                use $crate::ErrorTrait;
+                use ::macros::result::ErrorTrait;
                 match self {
                     $(
                         Error::$variant_identifier(variant) => {
@@ -115,14 +115,14 @@ macro_rules! define_error_nested {
 
         impl Into<usize> for Error {
             fn into(self) -> usize {
-                use $crate::ErrorTrait;
+                use ::macros::result::ErrorTrait;
                 self.to_no()
             }
         }
 
         impl Into<(usize,usize)> for Error {
             fn into(self) -> (usize,usize) {
-                use $crate::ErrorTrait;
+                use ::macros::result::ErrorTrait;
                 match self {
                     $(
                         Error::$variant_identifier(variant) => (self.to_no(), variant.to_no()),
@@ -134,14 +134,14 @@ macro_rules! define_error_nested {
 
         impl From<usize> for Error {
             fn from(a:usize) -> Error {
-                use result::ErrorTrait;
+                use ::macros::result::ErrorTrait;
                 Error::from_no(a)
             }
         }
 
         impl From<(usize,usize)> for Error {
             fn from(a: (usize,usize)) -> Error {
-                use $crate::ErrorNestedTrait;
+                use ::macros::result::ErrorNestedTrait;
                 Error::from_no(a.0, a.1)
             }
         }

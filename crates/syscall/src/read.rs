@@ -1,8 +1,8 @@
-use arch::{Arch, Callable};
+use arch::{Arch, traits::Callable};
 
 hooking!(READ);
 
-use result::define_error;
+use ::macros::define_error;
 
 define_error!(
     "Read",
