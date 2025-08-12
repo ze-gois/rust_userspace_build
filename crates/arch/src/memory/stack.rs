@@ -1,8 +1,6 @@
 pub mod arguments;
-// pub mod auxiliary;
-// pub mod environment;
-
-use human::info;
+pub mod auxiliary;
+pub mod environment;
 
 #[repr(u8)]
 #[derive(Debug, Clone, Copy)]
@@ -19,23 +17,23 @@ pub struct Stack {
     // pub size: usize,
     // pub size_modified: usize,
     pub arguments: arguments::List,
-    // pub environment: environment::List<'b>,
-    // pub auxiliary: auxiliary::List,
+    pub environment: environment::List,
+    pub auxiliary: auxiliary::List,
     pub status: Status,
 }
 
 impl Stack {
     pub fn from_pointer(stack_pointer: crate::Pointer) -> Self {
-        let (arguments, latter_pointer) = arguments::List::from_pointer(stack_pointer);
-        // let (environment, latter_pointer) = environment::List::from_pointer(environment_pointer);
-        // let (auxiliary, latter_pointer) = auxiliary::List::from_pointer(auxiliary_pointer);
+        let (arguments, environment_pointer) = arguments::List::from_pointer(stack_pointer);
+        let (environment, auxiliary_pointer) = environment::List::from_pointer(environment_pointer);
+        let (auxiliary, latter_pointer) = auxiliary::List::from_pointer(auxiliary_pointer);
 
         Self {
             former: stack_pointer,
             latter: latter_pointer,
             arguments,
-            // environment,
-            // auxiliary,
+            environment,
+            auxiliary,
             status: Status::Raw,
         }
     }
@@ -56,7 +54,7 @@ impl Stack {
             self.former, self.latter, self.arguments, self.status,
         );
         self.arguments.print();
-        // self.environment.print();
+        self.environment.print();
         // self.auxiliary.print();
         info!("---------------------\n");
     }

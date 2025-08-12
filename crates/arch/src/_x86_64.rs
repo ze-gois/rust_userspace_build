@@ -3,7 +3,7 @@ mod callable;
 
 pub use callable::*;
 
-pub type PointerType = *const u8;
+pub type PointerType = *const u64;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Pointer(pub PointerType);
