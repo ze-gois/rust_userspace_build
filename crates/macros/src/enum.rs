@@ -6,3 +6,6 @@ pub mod labeled_typed;
 
 #[macro_use]
 pub mod labeled_typed_;
+
+#[macro_use]
+pub mod flag;

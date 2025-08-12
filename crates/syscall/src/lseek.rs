@@ -7,10 +7,7 @@ hooking!(LSEEK);
 
 use ::macros::define_error;
 
-define_error!(
-    "lseek",
-    [[BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],]
-);
+define_error!("lseek", []);
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {

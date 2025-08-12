@@ -18,15 +18,40 @@
 /// # Example
 ///
 /// ```
-/// define_syscall_error!(Error, Read, "read", [
-///     [BadFileDescriptor, -9, "Bad file descriptor", "EBADF"],
-///     [InvalidBuffer, -14, "Invalid buffer pointer", "EFAULT"]
-/// ]);
+/// $enum_identifier:ident,
+/// $variant:ty,
+/// $label:expr,
+/// [
+///     $(
+///         [
+///             $discriminant:expr;
+///             $identifier:ident;
+///             $const_identifier:ident;
+///             $acronym:expr;
+///             $description:expr
+///         ]
+///     ),* $(,)?
+/// ]
 /// ```
 #[macro_export]
+#[rustfmt::skip]
 macro_rules! labeled_enum {
-    ($enum_identifier:ident, $variant:ty, $label:expr,
-     [ $( [$identifier:ident, $const_identifier:ident, $discriminant:expr, $description:expr, $acronym:expr] ),* $(,)? ]) => {
+    (
+        $enum_identifier:ident,
+        $variant:ty,
+        $label:expr,
+        [
+            $(
+                [
+                    $discriminant:expr;
+                    $identifier:ident;
+                    $const_identifier:ident;
+                    $acronym:expr;
+                    $description:expr
+                ]
+            ),* $(,)?
+        ]
+    ) => {
         // Define Linux standard error constants in an discriminant module with standard names
         pub mod constants {
             $(
@@ -89,13 +114,13 @@ macro_rules! labeled_enum {
 
         impl core::fmt::Display for $enum_identifier {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                write!(f, "{}", self.str())
+                write!(f, "{}:{}",self.to(), self.str())
             }
         }
 
         impl core::fmt::Debug for $enum_identifier {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                write!(f, "{}", self.acronym())
+                write!(f, "{}:{}",self.to(), self.acronym())
             }
         }
     };

@@ -7,42 +7,19 @@ hooking!(OPEN);
 
 use ::macros::define_error;
 
+#[rustfmt::skip]
 define_error!(
-    "openat",
+    "open",
     [
-        [FileNotFound, 2, "File not found", "ENOENT", ENOENT],
-        [PermissionDenied, 13, "Permission denied", "EACCES", EACCES],
-        [InvalidPath, 22, "Invalid path", "EINVAL", EINVAL],
-        [
-            DirectoryNotFound,
-            20,
-            "Directory not found",
-            "ENOTDIR",
-            ENOTDIR
-        ],
-        [
-            TooManySymlinks,
-            40,
-            "Too many levels of symbolic links",
-            "ELOOP",
-            ELOOP
-        ],
-        [
-            PathnameTooLong,
-            36,
-            "Pathname too long",
-            "ENAMETOOLONG",
-            ENAMETOOLONG
-        ],
-        [FileExists, 17, "File exists", "EEXIST", EEXIST],
-        [
-            TooManyOpenFiles,
-            24,
-            "Too many open files",
-            "EMFILE",
-            EMFILE
-        ],
-        [NoSpace, 28, "No space left on device", "ENOSPC", ENOSPC]
+        [2; FileNotFound;       ENOENT;         "ENOENT";       "File not found"],
+        [13; PermissionDenied;  EACCES;         "EACCES";       "Permission denied"],
+        [22; InvalidPath;       EINVAL;         "EINVAL";       "Invalid path"],
+        [20; DirectoryNotFound; ENOTDIR;        "ENOTDIR";      "Directory not found"],
+        [40; TooManySymlinks;   ELOOP;          "ELOOP";        "Too many levels of symbolic links"],
+        [36; PathnameTooLong;   ENAMETOOLONG;   "ENAMETOOLONG"; "Pathname too long"],
+        [17; FileExists;        EEXIST;         "EEXIST";       "File exists"],
+        [24; TooManyOpenFiles;  EMFILE;         "EMFILE";       "Too many open files"],
+        [28; NoSpace;           ENOSPC;         "ENOSPC";       "No space left on device"],
     ]
 );
 

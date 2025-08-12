@@ -8,16 +8,7 @@ hooking!(MMAP);
 
 use ::macros::define_error;
 
-define_error!(
-    "mmap",
-    [[
-        NotReadable,
-        13,
-        "File not open for reading",
-        "EACCES",
-        EACCES
-    ]]
-);
+define_error!("mmap", []);
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
@@ -29,14 +20,8 @@ pub fn handle_result(arch_result: arch::Result) -> crate::Result {
 }
 
 #[inline(always)]
-pub fn mmap(
-    addr: *mut u8,
-    length: usize,
-    prot: i32,
-    flags: i32,
-    fd: i32,
-    offset: i64,
-) -> crate::Result {
+#[rustfmt::skip]
+pub fn mmap(addr: *mut u8, length: usize, prot: i32, flags: i32, fd: i32, offset: i64) -> crate::Result {
     let arch_result = Arch::syscall6(
         NUMBER,
         addr as usize,

@@ -9,6 +9,9 @@ pub mod r#enum;
 #[macro_use]
 pub mod result;
 
+// #[macro_use]
+// pub mod pointer;
+
 #[macro_export]
 macro_rules! impl_partial_eq_for_type {
     ($name:ty, $inner:ty, $($t:ty),*) => {

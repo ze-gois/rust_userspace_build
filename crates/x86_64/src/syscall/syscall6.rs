@@ -1,15 +1,8 @@
 use crate::result::{Result, handle_result};
 
 #[inline(always)]
-pub fn syscall6(
-    n: usize,
-    a1: usize,
-    a2: usize,
-    a3: usize,
-    a4: usize,
-    a5: usize,
-    a6: usize,
-) -> Result {
+#[rustfmt::skip]
+pub fn syscall6(n: usize, a1: usize, a2: usize, a3: usize, a4: usize, a5: usize, a6: usize)-> Result {
     let syscall_return: usize;
 
     unsafe {
@@ -26,5 +19,6 @@ pub fn syscall6(
             out("r11") _,
         );
     }
+
     handle_result(syscall_return)
 }

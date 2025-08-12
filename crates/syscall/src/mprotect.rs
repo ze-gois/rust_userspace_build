@@ -6,16 +6,7 @@ hooking!(MPROTECT);
 
 use ::macros::define_error;
 
-define_error!(
-    "mprotect",
-    [[
-        NotReadable,
-        13,
-        "File not open for reading",
-        "EACCES",
-        EACCES
-    ]]
-);
+define_error!("mprotect", []);
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {

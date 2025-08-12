@@ -7,25 +7,13 @@ use ::macros::define_error;
 define_error!(
     "write",
     [
-        [BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],
-        [
-            InvalidBuffer,
-            14,
-            "Invalid buffer pointer",
-            "EFAULT",
-            EFAULT
-        ],
-        [BufferTooLarge, 27, "Buffer too large", "EFBIG", EFBIG],
-        [
-            Interrupted,
-            4,
-            "System call was interrupted",
-            "EINTR",
-            EINTR
-        ],
-        [IOError, 5, "Input/output error", "EIO", EIO],
-        [NoSpaceLeft, 28, "No space left on device", "ENOSPC", ENOSPC],
-        [BrokenPipe, 32, "Broken pipe", "EPIPE", EPIPE]
+        [9;     BadFileDescriptor;  EBADF;   "EBADF";     "Bad file descriptor"],
+        [14;    InvalidBuffer;      EFAULT;  "EFAULT";    "Invalid buffer pointer"],
+        [27;    BufferTooLarge;     EFBIG;   "EFBIG";     "Buffer too large"],
+        [4;     Interrupted;        EINTR;   "EINTR";     "System call was interrupted"],
+        [5;     IOError;            EIO;     "EIO";       "Input/output error"],
+        [28;    NoSpaceLeft;        ENOSPC;  "ENOSPC";    "No space left on device"],
+        [32;    BrokenPipe;         EPIPE;   "EPIPE";     "Broken pipe"],
     ]
 );
 

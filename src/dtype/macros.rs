@@ -1,11 +1,12 @@
 #[macro_export]
 macro_rules! elf_define_type {
     ($(#[$meta:meta])* $vis:vis $name:ident, $inner:ty) => {
+
         $(#[$meta])*
         #[derive(Clone, Copy, Debug, PartialEq)]
         $vis struct $name(pub $inner);
 
-        impl $crate::dtype::ELFType for $name {
+        impl ELFType for $name {
             type Inner = $inner;
             const SIZE_BYTES: usize = core::mem::size_of::<$inner>();
             const SIZE_BITS: usize = Self::SIZE_BYTES * 8;
@@ -89,8 +90,8 @@ macro_rules! elf_define_type {
                         };
                         Ok((0,$name::from(value).into()))
                     },
-                    Ok(_) => Err($crate::Error::DType(Error::ShorterData)), // usize::MAX - payload required.
-                    Err(_) => Err($crate::Error::DType(Error::InvalidData)),
+                    Ok(_) => Err($crate::Error::DType($crate::dtype::Error::ShorterData)), // usize::MAX - payload required.
+                    Err(_) => Err($crate::Error::DType($crate::dtype::Error::InvalidData)),
                 }
             }
         }

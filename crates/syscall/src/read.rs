@@ -7,31 +7,13 @@ use ::macros::define_error;
 define_error!(
     "Read",
     [
-        [BadFileDescriptor, 9, "Bad file descriptor", "EBADF", EBADF],
-        [
-            InvalidBuffer,
-            14,
-            "Invalid buffer pointer",
-            "EFAULT",
-            EFAULT
-        ],
-        [InvalidCount, 22, "Invalid count", "EINVAL", EINVAL],
-        [
-            Interrupted,
-            4,
-            "System call was interrupted",
-            "EINTR",
-            EINTR
-        ],
-        [IOError, 5, "Input/output error", "EIO", EIO],
-        [IsDirectory, 21, "Is a directory", "EISDIR", EISDIR],
-        [
-            NotReadable,
-            13,
-            "File not open for reading",
-            "EACCES",
-            EACCES
-        ],
+        [4;   Interrupted;       EINTR;    "EINTR";     "System call was interrupted"],
+        [5;   IOError;           EIO;      "EIO";       "Input/output error"],
+        [9;   BadFileDescriptor; EBADF;    "EBADF";     "Bad file descriptor"],
+        [14;  InvalidBuffer;     EFAULT;   "EFAULT";    "Invalid buffer pointer"],
+        [22;  InvalidCount;      EINVAL;   "EINVAL";    "Invalid count"],
+        [21;  IsDirectory;       EISDIR;   "EISDIR";    "Is a directory"],
+        [13;  NotReadable;       EACCES;   "EACCES";    "File not open for reading"],
     ]
 );
 

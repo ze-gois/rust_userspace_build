@@ -38,40 +38,17 @@ impl Callable for Arch {
         syscall_result
     }
 
+    #[rustfmt::skip]
     fn _syscall5(n: usize, a1: usize, a2: usize, a3: usize, a4: usize, a5: usize) -> Result {
-        crate::info!(
-            "Syscall Input: 0x{:x}, {}, {}, {}, {}, {}",
-            n,
-            a1,
-            a2,
-            a3,
-            a4,
-            a5
-        );
+        crate::info!(X "Syscall Input: 0x{:x}, {}, {}, {}, {}, {}", n, a1, a2, a3, a4, a5);
         let syscall_result = syscall5(n, a1, a2, a3, a4, a5);
         crate::info!(X "Syscall Result: {:?}", syscall_result);
         syscall_result
     }
 
-    fn _syscall6(
-        n: usize,
-        a1: usize,
-        a2: usize,
-        a3: usize,
-        a4: usize,
-        a5: usize,
-        a6: usize,
-    ) -> Result {
-        crate::info!(
-            "Syscall Input: 0x{:x}, {}, {}, {}, {}, {}, {}",
-            n,
-            a1,
-            a2,
-            a3,
-            a4,
-            a5,
-            a6
-        );
+    #[rustfmt::skip]
+    fn _syscall6(n: usize, a1: usize, a2: usize, a3: usize, a4: usize, a5: usize, a6: usize) -> Result {
+        crate::info!(X "Syscall Input: 0x{:x}, {}, {}, {}, {}, {}, {}", n, a1, a2, a3, a4, a5, a6);
         let syscall_result = syscall6(n, a1, a2, a3, a4, a5, a6);
         crate::info!(X "Syscall Result: {:?}", syscall_result);
         syscall_result

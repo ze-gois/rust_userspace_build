@@ -1,5 +1,20 @@
 #[macro_export]
 #[rustfmt::skip]
+/// $label:expr,
+/// [
+///     $(
+///         [
+///             $variant_discriminant:expr;
+///             $variant_identifier:ident;
+///             $($variant_path:tt)::+;
+///             $variant_constant:ident;
+///             $variant_descriptor:expr;
+///             $variant_acronym:expr
+///         ]
+///     ),*
+///     $(,)*
+/// ]
+///
 macro_rules! define_error_nested {
     (
         $label:expr,

@@ -31,11 +31,11 @@ macro_rules! define_error{
         [
             $(
                 [
-                    $variant_identifier:ident,
-                    $variant_discriminant:expr,
-                    $variant_descriptor:expr,
-                    $variant_acronym:expr,
-                    $variant_constant:ident
+                    $variant_discriminant:expr;
+                    $variant_identifier:ident;
+                    $variant_constant:ident;
+                    $variant_acronym:expr;
+                    $variant_descriptor:expr
                 ]
             ),*
             $(,)?

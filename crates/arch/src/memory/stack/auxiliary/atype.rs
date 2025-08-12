@@ -1,0 +1,23 @@
+::macros::labeled_enum!(Type, usize, "AT_TYPE", [
+//   discriminant variant      constat      acronym        description
+    [0;           Null;        NULL;        "Null";        "End of vector"],
+    [1;           Ignore;      IGNORE;      "Ignore";      "Entry should be ignored"],
+    [2;           ExecFD;      EXECFD;      "ExecFD";      "File descriptor of program"],
+    [3;           PHdr;        PHDR;        "PHdr";        "Program headers for program"],
+    [4;           PHEnt;       PHENT;       "PHEnt";       "Size of program header entry"],
+    [5;           PHNum;       PHNUM;       "PHNum";       "Number of program headers"],
+    [6;           PageSz;      PAGESZ;      "PageSz";      "System page size"],
+    [7;           Base;        BASE;        "Base";        "Base address of interpreter"],
+    [8;           Flags;       FLAGS;       "Flags";       "Flags"],
+    [9;           Entry;       ENTRY;       "Entry";       "Entry point of program"],
+    [10;          NotELF;      NOTELF;      "NotELF";      "Program is not ELF"],
+    [11;          UID;         UID;         "UID";         "Real uid"],
+    [12;          EUID;        EUID;        "EUID";        "Effective uid"],
+    [13;          GID;         GID;         "GID";         "Real gid"],
+    [14;          EGID;        EGID;        "EGID";        "Effective gid"],
+    [17;          ClkTck;      CLKTCK;      "ClkTck";      "Frequency of times()"],
+    [31;          ExecFn;      EXECFN;      "ExecFn";      "ExecFn"],
+    [32;          SysInfo;     SYSINFO;     "SysInfo";     "SysInfo"],
+    [33;          SysInfoEhdr; SYSINFOEHDR; "SysInfoEhdr"; "SysInfoEhdr"],
+    [0xFFFFFFFF;  DontCare;    DONTCARE;    "DontCare";    "DontCare"],
+]);

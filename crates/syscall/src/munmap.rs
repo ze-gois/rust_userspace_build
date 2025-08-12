@@ -4,20 +4,11 @@ hooking!(MUNMAP);
 
 use ::macros::define_error;
 
-define_error!(
-    "munmap",
-    [[
-        NotReadable,
-        13,
-        "File not open for reading",
-        "EACCES",
-        EACCES
-    ]]
-);
+define_error!("munmap", []);
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
-        Err(arch::Error::TODO) => Err(crate::Error::MUnmap(Error::NotReadable)),
+        Err(arch::Error::TODO) => Err(crate::Error::MUnmap(Error::TODO)),
         Ok(no) => Ok((no, no)),
     }
 }

@@ -4,20 +4,11 @@ hooking!(CLOSE);
 
 use ::macros::define_error;
 
-define_error!(
-    "close",
-    [[
-        NotReadable,
-        13,
-        "File not open for reading",
-        "EACCES",
-        EACCES
-    ]]
-);
+define_error!("close", []);
 
 pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     match arch_result {
-        Err(arch::Error::TODO) => Err(crate::Error::Close(Error::NotReadable)),
+        Err(arch::Error::TODO) => Err(crate::Error::Close(Error::TODO)),
         Ok(no) => Ok((no, no)),
     }
 }

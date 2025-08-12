@@ -78,19 +78,6 @@ impl AuxiliarType {
     }
 }
 
-impl Auxiliar {
-    pub fn new(atype: T, value: T) -> Self {
-        Self {
-            atype: atype as u64,
-            value,
-        }
-    }
-
-    pub fn null() -> Self {
-        Self::new(AuxiliarType::Null.to(), 0)
-    }
-}
-
 impl core::fmt::Debug for Auxiliar {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let type_name = match self.atype {

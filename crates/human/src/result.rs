@@ -1,10 +1,8 @@
-use ::macros::define_error;
-
-define_error!(
+::macros::define_error!(
     "Human error",
     [
-        [ZeEntry, 1, "Entry to ze", "ZE", ZE_ENTRY],
-        [PeEntry, 2, "Entry to Pe", "ZE", PE_ENTRY],
+        [1; ZeEntry; ZE_ENTRY; "ZE"; "Entry to ze"],
+        [2; PeEntry; PE_ENTRY; "ZE"; "Entry to Pe"],
     ]
 );
 
