@@ -32,8 +32,11 @@ impl Entry {
     }
 
     pub fn value(&self) -> atype::EnumTyped {
-        match self.key() {
-            _ => atype::EnumTyped::TODO(0),
+        unsafe {
+            atype::EnumTyped::from_kv(
+                self.pointer.0 as *mut usize,
+                (self.pointer.0 as *mut usize).add(1) as atype::macro_types::mus,
+            )
         }
     }
 }

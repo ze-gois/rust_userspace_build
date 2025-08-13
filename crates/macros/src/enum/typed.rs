@@ -47,7 +47,7 @@ macro_rules! enum_typed {
                     $discriminant:expr;
                     $identifier:ident;
                     $type:ty;
-                    |p|{$($lambda:tt)*};
+                    |$argumento:ident : $tipo:ty|{$($lambda:tt)*};
                     $const_identifier:ident;
                     $acronym:expr;
                     $description:expr
@@ -139,17 +139,31 @@ macro_rules! enum_typed {
             }
         }
 
-        #[derive(Debug)]
+        #[derive(Debug, Clone, Copy)]
         pub enum EnumTyped {
             $($identifier($type),)*
             TODO(u32),
         }
 
         impl EnumTyped {
-            pub fn from_pointer(etype: $enum_identifier, ptr: *const u8) -> Self {
-                match etype {
-                    $( $enum_identifier::$identifier => EnumTyped::$identifier( unsafe { (|p:*const u8|{ $($lambda)* })(ptr)} ),)*
+            pub fn from_kv(etype: *const $variant, p: *const u8) -> Self {
+                match $enum_identifier::from(unsafe { *etype }) {
+                    $( $enum_identifier::$identifier => EnumTyped::$identifier( unsafe { (|$argumento:$tipo|{ $($lambda)* })(p)} ),)*
                     _ => EnumTyped::TODO(0),
+                }
+            }
+
+            pub fn to_kv(&self) -> ($variant, *const u8) {
+                match *self {
+                    $(EnumTyped::$identifier(v) => (($enum_identifier::$identifier).to(), v as *const u8),)*
+                    EnumTyped::TODO(id) => ($enum_identifier::TODO.to(), id as *const u8),
+                }
+            }
+
+            pub fn is_null(&self) -> bool {
+                match self {
+                    EnumTyped::Null(0) => true,
+                    _ => false,
                 }
             }
         }

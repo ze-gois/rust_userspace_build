@@ -1,7 +1,6 @@
 pub mod entry;
 pub use entry::*;
 pub mod atype;
-pub use atype::Type;
 
 #[repr(C)]
 #[derive(Debug)]
@@ -23,14 +22,31 @@ impl Default for List {
 
 impl List {
     #[rustfmt::skip]
-    pub fn from_pointer(stack_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        info!("\nstack_pointer: {:?}", stack_pointer);
-        let counter = unsafe { *(stack_pointer.0) } as usize;
-        let argument_pointers = unsafe { (stack_pointer.0).add(1) as *const crate::PointerType };
-        let environment_pointer = unsafe { (stack_pointer.0).add(2 + counter) };
+    pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> (List, crate::Pointer) {
+        info!("\n environment_npointer: {:?}", auxiliary_pointer);
+
+        let auxiliary_pointer: *mut crate::PointerType = auxiliary_pointer.0 as *mut crate::PointerType;
+
+        let mut counter = 0;
+        unsafe {
+            while true {
+                if auxiliary_pointer.add(counter).is_null() {
+                    break;
+                }
+                let key_pointer = auxiliary_pointer.add(counter);
+                let key_pointer = key_pointer as *mut usize;
+                let value_pointer = key_pointer.add(1) as *mut u8;
+                counter += 1;
+                if atype::EnumTyped::from_kv(key_pointer, value_pointer).is_null() {
+                    break
+                }
+            }
+        }
+
+        let latter_pointer = unsafe { (auxiliary_pointer as crate::PointerType).add(1 + counter) };
 
         if counter == 0 {
-            return (List::default(), crate::Pointer(environment_pointer));
+            return (List::default(), crate::Pointer(latter_pointer));
         }
 
         let list_pointer = crate::memory::alloc::<Entry>(counter);
@@ -38,7 +54,7 @@ impl List {
         unsafe {
             // preenche cada Entry in-place
             for a in 0..counter {
-                let entry_pointer = *(argument_pointers.add(a));
+                let entry_pointer = *(auxiliary_pointer.add(a));
                 let entry = Entry::from_pointer(crate::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
@@ -56,7 +72,7 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, crate::Pointer(environment_pointer))
+        (list, crate::Pointer(auxiliary_pointer))
     }
 
     pub fn print(&self) {
@@ -151,6 +167,68 @@ impl<'l> Iterator for Iter<'l> {
         item
     }
 }
+
+// pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> Self {
+
+//         info!("Environment count: {:?}\n\n", counter);
+
+//         if counter == 0 {
+//             return Self::default();
+//         }
+
+//         // Allocate memory using mmap
+//         let entries_ptr = unsafe {
+//             let size = core::mem::size_of::<Entry<'e>>() * counter;
+
+//             // Align size to page boundary
+//             let page_size = 4096;
+//             let aligned_size = (size + page_size - 1) & !(page_size - 1);
+
+//             // Define mmap constants locally since they're not accessible
+//             const PROT_READ: i32 = 0x1;
+//             const PROT_WRITE: i32 = 0x2;
+//             const MAP_PRIVATE: i32 = 0x02;
+//             const MAP_ANONYMOUS: i32 = 0x20;
+
+//             let result = memory::mmap::mmap(
+//                 ptr::null_mut(),
+//                 aligned_size,
+//                 PROT_READ | PROT_WRITE,
+//                 MAP_PRIVATE | MAP_ANONYMOUS,
+//                 -1,
+//                 0,
+//             );
+
+//             match result {
+//                 Ok(ptr) => ptr as *mut Entry<'e>,
+//                 Err(_) => {
+//                     // Allocation failed, return default vector
+//                     info!("Failed to allocate memory for environment vector\n");
+//                     return Self::default();
+//                 }
+//             }
+//         };
+
+//         // Create entries from the environment pointers
+//         for i in 0..counter {
+//             unsafe {
+//                 let env_ptr = auxiliary_pointer.add(i);
+//                 let entry = Entry::from_pointer(env_ptr, i);
+//                 ptr::write(entries_ptr.add(i), entry);
+//                 // info!("Env {}: {:?}\n", i, (*entries_ptr.add(i)).value);
+//             }
+//         }
+
+//         // Move past the environment array and the NULL terminator
+//         let next_pointer = unsafe { auxiliary_pointer.add(counter + 1) };
+
+//         let environment = Self {
+//             counter,
+//             entries: entries_ptr,
+//         };
+
+//         environment
+//     }
 
 // pub mod atype;
 // pub mod entry;
