@@ -66,7 +66,7 @@ impl List {
     }
 
     pub fn print(&self) {
-        info!("Arguments {{\n");
+        info!("Environment {{\n");
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
                 info!(
@@ -76,11 +76,11 @@ impl List {
                 );
             }
         }
-        info!("}} Arguments \n");
+        info!("}} Environment \n");
     }
 
     pub fn print_arguments(&self) {
-        info!("Argument count: {}\n", self.counter);
+        info!("Environment count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.

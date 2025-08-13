@@ -54,7 +54,7 @@ impl List {
         unsafe {
             // preenche cada Entry in-place
             for a in 0..counter {
-                let entry_pointer = *(auxiliary_pointer.add(a));
+                let entry_pointer = auxiliary_pointer.add(a) as crate::PointerType;
                 let entry = Entry::from_pointer(crate::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
@@ -72,31 +72,33 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, crate::Pointer(auxiliary_pointer))
+        (list, crate::Pointer(latter_pointer))
     }
 
     pub fn print(&self) {
-        info!("Arguments {{\n");
+        info!("Auxiliary!!! {{\n");
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
-                info!(
-                    "\t{:?} @ {:?}\n",
-                    unsafe { crate::Pointer(self.former.add(a) as crate::PointerType) },
-                    e
-                );
+                info!("\t{:?} @ ", unsafe {
+                    crate::Pointer(self.former.add(a) as crate::PointerType)
+                },);
+                info!("{:?}, ", e.prev);
+                info!("{:?}, ", e.next);
+                info!("{:?}, ", e.value());
+                info!("{:?}, \n", e.pointer);
             }
         }
-        info!("}} Arguments \n");
+        info!("}} Auxiliary \n");
     }
 
     pub fn print_arguments(&self) {
-        info!("Argument count: {}\n", self.counter);
+        info!("Auxiliary count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
                 unsafe {
                     // se Entry tiver método para converter a string, use-o aqui
-                    info!("Arg {}: '{:?}'\n", a, entry.pointer);
+                    info!("Arg {}: '{:?}'", a, entry.pointer);
                 }
             }
         }

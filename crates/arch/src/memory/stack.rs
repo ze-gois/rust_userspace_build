@@ -55,7 +55,7 @@ impl Stack {
         );
         self.arguments.print();
         self.environment.print();
-        // self.auxiliary.print();
+        self.auxiliary.print();
         info!("---------------------\n");
     }
 }
