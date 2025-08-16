@@ -17,6 +17,8 @@ pub trait ErrorTrait {
     fn description(&self) -> &str;
 
     fn acronym(&self) -> &str;
+
+    fn from_ptr(ptr: *const u8) -> Self;
 }
 
 #[macro_use]
@@ -30,4 +32,9 @@ pub trait ErrorNestedTrait {
     fn description(&self) -> &str;
 
     fn acronym(&self) -> &str;
+
+    // fn from_ptr(ptr: *const u8) -> Self;
 }
+
+#[macro_use]
+pub mod error_typed;

@@ -22,7 +22,6 @@ impl Default for List {
 impl List {
     #[rustfmt::skip]
     pub fn from_pointer(stack_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        info!("\nstack_pointer: {:?}", stack_pointer);
         let counter = unsafe { *(stack_pointer.0) } as usize;
         let argument_pointers = unsafe { (stack_pointer.0).add(1) as *const crate::PointerType };
         let environment_pointer = unsafe { (stack_pointer.0).add(2 + counter) };

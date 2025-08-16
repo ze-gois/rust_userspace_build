@@ -78,6 +78,10 @@ macro_rules! define_error_nested {
                     _ => "TODO",
                 }
             }
+
+            fn from_ptr(ptr: *const u8) -> Error {
+                Self::from_no(unsafe{*(ptr as *const usize)})
+            }
         }
 
         impl ::macros::result::ErrorNestedTrait for Error {

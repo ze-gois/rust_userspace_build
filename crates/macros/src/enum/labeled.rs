@@ -35,7 +35,7 @@
 /// ```
 #[macro_export]
 #[rustfmt::skip]
-macro_rules! labeled_enum {
+macro_rules! enum_labeled {
     (
         $enum_identifier:ident,
         $variant:ty,

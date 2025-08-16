@@ -20,6 +20,7 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
             stat = crate::file::fstat(fd);
 
             ::human::info!("{:?}\n", stat);
+
             license_mapping = match syscall::mmap(
                 core::ptr::null_mut(),
                 stat.st_size as usize,

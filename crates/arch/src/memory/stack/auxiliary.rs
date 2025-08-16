@@ -23,13 +23,11 @@ impl Default for List {
 impl List {
     #[rustfmt::skip]
     pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        info!("\n environment_npointer: {:?}", auxiliary_pointer);
-
         let auxiliary_pointer: *mut crate::PointerType = auxiliary_pointer.0 as *mut crate::PointerType;
 
         let mut counter = 0;
         unsafe {
-            while true {
+            loop {
                 if auxiliary_pointer.add(counter).is_null() {
                     break;
                 }
@@ -82,10 +80,7 @@ impl List {
                 info!("\t{:?} @ ", unsafe {
                     crate::Pointer(self.former.add(a) as crate::PointerType)
                 },);
-                info!("{:?}, ", e.prev);
-                info!("{:?}, ", e.next);
-                info!("{:?}, ", e.value());
-                info!("{:?}, \n", e.pointer);
+                info!("{:?}\n", e);
             }
         }
         info!("}} Auxiliary \n");

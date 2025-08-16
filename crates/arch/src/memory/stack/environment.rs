@@ -22,8 +22,6 @@ impl Default for List {
 impl List {
     #[rustfmt::skip]
     pub fn from_pointer(environment_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        info!("\n environment_npointer: {:?}", environment_pointer);
-
         let environment_pointer: *mut crate::PointerType = environment_pointer.0 as *mut crate::PointerType;
 
         let mut counter = 0;

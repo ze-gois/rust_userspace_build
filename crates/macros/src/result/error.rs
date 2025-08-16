@@ -86,6 +86,10 @@ macro_rules! define_error{
                     _ => "TODO",
                 }
             }
+
+            fn from_ptr(ptr: *const u8) -> Self {
+                Self::from_no(unsafe{*(ptr as *const usize)})
+            }
         }
 
         impl Into<usize> for Error {
