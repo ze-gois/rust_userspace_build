@@ -1,4 +1,7 @@
 #[macro_use]
+pub mod default;
+
+#[macro_use]
 pub mod error;
 
 /// A trait that standardizes error handling across the xelf crates
@@ -19,6 +22,8 @@ pub trait ErrorTrait {
     fn acronym(&self) -> &str;
 
     fn from_ptr(ptr: *const u8) -> Self;
+
+    fn as_ptr(ptr: Self) -> *const u8;
 }
 
 #[macro_use]
@@ -33,7 +38,9 @@ pub trait ErrorNestedTrait {
 
     fn acronym(&self) -> &str;
 
-    // fn from_ptr(ptr: *const u8) -> Self;
+    fn from_ptr(ptr: *const u8) -> Self;
+
+    fn as_ptr(&self) -> *const u8;
 }
 
 #[macro_use]

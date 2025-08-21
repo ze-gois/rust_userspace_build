@@ -20,51 +20,109 @@ macro_rules! error_typed {
             ),* $(,)?
         ]
     ) => {
-        pub type Franco = *const u8;
 
-        pub use $($module)::*::*;
-
-        // Define Linux standard error constants in an discriminant module with standard names
-        pub mod constants {
-            $(
-                pub const $const_identifier: usize = $discriminant;
-            )*
-        }
-
-        pub mod types {
-            pub use $($module)::*::*;
-            $(
-                pub type $identifier = $type;
-            )*
-        }
-
-        #[derive(Debug, Clone, Copy)]
-        pub enum Error {
-            $($identifier($type),)*
-            TODO,
-        }
-
-        impl Error {
-            pub fn discriminant(&self) -> usize {
-                match *self {
-                    $( Error::$identifier(_) => $discriminant,)*
-                    Error::TODO => usize::MAX,
-                }
-            }
-
-            pub fn from_dp(discriminant: usize, value_pointer: Franco) -> Self {
-                match discriminant {
-                    $( $discriminant => Error::$identifier(unsafe { (|$argumento:Franco|{ $($lambda_from_franco)* })(value_pointer) }),)*
-                    _ => Error::TODO,
-                }
-            }
-
-            pub fn to_dp(&self) -> (usize, Franco) {
-                match *self {
-                    $( Error::$identifier(value) => (self.discriminant(), (|$argumento:$type|{ $($lambda_to_franco)* })(value)),)*
-                    Error::TODO => (Error::TODO.discriminant(), core::ptr::null_mut()),
-                }
-            }
-        }
-    };
+    }
 }
+//         pub type Franco = *const u8;
+
+//         pub use $($module)::*::*;
+
+//         // Define Linux standard error constants in an discriminant module with standard names
+//         pub mod constants {
+//             $(
+//                 pub const $const_identifier: usize = $discriminant;
+//             )*
+//         }
+
+//         pub mod types {
+//             pub use $($module)::*::*;
+//             $(
+//                 pub type $identifier = $type;
+//             )*
+//         }
+
+//         #[derive(Debug, Clone, Copy)]
+//         pub enum Error {
+//             $($identifier($type),)*
+//             TODO,
+//         }
+
+//         impl Error {
+//             pub fn description(&self) -> &str {
+//                 match *self {
+//                     $( Error::$identifier(_) => $description,)*
+//                     Error::TODO => "Error::TODO",
+//                 }
+//             }
+
+//             pub fn acronym(&self) -> &str {
+//                 match *self {
+//                     $( Error::$identifier(_) => $acronym,)*
+//                     Error::TODO => "Error::TODO",
+//                 }
+//             }
+
+//             pub fn discriminant(&self) -> usize {
+//                 match *self {
+//                     $( Error::$identifier(_) => $discriminant,)*
+//                     Error::TODO => usize::MAX,
+//                 }
+//             }
+
+//             pub fn from_ptr(value_pointer: Franco) -> Self {
+//                 let discriminant_pointer = value_pointer as *mut usize;
+//                 let discriminant = unsafe { *discriminant_pointer };
+//                 let payload_pointer = unsafe { discriminant_pointer.add(1) as Franco };
+//                 match discriminant {
+//                     $( $discriminant => Error::$identifier(unsafe { (|$argumento:Franco|{ $($lambda_from_franco)* })(payload_pointer) }),)*
+//                     _ => Error::TODO,
+//                 }
+//             }
+
+//             pub fn as_ptr(&self) -> Franco {
+//                 match self {
+//                     $(
+//                         Error::$identifier(payload) => {
+//                             let discriminant_size = core::mem::size_of::<usize>();
+//                             let payload_size = core::mem::size_of::<usize>();
+
+//                             let payload_as_franco =  (|$argumento:$type|{ $($lambda_to_franco)* })(payload);
+//                             let discriminant_as_franco = self.discriminant() as Franco;
+
+//                             let pointer : &[u8] = &[0u8; discriminant_size + payload_size];
+//                         },
+//                     )*
+//                     Error::TODO => {
+//                         let discriminant_size = core::mem::size_of::<usize>();
+//                         let payload_size = core::mem::size_of::<usize>();
+
+//                         let pointer : &[u8] = &[0u8; discriminant_size + payload_size];
+
+//                         ptr::
+//                         Error::TODO
+//                     }
+//                 }
+
+//                 match discriminant {
+//                     $(
+//                         $discriminant => {
+//                             let discriminant_size = core::mem::size_of::<usize>();
+//                             let payload_size = core::mem::size_of::<$type>();
+
+//                             let pointer : &[u8] = &[0u8; discriminant_size + payload_size];
+
+//                             Error::$identifier(value)
+//                             // let payload_pointer = unsafe { discriminant_pointer.add(1) as Franco };
+//                             // (discriminant, payload_pointer)
+//                         }
+//                     )*
+//                 }
+//                 match *self {
+//                     $(  => (self.discriminant(), (,)*
+//                     Error::TODO => (Error::TODO.discriminant(), core::ptr::null_mut()),
+//                 }
+//             }
+
+//         }
+//     };
+// }

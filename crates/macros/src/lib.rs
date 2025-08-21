@@ -9,8 +9,41 @@ pub mod r#enum;
 #[macro_use]
 pub mod result;
 
+#[macro_use]
+pub mod r#struct;
+
 // #[macro_use]
 // pub mod pointer;
+
+macro_rules! max_const {
+    // caso base: apenas um argumento
+    ($x:expr) => { $x };
+    // caso recursivo: pelo menos dois
+    ($x:expr, $($rest:expr),+) => {
+        {
+            let y = max_const!($($rest),+);
+            if $x > y { $x } else { y }
+        }
+    };
+}
+
+pub trait XElfSize {
+    const XELF_SIZE: usize;
+}
+
+macro_rules! xelf_size_as_mem_size {
+    ($($t:ty),*) => {
+       $(
+           impl XElfSize for $t {
+                const XELF_SIZE : usize = core::mem::size_of::<$t>();
+           }
+       )*
+    };
+}
+
+xelf_size_as_mem_size!(
+    bool, char, f32, f64, i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize
+);
 
 #[macro_export]
 macro_rules! impl_partial_eq_for_type {

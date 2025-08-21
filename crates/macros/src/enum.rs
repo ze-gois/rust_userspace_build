@@ -1,4 +1,7 @@
 #[macro_use]
+pub mod default;
+
+#[macro_use]
 pub mod labeled;
 
 #[macro_use]

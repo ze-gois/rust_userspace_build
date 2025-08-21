@@ -43,6 +43,8 @@ macro_rules! define_error{
     ) => {
         use ::macros::result::ErrorTrait;
 
+        pub type discriminant_type = usize;
+
         pub mod constant {
             pub const LABEL : &str = $label;
 
@@ -89,6 +91,10 @@ macro_rules! define_error{
 
             fn from_ptr(ptr: *const u8) -> Self {
                 Self::from_no(unsafe{*(ptr as *const usize)})
+            }
+
+            fn as_ptr(ptr: Self) -> *const u8 {
+                ptr.to_no() as *const u8
             }
         }
 

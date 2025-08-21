@@ -13,7 +13,6 @@ syscall = { path = "crates/syscall" }
 [workspace]
 members = [
     "crates/arch",
-    "crates/building",
     "crates/common",
     "crates/human",
     "crates/syscall",
@@ -40,4 +39,3 @@ test = false
 
 [build-dependencies]
 cc = "1.0"
-building = { path = "crates/building" }

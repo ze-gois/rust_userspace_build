@@ -82,6 +82,10 @@ macro_rules! define_error_nested {
             fn from_ptr(ptr: *const u8) -> Error {
                 Self::from_no(unsafe{*(ptr as *const usize)})
             }
+
+            fn as_ptr(ptr: Self) -> *const u8 {
+                ptr.to_no() as *const u8
+            }
         }
 
         impl ::macros::result::ErrorNestedTrait for Error {
@@ -131,6 +135,26 @@ macro_rules! define_error_nested {
                     ),*
                     _ => "TODO"
                 }
+            }
+
+            fn from_ptr(ptr: *const u8) -> Self {
+                let discriminant_ptr = ptr as *const usize;
+                let discriminant = unsafe { *discriminant_ptr };
+
+                match discriminant {
+                    $(
+                        $variant_discriminant => {
+                            use ::macros::result::ErrorTrait;
+                            let payload_ptr = unsafe { discriminant_ptr.add(1) as *const u8 }  ;
+                            Error::$variant_identifier(unsafe { <$($variant_path)::+::Error as ErrorTrait>::from_ptr(payload_ptr)  })
+                        }
+                    )*
+                    _ => Error::TODO,
+                }
+            }
+
+            fn as_ptr(&self) -> *const u8 {
+                core::ptr::null()
             }
         }
 

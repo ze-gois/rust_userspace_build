@@ -32,16 +32,12 @@ pub fn handle_result(arch_result: arch::Result) -> crate::Result {
     }
 }
 
-pub fn open(
-    directory_file_descriptor: isize,
-    file_pathname: *const u8,
-    flags: i32,
-) -> crate::Result {
+pub fn open(file_pathname: *const u8, flags: i32, mode: i32) -> crate::Result {
     let syscall_result = Arch::syscall3(
         NUMBER,
-        directory_file_descriptor as usize,
         file_pathname as usize,
         flags as usize,
+        mode as usize,
     );
 
     handle_result(syscall_result)
