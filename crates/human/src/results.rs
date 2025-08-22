@@ -1,9 +1,10 @@
 // use ::macros::result::ResultDefaultTrait;
 
 // use ::macros::ZeroedMem;
+pub mod traits;
 
 mod error {
-    crate::macros::result!(
+    results::result!(
         Error;
         "Human error";
         usize;
@@ -15,7 +16,7 @@ mod error {
 }
 
 mod ok {
-    crate::macros::result!(
+    results::result!(
         Ok;
         "Human Ok";
         usize;

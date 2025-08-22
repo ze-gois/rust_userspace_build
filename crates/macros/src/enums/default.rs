@@ -17,7 +17,7 @@ macro_rules! r#enum {
         use crate::macros::traits::Bytes as BytesTrait;
 
         impl BytesTrait for $enum_identifier {
-            const BYTES_SIZE : usize = core::mem::size_of::<$enum_discriminant_type>()+ ::macros::expressions_upperbound!($(<$variant_type as BytesTrait>::BYTES_SIZE),*);
+            const BYTES_SIZE : usize = <$enum_discriminant_type as BytesTrait>::BYTES_SIZE + crate::macros::expressions_upperbound!($(<$variant_type as BytesTrait>::BYTES_SIZE),*);
             fn to_bytes(&self, endianness: bool) -> [u8;Self::BYTES_SIZE] {
                 let mut bytes = [0u8;Self::BYTES_SIZE];
 
@@ -27,19 +27,19 @@ macro_rules! r#enum {
                             let discriminant = self.discriminant();
 
                             let mut o = 0;
-                            bytes[o..(o+<$enum_discriminant_type>::BYTES_SIZE)].copy_from_slice(
+                            bytes[o..(o+<$enum_discriminant_type as BytesTrait>::BYTES_SIZE)].copy_from_slice(
                                 &if endianness {
-                                    <$enum_discriminant_type>::to_le_bytes(discriminant)
+                                    <$enum_discriminant_type as BytesTrait>::to_le_bytes(&discriminant)
                                 } else {
-                                    <$enum_discriminant_type>::to_be_bytes(discriminant)
+                                    <$enum_discriminant_type as BytesTrait>::to_be_bytes(&discriminant)
                                 }
                             );
-                            o = o + <$enum_discriminant_type>::BYTES_SIZE;
-                            bytes[o..(o+<$variant_type>::BYTES_SIZE)].copy_from_slice(
+                            o = o + <$enum_discriminant_type as BytesTrait>::BYTES_SIZE;
+                            bytes[o..(o+<$variant_type as BytesTrait>::BYTES_SIZE)].copy_from_slice(
                                 &if endianness {
-                                    <$variant_type>::to_le_bytes(*payload)
+                                    <$variant_type as BytesTrait>::to_le_bytes(payload)
                                 } else {
-                                    <$variant_type>::to_be_bytes(*payload)
+                                    <$variant_type as BytesTrait>::to_be_bytes(payload)
                                 }
                             );
                             bytes
@@ -50,14 +50,14 @@ macro_rules! r#enum {
 
             fn from_bytes(bytes: [u8;Self::BYTES_SIZE], endianness: bool) -> Self {
                 let mut o = 0;
-                let mut discriminant_bytes = [0u8; <$enum_discriminant_type>::BYTES_SIZE];
-                discriminant_bytes.copy_from_slice(&bytes[o..(o+<$enum_discriminant_type>::BYTES_SIZE)]);
+                let mut discriminant_bytes = [0u8; <$enum_discriminant_type as BytesTrait>::BYTES_SIZE];
+                discriminant_bytes.copy_from_slice(&bytes[o..(o+<$enum_discriminant_type as BytesTrait>::BYTES_SIZE)]);
                 let discriminant = if endianness {
-                    <$enum_discriminant_type>::from_le_bytes(discriminant_bytes)
+                    <$enum_discriminant_type as BytesTrait>::from_le_bytes(discriminant_bytes)
                 } else {
-                    <$enum_discriminant_type>::from_be_bytes(discriminant_bytes)
+                    <$enum_discriminant_type as BytesTrait>::from_be_bytes(discriminant_bytes)
                 };
-                o = o + <$enum_discriminant_type>::BYTES_SIZE;
+                o = o + <$enum_discriminant_type as BytesTrait>::BYTES_SIZE;
                 match discriminant {
                     $(
                         $variant_discriminant => {
@@ -65,9 +65,9 @@ macro_rules! r#enum {
                                 let mut payload = [0u8; <$variant_type as BytesTrait>::BYTES_SIZE];
                                 payload.copy_from_slice(&bytes[o..(o+<$variant_type as BytesTrait>::BYTES_SIZE)]);
                                 if endianness {
-                                    <$variant_type>::from_le_bytes(payload)
+                                    <$variant_type as BytesTrait>::from_le_bytes(payload)
                                 } else {
-                                    <$variant_type>::from_be_bytes(payload)
+                                    <$variant_type as BytesTrait>::from_be_bytes(payload)
                                 }
                             })
                         },

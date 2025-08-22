@@ -4,10 +4,8 @@
 #![feature(generic_const_items)]
 
 pub mod arch;
-pub mod result;
+pub mod results;
 pub mod stdout;
-
-pub use result::*;
 
 pub mod traits;
 
@@ -18,13 +16,9 @@ pub mod macros {
         pub use crate::traits::Bytes;
         pub use crate::traits::Primitive;
     }
-    pub mod results {
-        pub mod traits {
-            pub use macros::results::traits::Result;
-        }
-    }
+
     pub use macros::r#enum;
-    pub use macros::result;
+    pub use macros::expressions_upperbound;
     pub use macros::trait_implement_bytes;
     pub use macros::trait_implement_defaut_for_primitives;
     pub use macros::trait_implement_primitive;
@@ -32,4 +26,4 @@ pub mod macros {
 
 crate::macros::trait_implement_defaut_for_primitives!();
 
-// pub mod traits;
+pub use results::{Error, Ok, Result};

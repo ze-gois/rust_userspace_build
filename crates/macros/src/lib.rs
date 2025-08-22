@@ -7,9 +7,6 @@
 pub mod latent;
 
 #[macro_use]
-pub mod results;
-
-#[macro_use]
 pub mod enums;
 
 #[macro_use]
@@ -21,12 +18,12 @@ pub mod traits;
 #[macro_use]
 pub mod tuples;
 
-pub mod macros {
-    pub use crate::*;
-    //     // pub use crate::enums;
-    //     // pub use crate::latent;
-    //     // pub use crate::results;
-    //     // pub use crate::structs;
-    //     // pub use crate::traits;
-    //     // pub use crate::tuples;
-}
+// pub mod macros {
+//     pub use crate::*;
+//     //     // pub use crate::enums;
+//     //     // pub use crate::latent;
+//     //     // pub use crate::results;
+//     //     // pub use crate::structs;
+//     //     // pub use crate::traits;
+//     //     // pub use crate::tuples;
+// }

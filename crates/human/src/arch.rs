@@ -3,7 +3,7 @@ mod x86_64;
 #[cfg(target_arch = "x86_64")]
 use x86_64 as arch;
 
-use crate::result::*;
+use crate::results::*;
 
 pub struct Arch;
 

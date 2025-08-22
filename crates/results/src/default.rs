@@ -1,6 +1,6 @@
 #[macro_export]
 #[rustfmt::skip]
-macro_rules! r#result {
+macro_rules! result {
     (
         $result_identifier:ident;
         $result_label:expr;
@@ -34,7 +34,7 @@ macro_rules! r#result {
             $( pub const $variant_const_identifier : &str = $variant_description; )*
         }
 
-        pub use crate::macros::results::traits::Result as ResultTrait;
+        pub use crate::results::traits::Result as ResultTrait;
 
         impl ResultTrait for $result_identifier {
             type ResultType = $result_discriminant_type;
