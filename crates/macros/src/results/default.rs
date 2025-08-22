@@ -1,6 +1,6 @@
 #[macro_export]
 #[rustfmt::skip]
-macro_rules! do_result {
+macro_rules! r#result {
     (
         $result_identifier:ident;
         $result_label:expr;
@@ -18,7 +18,7 @@ macro_rules! do_result {
             ),* $(,)?
         ]
     ) => {
-        $crate::do_enum!(pub $result_identifier, $result_discriminant_type,[
+        $crate::r#enum!(pub $result_identifier, $result_discriminant_type,[
            $([$variant_discriminant, $variant_identifier, $variant_type],)*
         ]);
 

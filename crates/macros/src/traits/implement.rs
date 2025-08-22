@@ -1,15 +1,17 @@
+pub mod bytes;
 pub mod from;
-
 pub mod partial_eq;
-
 pub mod primitive;
 
-pub mod xelf_size;
-
 #[macro_export]
-macro_rules! trait_implement_default_primitive {
+macro_rules! trait_implement_defaut_for_primitives {
     ($($t:ty),*) => {
-        trait_implement_xelf_size!($($t),*);
-        trait_implement_primitive!($($t),*);
+        trait_implement_primitive!(
+            true, bool, char, f32, f64, i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128,
+            usize
+        );
+        trait_implement_bytes!(
+            bool, char, f32, f64, i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize
+        );
     };
 }
