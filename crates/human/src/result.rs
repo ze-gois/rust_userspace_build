@@ -3,7 +3,7 @@
 // use ::macros::ZeroedMem;
 
 mod error {
-    ::macros::do_result!(
+    crate::macros::result!(
         Error;
         "Human error";
         usize;
@@ -15,7 +15,7 @@ mod error {
 }
 
 mod ok {
-    ::macros::do_result!(
+    crate::macros::result!(
         Ok;
         "Human Ok";
         usize;

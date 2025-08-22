@@ -18,7 +18,7 @@ macro_rules! r#result {
             ),* $(,)?
         ]
     ) => {
-        $crate::r#enum!(pub $result_identifier, $result_discriminant_type,[
+        crate::macros::r#enum!(pub $result_identifier, $result_discriminant_type,[
            $([$variant_discriminant, $variant_identifier, $variant_type],)*
         ]);
 
@@ -34,9 +34,9 @@ macro_rules! r#result {
             $( pub const $variant_const_identifier : &str = $variant_description; )*
         }
 
-        pub use ::macros::result::ResultDefaultTrait;
+        pub use crate::macros::results::traits::Result as ResultTrait;
 
-        impl ResultDefaultTrait for $result_identifier {
+        impl ResultTrait for $result_identifier {
             type ResultType = $result_discriminant_type;
 
             fn from_no(no: Self::ResultType) -> Self {

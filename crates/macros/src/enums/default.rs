@@ -14,9 +14,11 @@ macro_rules! r#enum {
             }
         }
 
-        impl $crate::macros::traits::Bytes for $enum_identifier {
-            const BYTES_SIZE : usize = core::mem::size_of::<$enum_discriminant_type>()+ ::macros::expressions_upperbound!($(<$variant_type>::BYTES_SIZE),*);
-            pub fn to_bytes(&self, endianness: bool) -> [u8;Self::BYTES_SIZE] {
+        use crate::macros::traits::Bytes as BytesTrait;
+
+        impl BytesTrait for $enum_identifier {
+            const BYTES_SIZE : usize = core::mem::size_of::<$enum_discriminant_type>()+ ::macros::expressions_upperbound!($(<$variant_type as BytesTrait>::BYTES_SIZE),*);
+            fn to_bytes(&self, endianness: bool) -> [u8;Self::BYTES_SIZE] {
                 let mut bytes = [0u8;Self::BYTES_SIZE];
 
                 match self {
@@ -46,7 +48,7 @@ macro_rules! r#enum {
                 }
             }
 
-            pub fn from_bytes(bytes: [u8;Self::BYTES_SIZE], endianness: bool) -> Self {
+            fn from_bytes(bytes: [u8;Self::BYTES_SIZE], endianness: bool) -> Self {
                 let mut o = 0;
                 let mut discriminant_bytes = [0u8; <$enum_discriminant_type>::BYTES_SIZE];
                 discriminant_bytes.copy_from_slice(&bytes[o..(o+<$enum_discriminant_type>::BYTES_SIZE)]);
@@ -60,8 +62,8 @@ macro_rules! r#enum {
                     $(
                         $variant_discriminant => {
                             Self::$variant_identifier({
-                                let mut payload = [0u8; <$variant_type>::BYTES_SIZE];
-                                payload.copy_from_slice(&bytes[o..(o+<$variant_type>::BYTES_SIZE)]);
+                                let mut payload = [0u8; <$variant_type as BytesTrait>::BYTES_SIZE];
+                                payload.copy_from_slice(&bytes[o..(o+<$variant_type as BytesTrait>::BYTES_SIZE)]);
                                 if endianness {
                                     <$variant_type>::from_le_bytes(payload)
                                 } else {

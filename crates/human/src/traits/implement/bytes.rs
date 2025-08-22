@@ -2,7 +2,7 @@
 macro_rules! trait_implement_bytes {
     ($($t:ty),*) => {
         $(
-            impl crate::macros::traits::Bytes for $t {
+            impl $crate::macros::traits::Bytes for $t {
 
                 const BYTES_SIZE: usize = core::mem::size_of::<Self>();
 

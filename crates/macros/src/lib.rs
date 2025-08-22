@@ -22,10 +22,11 @@ pub mod traits;
 pub mod tuples;
 
 pub mod macros {
-    pub use crate::enums;
-    pub use crate::latent;
-    pub use crate::results;
-    pub use crate::structs;
-    pub use crate::traits;
-    pub use crate::tuples;
+    pub use crate::*;
+    //     // pub use crate::enums;
+    //     // pub use crate::latent;
+    //     // pub use crate::results;
+    //     // pub use crate::structs;
+    //     // pub use crate::traits;
+    //     // pub use crate::tuples;
 }
