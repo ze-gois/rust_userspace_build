@@ -29,12 +29,18 @@ mod ok {
 pub use error::Error;
 pub use ok::Ok;
 
+impl Error {
+    pub fn from_no(no: usize) -> Self {
+        Error::PeEntry(no)
+    }
+}
+
 pub type Result = core::result::Result<Ok, Error>;
 
 pub fn handle_result(result: usize) -> Result {
     if (result as isize) < 0 {
         Err(Error::from_no(result))
     } else {
-        Ok(Ok::HumanOk(()))
+        Ok(Ok::HumanOk(result))
     }
 }
