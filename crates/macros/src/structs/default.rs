@@ -1,6 +1,7 @@
 #[macro_export]
 macro_rules! do_struct {
     ($struct_identifier:ident {$($field_identifier:ident: $field_type:ty),*$(,)?}) => {
+
         // #[repr(C,packed)]
         #[derive(Debug, Clone, Copy)]
         pub struct $struct_identifier {

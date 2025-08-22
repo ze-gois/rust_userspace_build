@@ -1,13 +1,15 @@
 #[macro_export]
 macro_rules! do_enum {
-    ($enum_module:ident, $enum_identifier:ident, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$variant_type:ty]),* $(,)? ]) => {
+    ($enum_vis:vis $enum_identifier:ident, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$variant_type:ty]),* $(,)? ]) => {
+        use ::macros::traits::XElfSize;
+
         #[derive(Debug, Clone, Copy)]
-        enum $enum_identifier {
+        $enum_vis enum $enum_identifier {
             $($variant_identifier($variant_type)),*
         }
 
         impl XElfSize for $enum_identifier {
-            const XELF_SIZE : usize = core::mem::size_of::<$enum_discriminant_type>()+ max_const!($(<$variant_type>::XELF_SIZE),*);
+            const XELF_SIZE : usize = core::mem::size_of::<$enum_discriminant_type>()+ ::macros::expressions_upperbound!($(<$variant_type>::XELF_SIZE),*);
         }
 
         impl $enum_identifier {
@@ -36,9 +38,9 @@ macro_rules! do_enum {
                             o = o + <$enum_discriminant_type>::XELF_SIZE;
                             bytes[o..(o+<$variant_type>::XELF_SIZE)].copy_from_slice(
                                 &if endianness {
-                                    <$variant_type>::to_le_bytes(payload)
+                                    <$variant_type>::to_le_bytes(*payload)
                                 } else {
-                                    <$variant_type>::to_be_bytes(payload)
+                                    <$variant_type>::to_be_bytes(*payload)
                                 }
                             );
                             bytes
