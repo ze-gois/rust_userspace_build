@@ -24,11 +24,11 @@
 /// [
 ///     $(
 ///         [
-///             $discriminant:expr;
-///             $identifier:ident;
-///             $const_identifier:ident;
-///             $acronym:expr;
-///             $description:expr
+///             $variant_discriminant:expr;
+///             $variant_identifier:ident;
+///             $variant_const_identifier:ident;
+///             $variant_acronym:expr;
+///             $variant_description:expr
 ///         ]
 ///     ),* $(,)?
 /// ]
@@ -37,60 +37,67 @@
 #[rustfmt::skip]
 macro_rules! enum_labeled {
     (
-        $enum_identifier:ident,
-        $variant:ty,
+        $enum_vis:vis $enum_identifier:ident,
+        $enum_discriminant_type:ty,
         $label:expr,
         [
             $(
                 [
-                    $discriminant:expr;
-                    $identifier:ident;
-                    $const_identifier:ident;
-                    $acronym:expr;
-                    $description:expr
+                    $variant_discriminant:expr;
+                    $variant_identifier:ident;
+                    $variant_const_identifier:ident;
+                    $variant_acronym:expr;
+                    $variant_description:expr
                 ]
             ),* $(,)?
         ]
     ) => {
+
+
+        ($enum_vis $enum_identifier, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$variant_type:ty]),* $(,)? ]) => {
+        crate::macros::r#enum!(
+
+        );
+
         // Define Linux standard error constants in an discriminant module with standard names
         pub mod constants {
             $(
-                pub const $const_identifier: $variant = $discriminant;
+                pub const $variant_const_identifier: $variant = $variant_discriminant;
             )*
         }
 
         #[repr(C)]
         #[derive(Copy, Clone, Eq, PartialEq)]
         pub enum $enum_identifier {
-            $($identifier = $discriminant,)*
+            $($variant_identifier = $variant_discriminant,)*
             TODO,
         }
 
         impl $enum_identifier {
             pub fn from(discriminant: $variant) -> Self {
                 match discriminant {
-                    $($discriminant => Self::$identifier,)*
+                    $($variant_discriminant => Self::$variant_identifier,)*
                     _ => Self::TODO,
                 }
             }
 
             pub fn to(&self) -> $variant {
                 match *self {
-                    $(Self::$identifier => $discriminant,)*
+                    $(Self::$variant_identifier => $variant_discriminant,)*
                     _ => <$variant>::MAX
                 }
             }
 
             pub fn str(&self) -> &str {
                 match self {
-                    $(Self::$identifier => $description,)*
+                    $(Self::$variant_identifier => $variant_description,)*
                     _ => "TODO"
                 }
             }
 
             pub fn acronym(&self) -> &str {
                 match *self {
-                    $(Self::$identifier => $acronym,)*
+                    $(Self::$variant_identifier => $variant_acronym,)*
                     _ => "Unknown error",
                 }
             }
