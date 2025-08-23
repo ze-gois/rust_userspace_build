@@ -1,6 +1,6 @@
 // pub use crate::results::traits::Result as ResultTrait;
 
-mod ok {
+pub mod ok {
     results::result!(
         Ok;
         "Syscall ok";
@@ -17,7 +17,7 @@ mod ok {
     }
 }
 
-mod error {
+pub mod error {
     results::result!(
         Error;
         "Syscall error";
@@ -37,10 +37,10 @@ mod error {
 pub use error::Error;
 pub use ok::Ok;
 
-pub fn handle_result(result: usize) -> crate::Result {
-    if (result as isize) < 0 {
-        Err(crate::Error::)
-    } else {
-        Ok(Ok::from_no(result))
-    }
-}
+// pub fn handle_result(result: usize) -> crate::Result {
+//     if (result as isize) < 0 {
+//         Err(crate::Error::Syscall(crate::results::error::SyscallEntry{}))
+//     } else {
+//         Ok(Ok::from_no(result))
+//     }
+// }

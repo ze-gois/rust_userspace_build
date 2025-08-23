@@ -1,9 +1,9 @@
 #[cfg(target_arch = "x86_64")]
-mod x86_64;
+pub mod x86_64;
 #[cfg(target_arch = "x86_64")]
-use x86_64 as arch;
+pub use x86_64 as arch;
 
-pub use arch::*;
+pub use arch::results::{Error, Ok};
 
 pub struct Arch;
 
