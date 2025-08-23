@@ -3,11 +3,11 @@ mod x86_64;
 #[cfg(target_arch = "x86_64")]
 use x86_64 as arch;
 
-use crate::results::*;
+pub use arch::*;
 
 pub struct Arch;
 
-pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) -> Result {
+pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) -> crate::Result {
     let returned_value = arch::syscall3(
         1usize,
         file_descriptor as usize,

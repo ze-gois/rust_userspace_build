@@ -19,6 +19,7 @@ pub mod macros {
 
     pub use macros::r#enum;
     pub use macros::expressions_upperbound;
+    pub use macros::r#struct;
     pub use macros::trait_implement_bytes;
     pub use macros::trait_implement_defaut_for_primitives;
     pub use macros::trait_implement_primitive;

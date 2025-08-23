@@ -1,17 +1,17 @@
 #[macro_export]
 macro_rules! r#struct {
-    ($struct_identifier:ident {$($field_identifier:ident: $field_type:ty),*$(,)?}) => {
+    ($vis:vis $struct_identifier:ident {$($field_identifier:ident: $field_type:ty),*$(,)?}) => {
 
         // #[repr(C,packed)]
         #[derive(Debug, Clone, Copy)]
-        pub struct $struct_identifier {
+        $vis struct $struct_identifier {
             $($field_identifier: $field_type),*
         }
 
-        impl $crate::macros::traits::Bytes for $struct_identifier {
-            const BYTES_SIZE : usize = $(core::mem::size_of::<$field_type>()+)* 0;
+        impl BytesTrait for $struct_identifier {
+            const BYTES_SIZE : usize = $(<$field_type>::BYTES_SIZE +)* 0;
 
-            pub fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+            fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
                 let mut b = [0u8; Self::BYTES_SIZE];
                 let mut o = 0;
                 $(
@@ -27,7 +27,7 @@ macro_rules! r#struct {
                 b
             }
 
-            pub fn from_bytes(bytes : [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+            fn from_bytes(bytes : [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
                 let mut o = 0;
                 $(
                     let mut field_bytes = [0u8; <$field_type>::BYTES_SIZE];

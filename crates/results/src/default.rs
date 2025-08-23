@@ -39,18 +39,18 @@ macro_rules! result {
         impl ResultTrait for $result_identifier {
             type ResultType = $result_discriminant_type;
 
-            fn from_no(no: Self::ResultType) -> Self {
-                match no {
-                    $(
-                        $variant_discriminant => {
-                            let payload : $variant_type;
-                            payload = <$variant_type>::from_le_bytes(no.to_le_bytes());
-                            Self::$variant_identifier(payload)
-                        },
-                    )*
-                    _ => todo!(),
-                }
-            }
+            // fn from_no(no: Self::ResultType) -> Self {
+            //     match no {
+            //         $(
+            //             $variant_discriminant => {
+            //                 let payload : $variant_type;
+            //                 payload = <$variant_type>::from_le_bytes(no.to_le_bytes());
+            //                 Self::$variant_identifier(payload)
+            //             },
+            //         )*
+            //         _ => todo!(),
+            //     }
+            // }
 
             fn acronym(&self) -> &'static str {
                 match self {
