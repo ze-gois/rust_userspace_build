@@ -1,5 +1,7 @@
 use core::ops::Not;
 
+pub use arch::page::SIZE;
+
 pub const ALIGNMENT: usize = SIZE - 1;
 pub const MASK: usize = !ALIGNMENT;
 

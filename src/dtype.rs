@@ -6,6 +6,7 @@ pub use class_64::UChar;
 #[macro_use]
 pub mod macros;
 pub mod endianness;
+pub use endianness::Endianness;
 
 pub trait ELFType {
     type Inner;
@@ -39,17 +40,12 @@ pub mod ok {
 }
 
 pub mod error {
-    crate::macros::r#struct!(pub SyscallEntry {
-        value: usize,
-        error: crate::arch::Error
-    });
-
     results::result!(
         Error;
         "Human error";
         usize;
         [
-            [0; ERR_NULL;       Null;    u8;     "UChar_64";  "UChar_64"],
+            [0; ERR_NULL;       Null;    usize;     "UChar_64";  "UChar_64"],
             [1; ERR_UCHAR_64;   UChar;   u8;     "UChar_64";  "UChar_64"],
             [2; ERR_SXWORD_64;  SXWord;  i64;   "SXWord_64"; "SXWord_64"],
             [3; ERR_HALF_64;    Half;    u16;     "Half_64";   "Half_64"],
@@ -63,10 +59,7 @@ pub mod error {
 
     impl Error {
         pub fn from_no(no: usize) -> Self {
-            Error::Syscall(SyscallEntry {
-                value: no,
-                error: crate::arch::Error::UnoticedX86_64(no),
-            })
+            Error::Null(no)
         }
     }
 }

@@ -1,5 +1,4 @@
 use super::ELFType;
-use super::Endianness;
 
 crate::dtype_define!(pub Null, u8); //Unsigned file offset
 crate::dtype_define!(pub UChar, u8); //Unsigned file offset

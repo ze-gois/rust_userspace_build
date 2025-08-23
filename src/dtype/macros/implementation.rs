@@ -1,6 +1,8 @@
 #[macro_export]
 macro_rules! dtype_impl {
     ($($dtype:ident),*) => {
+        crate::macros::trait_implement_primitive!(false, $($dtype),*);
+        crate::macros::trait_implement_bytes!($($dtype),*);
         $(
             impl $dtype {
                 // pub fn to_bytes(

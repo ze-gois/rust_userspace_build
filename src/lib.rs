@@ -1,4 +1,7 @@
 #![no_std]
+#![allow(incomplete_features)]
+#![feature(generic_const_exprs)]
+#![feature(generic_const_items)]
 
 pub mod dtype;
 pub mod header;

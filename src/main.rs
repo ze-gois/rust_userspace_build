@@ -5,7 +5,7 @@
 pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
     xelf::info!("eXecuting Executable and Linkable Format\n\n");
 
-    let stack = arch::memory::Stack::from_pointer(arch::Pointer(stack_pointer));
+    let stack = memory::Stack::from_pointer(arch::Pointer(stack_pointer));
     stack.print();
 
     let file_path_pointer = stack.arguments.get(0);
@@ -18,7 +18,7 @@ pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
     let fd = common::file::open_path(file_path);
 
     let header_identifier_length = xelf::header::identifier::Index::NIdent.to();
-    let header_identifier_pointer = arch::memory::alloc::<u8>(header_identifier_length as usize);
+    let header_identifier_pointer = memory::alloc::<u8>(header_identifier_length as usize);
 
     let _ = syscall::read(
         fd,

@@ -1,3 +1,5 @@
+use human::info;
+
 pub mod entry;
 pub use entry::*;
 
@@ -37,7 +39,7 @@ impl List {
             return (List::default(), crate::Pointer(auxiliary_pointer));
         }
 
-        let list_pointer = crate::memory::alloc::<Entry>(counter);
+        let list_pointer = crate::alloc::<Entry>(counter);
 
         unsafe {
             // preenche cada Entry in-place
@@ -130,10 +132,9 @@ impl Drop for List {
 
                 // desaloca o bloco que foi alocado por alloc
                 let total_size = core::mem::size_of::<Entry>() * self.counter as usize;
-                let aligned_size =
-                    (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
+                let aligned_size = (total_size + crate::page::SIZE - 1) & !(crate::page::SIZE - 1);
 
-                let _ = crate::memory::munmap(self.former as *mut u8, aligned_size);
+                let _ = syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
                 self.former = core::ptr::null_mut();
                 self.latter = core::ptr::null_mut();

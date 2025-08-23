@@ -28,28 +28,18 @@ pub mod ok {
 }
 
 pub mod error {
-    crate::macros::r#struct!(pub SyscallEntry {
-        value: usize,
-        error: crate::arch::Error
-    });
-
     results::result!(
         Error;
         "Human error";
         usize;
         [
-            [1; ZE_ENTRY; ZeEntry; usize; "ZE"; "Entry to ze"],
-            [2; SYSCALL; Syscall; SyscallEntry; "ZE"; "Entry to Pe"],
-            [3; STDOUT; StdoutErr; SyscallEntry; "ZE"; "Entry to Pe"],
+            [1; ERROR; Error; usize; "ZE"; "Entry to ze"],
         ]
     );
 
     impl Error {
         pub fn from_no(no: usize) -> Self {
-            Error::Syscall(SyscallEntry {
-                value: no,
-                error: crate::arch::Error::UnoticedX86_64(no),
-            })
+            Error::Error(no)
         }
     }
 }
