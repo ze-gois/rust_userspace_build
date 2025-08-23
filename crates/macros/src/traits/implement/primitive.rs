@@ -7,13 +7,4 @@ macro_rules! trait_implement_primitive {
             }
         )*
     };
-
-    ($crate_id:ident,$tv:expr, $($t:ty),*) => {
-        impl<T:$crate_id> crate::macros::traits::Primitive for T {
-            const IS_PRIMITIVE: bool = $tv;
-        }
-        $(
-            impl $crate_id for $t {}
-        )*
-    };
 }

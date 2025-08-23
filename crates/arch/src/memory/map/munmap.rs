@@ -1,18 +1,44 @@
 use crate::{Arch, Callable};
 
-use ::macros::define_error;
-
-define_error!("munmap", []);
-
-pub fn handle_result(arch_result: crate::Result) -> super::Result {
-    match arch_result {
-        Err(crate::Error::TODO) => Err(super::Error::MUnMap(Error::TODO)),
-        Ok(no) => Ok((no, no)),
-    }
-}
-
 #[inline(always)]
 pub fn munmap(addr: *mut u8, length: usize) -> super::Result {
     let arch_result = Arch::syscall2(13, addr as usize, length);
     handle_result(arch_result)
+}
+
+pub mod ok {
+    results::result!( Ok; "Human Ok"; usize; [
+        [0; OK; Ok; usize; "Ok"; "All good"],
+    ]);
+
+    impl Ok {
+        pub fn from_no(no: usize) -> Self {
+            Ok::Ok(no)
+        }
+    }
+}
+
+pub mod error {
+    results::result!(Error; "Human error"; usize; [
+        [1; ERROR; Error; usize; "Error"; "Something wicked this way comes"],
+    ]);
+
+    impl Error {
+        pub fn from_no(no: usize) -> Self {
+            Error::Error(no)
+        }
+    }
+}
+
+pub use error::Error;
+pub use ok::Ok;
+
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: usize) -> Result {
+    if (result as isize) < 0 {
+        Err(Error::from_no(result))
+    } else {
+        Ok(Ok::from_no(result))
+    }
 }

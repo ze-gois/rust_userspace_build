@@ -21,10 +21,10 @@ pub mod macros {
     pub use macros::expressions_upperbound;
     pub use macros::r#struct;
     pub use macros::trait_implement_bytes;
-    pub use macros::trait_implement_defaut_for_primitives_by_crate;
+    pub use macros::trait_implement_defaut_for_primitives;
     pub use macros::trait_implement_primitive;
 }
 
-crate::macros::trait_implement_defaut_for_primitives_by_crate!(CrateX86_64);
+crate::macros::trait_implement_defaut_for_primitives!();
 
 pub use result::{Error, Ok, Result};

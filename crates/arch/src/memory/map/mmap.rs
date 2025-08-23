@@ -17,19 +17,19 @@ pub fn mmap(addr: *mut u8, length: usize, prot: i32, flags: i32, fd: i32, offset
 }
 
 pub mod ok {
-    results::result!( Ok; "Human Ok"; usize; [
-        [0; OK; Ok; usize; "Ok"; "All good"],
+    results::result!( Ok; "MMap Ok"; usize; [
+        [0; OK; OkMMap; usize; "Ok"; "All good"],
     ]);
 
     impl Ok {
         pub fn from_no(no: usize) -> Self {
-            Ok::Ok(no)
+            Ok::OkMMap(no)
         }
     }
 }
 
 pub mod error {
-    results::result!(Error; "Human error"; usize; [
+    results::result!(Error; "MMap error"; usize; [
         [1; ERROR; Error; usize; "Error"; "Something wicked this way comes"],
     ]);
 
@@ -45,10 +45,9 @@ pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
-pub fn handle_result(result: usize) -> Result {
-    if (result as isize) < 0 {
-        Err(Error::from_no(result))
-    } else {
-        Ok(Ok::from_no(result))
+pub fn handle_result(result: crate::Result) -> Result {
+    match result {
+        Ok(o) => core::result::Result::Ok(Ok::OkMMap(32)),
+        _ => core::result::Result::Err(Error::Error(12)),
     }
 }

@@ -4,5 +4,5 @@ pub mod primitive;
 #[macro_use]
 pub mod implement;
 
-pub use bytes::Bytes;
-pub use primitive::Primitive;
+crate::trait_place_bytes!();
+crate::trait_place_primitive!();

@@ -25,18 +25,18 @@ pub mod macros {
     pub mod traits {
         // pub use macros::traits::Bytes;
         // pub use macros::traits::Primitive;
-        pub use macros::traits::Bytes;
-        pub use macros::traits::Primitive;
+        macros::trait_place_bytes!();
+        macros::trait_place_primitive!();
     }
 
     pub use macros::r#enum;
     pub use macros::expressions_upperbound;
     pub use macros::r#struct;
     pub use macros::trait_implement_bytes;
-    pub use macros::trait_implement_defaut_for_primitives_by_crate;
+    pub use macros::trait_implement_defaut_for_primitives;
     pub use macros::trait_implement_primitive;
 }
 
-crate::macros::trait_implement_defaut_for_primitives_by_crate!(ArchCrate);
+crate::macros::trait_implement_defaut_for_primitives!();
 
 pub use result::{Error, Ok, Result};
