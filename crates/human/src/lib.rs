@@ -6,7 +6,7 @@
 pub mod arch;
 pub mod results;
 pub mod stdout;
-
+pub mod syscall;
 pub mod traits;
 
 pub mod macros {

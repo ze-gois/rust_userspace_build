@@ -1,7 +1,11 @@
 pub struct Stdout;
 
 fn print(msg: &str) -> crate::Result {
-    crate::arch::write(1, msg.as_ptr(), msg.len())
+    let out = crate::syscall::write(1, msg.as_ptr(), msg.len());
+
+    match out {
+        _ => Ok(crate::Ok::StdoutOk(32)),
+    }
 }
 
 impl core::fmt::Write for Stdout {

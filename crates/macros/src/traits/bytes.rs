@@ -1,4 +1,5 @@
 pub trait Bytes {
+    type Type;
     const BYTES_SIZE: usize;
 
     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE];

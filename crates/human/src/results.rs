@@ -14,6 +14,7 @@ pub mod ok {
         [
             [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
             [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
+            [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
         ]
     );
 
@@ -37,6 +38,7 @@ pub mod error {
         [
             [1; ZE_ENTRY; ZeEntry; usize; "ZE"; "Entry to ze"],
             [2; SYSCALL; Syscall; SyscallEntry; "ZE"; "Entry to Pe"],
+            [3; STDOUT; StdoutErr; SyscallEntry; "ZE"; "Entry to Pe"],
         ]
     );
 
@@ -44,7 +46,7 @@ pub mod error {
         pub fn from_no(no: usize) -> Self {
             Error::Syscall(SyscallEntry {
                 value: no,
-                error: crate::arch::Error::Unoticed(no),
+                error: crate::arch::Error::UnoticedX86_64(no),
             })
         }
     }

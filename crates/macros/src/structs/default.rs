@@ -8,7 +8,7 @@ macro_rules! r#struct {
             $($field_identifier: $field_type),*
         }
 
-        impl BytesTrait for $struct_identifier {
+        impl crate::macros::traits::Bytes for $struct_identifier {
             const BYTES_SIZE : usize = $(<$field_type>::BYTES_SIZE +)* 0;
 
             fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
