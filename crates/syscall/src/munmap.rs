@@ -1,4 +1,5 @@
 use arch::{Arch, traits::Callable};
+
 hooking!(MUNMAP);
 
 #[inline(always)]

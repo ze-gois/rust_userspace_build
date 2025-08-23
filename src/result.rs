@@ -1,36 +1,105 @@
-// use macros::result::ErrorTrait;
+pub mod traits {
+    results::trait_place_result!();
+}
+
+pub mod ok {
+
+    crate::macros::r#struct!(pub OurStruct {
+        value : usize,
+        inform : u8,
+    });
+
+    results::result!(
+        Ok;
+        "Human Ok";
+        usize;
+        [
+            [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
+            [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
+            [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
+        ]
+    );
+
+    impl Ok {
+        pub fn from_no(no: usize) -> Self {
+            Ok::HumanOk(no)
+        }
+    }
+}
 
 pub mod error {
-    ::macros::define_error!("ELF", []);
+    crate::macros::r#struct!(pub SyscallEntry {
+        value: usize,
+        error: crate::arch::Error
+    });
+
+    results::result!(
+        Error;
+        "Human error";
+        usize;
+        [
+            [1; ZE_ENTRY; ZeEntry; usize; "ZE"; "Entry to ze"],
+            [2; SYSCALL; Syscall; SyscallEntry; "ZE"; "Entry to Pe"],
+            [3; STDOUT; StdoutErr; SyscallEntry; "ZE"; "Entry to Pe"],
+        ]
+    );
+
+    impl Error {
+        pub fn from_no(no: usize) -> Self {
+            Error::Syscall(SyscallEntry {
+                value: no,
+                error: crate::arch::Error::UnoticedX86_64(no),
+            })
+        }
+    }
 }
 
-// ::macros::define_error_nested! (
-//     "ELF",
-//     [
-//         [0; Elf;     self::error;     ERR_ELF;     "Local error";   "ERR_ELF"],
-//         // [1; DType;   crate::dtype;    ERR_DTYPE;   "Datatype erro"; "ERR_DTYPE"],
-//         [2; Human;   human::result;   ERR_HUMAN;   "Human error";   "ERR_HUMAN"],
-//         [3; Syscall; syscall::result; ERR_SYSCALL; "Syscall error"; "ERR_SYSCALL"]
-//     ]
-// );
+pub use error::Error;
+pub use ok::Ok;
 
-pub mod macro_types {
-    #[allow(non_camel_case_types)]
-    pub type Mi8 = *const i8;
-    pub type elf_error = super::error::Error;
-    pub type dtype_error = crate::dtype::Error;
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: usize) -> Result {
+    if (result as isize) < 0 {
+        Err(Error::from_no(result))
+    } else {
+        Ok(Ok::from_no(result))
+    }
 }
 
-mod ok {
-    ::macros::enum_typed!(Ok; usize; "AT_TYPE"; crate::result::macro_types; [
-        [0;    Null;            usize;  |p: Franco| { *p as usize };     AT_NULL;          "Null";          "End of vector"],
-        [1;    Ignore;          usize;  |p: Franco| { *p as usize };     AT_IGNORE;        "Ignore";        "Entry should be ignored"],
-    ]);
-}
+// // use macros::result::ErrorTrait;
 
-::macros::error_typed!("ELF Type"; crate::result::macro_types; [
-   [0; Elf;     elf_error; p; { elf_error::from_ptr(p) };  { p.to_no() as Franco };                ERR_ELF; "ERR_ELF";   "ERR_ELF"],
-   [1; DType; dtype_error; p; { dtype_error::from_ptr(p)}; { p as *const dtype_error as Franco}; ERR_DTYPE; "ERR_DTYPE"; "ERR_DTYPE"],
-]);
+// pub mod error {
+//     ::macros::define_error!("ELF", []);
+// }
 
-pub type Result = core::result::Result<ok::Ok, Error>;
+// // ::macros::define_error_nested! (
+// //     "ELF",
+// //     [
+// //         [0; Elf;     self::error;     ERR_ELF;     "Local error";   "ERR_ELF"],
+// //         // [1; DType;   crate::dtype;    ERR_DTYPE;   "Datatype erro"; "ERR_DTYPE"],
+// //         [2; Human;   human::result;   ERR_HUMAN;   "Human error";   "ERR_HUMAN"],
+// //         [3; Syscall; syscall::result; ERR_SYSCALL; "Syscall error"; "ERR_SYSCALL"]
+// //     ]
+// // );
+
+// pub mod macro_types {
+//     #[allow(non_camel_case_types)]
+//     pub type Mi8 = *const i8;
+//     pub type elf_error = super::error::Error;
+//     pub type dtype_error = crate::dtype::Error;
+// }
+
+// mod ok {
+//     ::macros::enum_typed!(Ok; usize; "AT_TYPE"; crate::result::macro_types; [
+//         [0;    Null;            usize;  |p: Franco| { *p as usize };     AT_NULL;          "Null";          "End of vector"],
+//         [1;    Ignore;          usize;  |p: Franco| { *p as usize };     AT_IGNORE;        "Ignore";        "Entry should be ignored"],
+//     ]);
+// }
+
+// ::macros::error_typed!("ELF Type"; crate::result::macro_types; [
+//    [0; Elf;     elf_error; p; { elf_error::from_ptr(p) };  { p.to_no() as Franco };                ERR_ELF; "ERR_ELF";   "ERR_ELF"],
+//    [1; DType; dtype_error; p; { dtype_error::from_ptr(p)}; { p as *const dtype_error as Franco}; ERR_DTYPE; "ERR_DTYPE"; "ERR_DTYPE"],
+// ]);
+
+// pub type Result = core::result::Result<ok::Ok, Error>;

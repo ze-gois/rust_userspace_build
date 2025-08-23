@@ -1,3 +1,8 @@
+#![no_std]
+#![allow(incomplete_features)]
+#![feature(generic_const_exprs)]
+#![feature(generic_const_items)]
+
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }

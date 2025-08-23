@@ -3,7 +3,11 @@ pub fn open_path(filepath: &str) -> isize {
         _ => {
             let dfd = syscall::open::AtFlag::FDCWD as isize;
             let flag = syscall::open::Flag::RDONLY as i32;
-            syscall::openat(dfd, filepath.as_ptr(), flag).unwrap().0 as isize
+            let fd = match syscall::openat(dfd, filepath.as_ptr(), flag) {
+                Ok(syscall::Ok::Open(syscall::open::Ok::OPENAT(no))) => no as isize,
+                _ => -1,
+            };
+            fd
         }
     }
 }

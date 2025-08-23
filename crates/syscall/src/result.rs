@@ -60,10 +60,3 @@ pub use error::Error;
 pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
-
-pub fn handle_result(result: crate::Result) -> Result {
-    match result {
-        Ok(o) => core::result::Result::Ok(Ok::MUnmap(crate::munmap::Ok::Ok(32))),
-        _ => core::result::Result::Err(Error::Error(12)),
-    }
-}

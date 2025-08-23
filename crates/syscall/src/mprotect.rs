@@ -1,6 +1,6 @@
 use arch::{Arch, traits::Callable};
 
-pub mod flags;
+pub use crate::mmap::{Prot, prot};
 
 hooking!(MPROTECT);
 

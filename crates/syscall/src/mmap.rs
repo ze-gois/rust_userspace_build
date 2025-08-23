@@ -1,8 +1,10 @@
 use arch::{Arch, traits::Callable};
 
 pub mod flags;
+pub mod prot;
 
-pub use flags::*;
+pub use flags::Flag;
+pub use prot::Prot;
 
 hooking!(MMAP);
 

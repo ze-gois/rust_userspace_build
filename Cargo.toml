@@ -9,6 +9,8 @@ common = { path = "crates/common" }
 human = { path = "crates/human" }
 macros = { path = "crates/macros" }
 syscall = { path = "crates/syscall" }
+memory = { path = "crates/memory" }
+results = { path = "crates/results" }
 
 [workspace]
 members = [
@@ -18,7 +20,8 @@ members = [
     "crates/syscall",
     "crates/x86_64",
     "crates/macros",
-    "crates/results", "crates/memory",
+    "crates/results",
+    "crates/memory",
 ]
 
 [lib]

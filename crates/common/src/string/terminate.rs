@@ -2,13 +2,13 @@ pub fn terminate(head: &str) -> *const u8 {
     let tailed = match syscall::mmap(
         core::ptr::null_mut(),
         head.bytes().len() + 1,
-        syscall::mmap::Prot::Read | syscall::mmap::Prot::Write,
-        syscall::mmap::Flag::Anonymous | syscall::mmap::Flag::Private,
+        (syscall::mmap::Prot::Read | syscall::mmap::Prot::Write) as i32,
+        (syscall::mmap::Flag::Anonymous | syscall::mmap::Flag::Private) as i32,
         -1,
         0,
     ) {
-        Ok(m) => m.0,
-        Err(_) => panic!("head"),
+        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(m))) => m,
+        _ => panic!("head"),
     };
 
     unsafe {
