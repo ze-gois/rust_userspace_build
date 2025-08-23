@@ -18,6 +18,16 @@ pub mod traits;
 #[macro_use]
 pub mod tuples;
 
+#[macro_export]
+macro_rules! crate_heading {
+    () => {
+        #![no_std]
+        #![allow(incomplete_features)]
+        #![feature(generic_const_exprs)]
+        #![feature(generic_const_items)]
+    };
+}
+
 // pub mod macros {
 //     pub use crate::*;
 //     //     // pub use crate::enums;

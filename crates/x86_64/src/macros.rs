@@ -1,6 +1,6 @@
 pub mod traits {
-    pub use crate::traits::Bytes;
-    pub use crate::traits::Primitive;
+    macros::trait_place_bytes!(1);
+    macros::trait_place_primitive!();
 }
 
 pub use macros::r#enum;

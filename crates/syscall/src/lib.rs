@@ -1,8 +1,12 @@
 #![no_std]
+#![allow(incomplete_features)]
+#![feature(generic_const_exprs)]
+#![feature(generic_const_items)]
+
 pub use human::info;
 
 pub mod result;
-pub use result::{Error, Result};
+pub use result::{Error, Ok, Result};
 
 #[macro_use]
 pub mod macros;

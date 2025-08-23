@@ -3,6 +3,7 @@ pub mod traits {
     macros::trait_place_primitive!();
 }
 
+pub use macros::crate_heading;
 pub use macros::r#enum;
 pub use macros::expressions_upperbound;
 pub use macros::r#struct;

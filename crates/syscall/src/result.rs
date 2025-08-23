@@ -1,19 +1,69 @@
-mod auxiliar {
-    ::macros::define_error!("auxiliar", []);
+pub mod traits {
+    results::trait_place_result!();
 }
 
-::macros::define_error_nested!(
-    "Syscall",
-    [
-        [999; Auxiliar; self::auxiliar;  ERR_AUXILIAR; "auxiliary"; "E_AUX"],
-        [2;   Close;    crate::close;    ERR_CLOSE;    "close";     "E_CLOSE" ],
-        [3;   LSeek;    crate::lseek;    ERR_LSEEK;    "lseek";     "E_LSEEK"],
-        [4;   MMap;     crate::mmap;     ERR_MMAP;     "mmap";      "E_MMAP"],
-        [5;   MProtect; crate::mprotect; ERR_MPROTECT; "mprotect";  "E_MPROTECT"],
-        [6;   MUnmap;   crate::munmap;   ERR_MUNMAP;   "munmap";    "E_MUNMAP"],
-        [7;   Open;     crate::open;     ERR_OPEN;     "open";      "E_OPEN"],
-        [8;   Read;     crate::read;     ERR_READ;     "read";      "E_READ"],
-        [9;   Write;    crate::write;    ERR_WRITE;    "write";     "E_WRITE"],
-        [10;  FStat;    crate::fstat;    ERR_FSTAT;    "fstat";     "E_FSTAT"]
-    ]
-);
+// mod auxiliar {
+//     ::macros::define_error!("auxiliar", []);
+// }
+
+// ::macros::define_error_nested!(
+//     "Syscall",
+//     [
+
+//     ]
+// );
+
+pub mod ok {
+    macros::r#struct!(MMapOk {});
+    results::result!( Ok; "MMap Ok"; usize; [
+        [0; OK;         Ok; usize; "Ok"; "All good"],
+        [2; ERR_CLOSE;  Close;    crate::close::Ok;        "close";     "E_CLOSE" ],
+        [3; ERR_LSEEK;  LSeek;    crate::lseek::Ok;        "lseek";     "E_LSEEK"],
+        [4; ERR_MMAP;  MMap;     crate::mmap::Ok;          "mmap";      "E_MMAP"],
+        [5; ERR_MPROTECT;  MProtect; crate::mprotect::Ok;  "mprotect";  "E_MPROTECT"],
+        [6; ERR_MUNMAP;  MUnmap;   crate::munmap::Ok;      "munmap";    "E_MUNMAP"],
+        [7; ERR_OPEN;  Open;     crate::open::Ok;          "open";      "E_OPEN"],
+        [8; ERR_READ;  Read;     crate::read::Ok;          "read";      "E_READ"],
+        [9; ERR_WRITE;  Write;    crate::write::Ok;        "write";     "E_WRITE"],
+        [10; ERR_FSTAT; FStat;    crate::fstat::Ok;        "fstat";     "E_FSTAT"]
+    ]);
+
+    impl Ok {
+        pub fn from_no(no: usize) -> Self {
+            Ok::OkMMap(no)
+        }
+    }
+}
+
+pub mod error {
+    results::result!(Error; "MMap error"; usize; [
+        [1; ERROR;      Error; usize; "Error"; "Something wicked this way comes"],
+        [2; ERR_CLOSE;  Close;    crate::close::Error;        "close";     "E_CLOSE" ],
+        [3; ERR_LSEEK;  LSeek;    crate::lseek::Error;        "lseek";     "E_LSEEK"],
+        [4; ERR_MMAP;  MMap;     crate::mmap::Error;          "mmap";      "E_MMAP"],
+        [5; ERR_MPROTECT;  MProtect; crate::mprotect::Error;  "mprotect";  "E_MPROTECT"],
+        [6; ERR_MUNMAP;  MUnmap;   crate::munmap::Error;      "munmap";    "E_MUNMAP"],
+        [7; ERR_OPEN;  Open;     crate::open::Error;          "open";      "E_OPEN"],
+        [8; ERR_READ;  Read;     crate::read::Error;          "read";      "E_READ"],
+        [9; ERR_WRITE;  Write;    crate::write::Error;        "write";     "E_WRITE"],
+        [10; ERR_FSTAT; FStat;    crate::fstat::Error;        "fstat";     "E_FSTAT"]
+    ]);
+
+    impl Error {
+        pub fn from_no(no: usize) -> Self {
+            Error::Error(no)
+        }
+    }
+}
+
+pub use error::Error;
+pub use ok::Ok;
+
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: crate::Result) -> Result {
+    match result {
+        Ok(o) => core::result::Result::Ok(Ok::MUnmap(crate::munmap::Ok::Ok(32))),
+        _ => core::result::Result::Err(Error::Error(12)),
+    }
+}

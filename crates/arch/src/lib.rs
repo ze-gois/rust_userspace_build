@@ -7,7 +7,6 @@
 #[macro_use]
 pub mod human;
 pub mod macros;
-pub mod memory;
 pub mod traits;
 
 #[cfg(target_arch = "x86_64")]
@@ -19,8 +18,6 @@ pub use _x86_64 as _arch;
 
 pub use _arch::*;
 pub use arch::*;
-
-pub use traits::*;
 
 pub struct Arch;
 

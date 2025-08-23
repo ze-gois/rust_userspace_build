@@ -4,21 +4,50 @@ pub mod flags;
 
 hooking!(MPROTECT);
 
-use ::macros::define_error;
-
-define_error!("mprotect", []);
-
-pub fn handle_result(arch_result: arch::Result) -> crate::Result {
-    match arch_result {
-        Err(arch::Error::TODO) => Err(crate::Error::MProtect(Error::TODO)),
-        Ok(no) => match no {
-            _ => Ok((no, no)),
-        },
-    }
-}
-
 #[inline(always)]
 pub fn mprotect(addr: *mut u8, len: usize, prot: i32) -> crate::Result {
     let arch_result = Arch::syscall3(NUMBER, addr as usize, len, prot as usize);
     handle_result(arch_result)
+}
+
+pub mod ok {
+    macros::r#struct!(OkSyscallMUnMap { value: usize });
+
+    results::result!( Ok; "MUnMap Ok"; usize; [
+        [0; OK; Ok; usize; "Ok"; "All good"],
+    ]);
+
+    impl Ok {
+        pub fn from_no(no: usize) -> Self {
+            Ok::Ok(no)
+        }
+    }
+}
+
+pub mod error {
+    results::result!(Error; "MUnMap error"; usize; [
+        [1; ERROR; Error; usize; "Error"; "Something wicked this way comes"],
+    ]);
+
+    impl Error {
+        pub fn from_no(no: usize) -> Self {
+            Error::Error(no)
+        }
+    }
+}
+
+pub use error::Error;
+pub use ok::Ok;
+
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: arch::Result) -> crate::Result {
+    match result {
+        Ok(o) => match o {
+            arch::Ok::Ok(no) => core::result::Result::Ok(crate::Ok::MProtect(Ok::Ok(no))),
+        },
+        Err(e) => match e {
+            arch::Error::Error(no) => core::result::Result::Err(crate::Error::Error(no)),
+        },
+    }
 }

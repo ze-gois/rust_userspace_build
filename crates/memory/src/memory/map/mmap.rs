@@ -17,6 +17,7 @@ pub fn mmap(addr: *mut u8, length: usize, prot: i32, flags: i32, fd: i32, offset
 }
 
 pub mod ok {
+    macros::r#struct!(MMapOk {});
     results::result!( Ok; "MMap Ok"; usize; [
         [0; OK; OkMMap; usize; "Ok"; "All good"],
     ]);

@@ -1,8 +1,7 @@
-use crate::Arch;
-use crate::arch::*;
-use crate::traits::callable::Callable;
+use crate::arch::syscall::*;
+use crate::arch::{Error, Ok, Result};
 
-impl Callable for Arch {
+impl crate::traits::Callable for crate::Arch {
     fn _syscall0(n: usize) -> Result {
         crate::info!(X "Syscall Input: 0x{:x}", n);
         let syscall_result = syscall0(n);

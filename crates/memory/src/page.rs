@@ -1,6 +1,5 @@
 use core::ops::Not;
 
-pub const SIZE: usize = 0x1000;
 pub const ALIGNMENT: usize = SIZE - 1;
 pub const MASK: usize = !ALIGNMENT;
 
