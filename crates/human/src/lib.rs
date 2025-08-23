@@ -4,7 +4,7 @@
 #![feature(generic_const_items)]
 
 pub mod arch;
-pub mod results;
+pub mod result;
 pub mod stdout;
 pub mod syscall;
 pub mod traits;
@@ -21,10 +21,10 @@ pub mod macros {
     pub use macros::expressions_upperbound;
     pub use macros::r#struct;
     pub use macros::trait_implement_bytes;
-    pub use macros::trait_implement_defaut_for_primitives;
+    pub use macros::trait_implement_defaut_for_primitives_by_crate;
     pub use macros::trait_implement_primitive;
 }
 
-crate::macros::trait_implement_defaut_for_primitives!();
+crate::macros::trait_implement_defaut_for_primitives_by_crate!(HumanCrate);
 
-pub use results::{Error, Ok, Result};
+pub use result::{Error, Ok, Result};

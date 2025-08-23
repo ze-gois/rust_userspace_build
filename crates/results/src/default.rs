@@ -34,7 +34,7 @@ macro_rules! result {
             $( pub const $variant_const_identifier : &str = $variant_description; )*
         }
 
-        pub use crate::results::traits::Result as ResultTrait;
+        pub use crate::result::traits::Result as ResultTrait;
 
         impl ResultTrait for $result_identifier {
             type ResultType = $result_discriminant_type;

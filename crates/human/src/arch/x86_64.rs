@@ -1,5 +1,5 @@
-pub mod results;
+pub mod result;
 pub mod syscall;
 
-pub use results::*;
+pub use result::*;
 pub use syscall::*;

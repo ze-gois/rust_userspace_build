@@ -1,8 +1,8 @@
 pub type Unit = ();
 
-impl crate::traits::Primitive for Unit {
-    const IS_PRIMITIVE: bool = true;
-}
+// impl crate::traits::Primitive for Unit {
+//     const IS_PRIMITIVE: bool = true;
+// }
 
 // impl crate::traits::Bytes for Unit {
 //     const BYTES_SIZE: usize = 0;

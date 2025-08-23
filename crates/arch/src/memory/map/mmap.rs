@@ -1,16 +1,5 @@
 use crate::{Arch, Callable};
 
-::macros::define_error!("mmap", []);
-
-pub fn handle_result(arch_result: crate::Result) -> super::Result {
-    match arch_result {
-        Err(crate::Error::TODO) => Err(super::Error::MMap(Error::TODO)),
-        Ok(no) => match no {
-            _ => Ok((no, no)),
-        },
-    }
-}
-
 #[inline(always)]
 #[rustfmt::skip]
 pub fn mmap(addr: *mut u8, length: usize, prot: i32, flags: i32, fd: i32, offset: i64) -> super::Result {
@@ -25,4 +14,41 @@ pub fn mmap(addr: *mut u8, length: usize, prot: i32, flags: i32, fd: i32, offset
     );
 
     handle_result(arch_result)
+}
+
+pub mod ok {
+    results::result!( Ok; "Human Ok"; usize; [
+        [0; OK; Ok; usize; "Ok"; "All good"],
+    ]);
+
+    impl Ok {
+        pub fn from_no(no: usize) -> Self {
+            Ok::Ok(no)
+        }
+    }
+}
+
+pub mod error {
+    results::result!(Error; "Human error"; usize; [
+        [1; ERROR; Error; usize; "Error"; "Something wicked this way comes"],
+    ]);
+
+    impl Error {
+        pub fn from_no(no: usize) -> Self {
+            Error::Error(no)
+        }
+    }
+}
+
+pub use error::Error;
+pub use ok::Ok;
+
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: usize) -> Result {
+    if (result as isize) < 0 {
+        Err(Error::from_no(result))
+    } else {
+        Ok(Ok::from_no(result))
+    }
 }

@@ -1,3 +1,3 @@
-pub trait Primitive<T> {
+pub trait Primitive {
     const IS_PRIMITIVE: bool;
 }
