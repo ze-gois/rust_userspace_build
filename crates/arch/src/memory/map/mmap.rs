@@ -45,9 +45,9 @@ pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
-pub fn handle_result(result: crate::Result) -> Result {
+pub fn handle_result(result: crate::Result) -> super::Result {
     match result {
-        Ok(o) => core::result::Result::Ok(Ok::OkMMap(32)),
-        _ => core::result::Result::Err(Error::Error(12)),
+        Ok(o) => core::result::Result::Ok(super::Ok::OkMMap(32)),
+        _ => core::result::Result::Err(super::Error::Error(12)),
     }
 }

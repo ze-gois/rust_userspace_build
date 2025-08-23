@@ -9,4 +9,4 @@ pub use mmap::mmap;
 pub use munmap::munmap;
 pub use prot::Prot;
 
-pub use result::{Error, Result};
+pub use result::{Error, Ok, Result};

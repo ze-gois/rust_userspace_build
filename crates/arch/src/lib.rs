@@ -1,9 +1,12 @@
 #![no_std]
 #![allow(unused)]
+#![allow(incomplete_features)]
+#![feature(generic_const_exprs)]
+#![feature(generic_const_items)]
 
 #[macro_use]
 pub mod human;
-pub mod r#macro;
+pub mod macros;
 pub mod memory;
 pub mod traits;
 
@@ -20,23 +23,5 @@ pub use arch::*;
 pub use traits::*;
 
 pub struct Arch;
-
-pub mod macros {
-    pub mod traits {
-        // pub use macros::traits::Bytes;
-        // pub use macros::traits::Primitive;
-        macros::trait_place_bytes!();
-        macros::trait_place_primitive!();
-    }
-
-    pub use macros::r#enum;
-    pub use macros::expressions_upperbound;
-    pub use macros::r#struct;
-    pub use macros::trait_implement_bytes;
-    pub use macros::trait_implement_defaut_for_primitives;
-    pub use macros::trait_implement_primitive;
-}
-
-crate::macros::trait_implement_defaut_for_primitives!();
 
 pub use result::{Error, Ok, Result};

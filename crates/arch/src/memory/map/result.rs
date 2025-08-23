@@ -29,10 +29,9 @@ pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
-pub fn handle_result(result: usize) -> Result {
-    if (result as isize) < 0 {
-        Err(Error::from_no(result))
-    } else {
-        Ok(Ok::from_no(result))
+pub fn handle_result(result: Result) -> crate::Result {
+    match result {
+        Ok(o) => core::result::Result::Ok(crate::Ok::from_no(o)),
+        Err(e) => core::result::Result::Err(crate::Error::from_no(e)),
     }
 }

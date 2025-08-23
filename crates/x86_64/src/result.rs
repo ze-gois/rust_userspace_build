@@ -1,4 +1,6 @@
-pub mod traits;
+pub mod traits {
+    results::trait_place_result!();
+}
 
 pub mod ok {
     results::result!( Ok; "Human Ok"; usize; [
