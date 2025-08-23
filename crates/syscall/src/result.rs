@@ -30,7 +30,7 @@ pub mod ok {
 
     impl Ok {
         pub fn from_no(no: usize) -> Self {
-            Ok::OkMMap(no)
+            Ok::Ok(no)
         }
     }
 }

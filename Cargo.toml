@@ -18,7 +18,7 @@ members = [
     "crates/syscall",
     "crates/x86_64",
     "crates/macros",
-    "crates/results",
+    "crates/results", "crates/memory",
 ]
 
 [lib]
