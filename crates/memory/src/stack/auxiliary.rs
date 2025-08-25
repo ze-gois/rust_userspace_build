@@ -2,6 +2,9 @@ pub mod entry;
 pub use entry::*;
 pub mod atype;
 
+pub use atype::AType;
+pub use atype::Type;
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct List {
@@ -35,7 +38,7 @@ impl List {
                 let key_pointer = key_pointer as *mut usize;
                 let value_pointer = key_pointer.add(1) as *mut u8;
                 counter += 1;
-                if atype::EnumTyped::from_kv(key_pointer, value_pointer).is_null() {
+                if Type::from_pair(key_pointer, value_pointer).is_null() {
                     break
                 }
             }
@@ -47,7 +50,7 @@ impl List {
             return (List::default(), crate::Pointer(latter_pointer));
         }
 
-        let list_pointer = crate::memory::alloc::<Entry>(counter);
+        let list_pointer = crate::alloc::<Entry>(counter);
 
         unsafe {
             // preenche cada Entry in-place
@@ -347,7 +350,7 @@ impl<'l> Iterator for Iter<'l> {
 //                 crate::info!("\tAuxv: {} ({}) = ", a, b);
 
 //                 if !(auxv_entry.value as *const u8).is_null() {
-//                     let s = crate::memory::misc::as_str(auxv_entry.value as *const u8);
+//                     let s = crate::misc::as_str(auxv_entry.value as *const u8);
 //                     match auxv_entry.atype {
 //                         31 => crate::info!("{}", s),
 //                         _ => crate::info!("{}", auxv_entry.value as u64),
