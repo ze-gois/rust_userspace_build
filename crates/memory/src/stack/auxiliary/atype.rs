@@ -1,5 +1,24 @@
 pub type pci8 = *const i8;
 
+impl macros::traits::Bytes<crate::Origin, crate::Origin> for pci8 {
+    const BYTES_SIZE: usize = core::mem::size_of::<Self>();
+    fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+        if endianness {
+            usize::to_le_bytes(*self as usize)
+        } else {
+            usize::to_be_bytes(*self as usize)
+        }
+    }
+
+    fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+        if endianness {
+            usize::from_le_bytes(bytes) as Self
+        } else {
+            usize::from_be_bytes(bytes) as Self
+        }
+    }
+}
+
 macros::enum_labeled! (
     pub Type,
     usize,
