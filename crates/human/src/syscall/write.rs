@@ -1,13 +1,13 @@
 use crate::arch;
 
-crate::macros::r#struct!(pub WriteOk {
+macros::r#struct!(pub WriteOk {
     syscall : arch::Ok
 });
 
 pub fn handle_result(arch_result: crate::arch::Result) -> crate::syscall::Result {
     match arch_result {
         Ok(e) => Ok(crate::syscall::Ok::UnoticedWrite(e.discriminant())),
-        Err(e) => Err(crate::syscall::Error::UnoticedWriteErr(32)),
+        Err(_e) => Err(crate::syscall::Error::UnoticedWriteErr(32)),
     }
     // arch::Result::Ok(arch::Ok::UnoticedSys3X86_64(syscall_return))
 }

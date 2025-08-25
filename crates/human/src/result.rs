@@ -4,7 +4,7 @@ pub mod traits {
 
 pub mod ok {
 
-    crate::macros::r#struct!(pub OurStruct {
+    macros::r#struct!(pub OurStruct {
         value : usize,
         inform : u8,
     });
@@ -28,7 +28,7 @@ pub mod ok {
 }
 
 pub mod error {
-    crate::macros::r#struct!(pub SyscallEntry {
+    macros::r#struct!(pub SyscallEntry {
         value: usize,
         error: crate::arch::Error
     });

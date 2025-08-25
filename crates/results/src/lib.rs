@@ -8,3 +8,5 @@ pub mod traits;
 // pub mod macros {
 //     pub use macros::r#enum;
 // }
+
+pub struct Origin {}

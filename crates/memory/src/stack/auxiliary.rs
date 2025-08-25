@@ -74,26 +74,26 @@ impl List {
     }
 
     pub fn print(&self) {
-        info!("Auxiliary!!! {{\n");
+        crate::info!("Auxiliary!!! {{\n");
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
-                info!("\t{:?} @ ", unsafe {
+                crate::info!("\t{:?} @ ", unsafe {
                     crate::Pointer(self.former.add(a) as crate::PointerType)
                 },);
-                info!("{:?}\n", e);
+                crate::info!("{:?}\n", e);
             }
         }
-        info!("}} Auxiliary \n");
+        crate::info!("}} Auxiliary \n");
     }
 
     pub fn print_arguments(&self) {
-        info!("Auxiliary count: {}\n", self.counter);
+        crate::info!("Auxiliary count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
                 unsafe {
                     // se Entry tiver método para converter a string, use-o aqui
-                    info!("Arg {}: '{:?}'", a, entry.pointer);
+                    crate::info!("Arg {}: '{:?}'", a, entry.pointer);
                 }
             }
         }
@@ -139,10 +139,9 @@ impl Drop for List {
 
                 // desaloca o bloco que foi alocado por alloc
                 let total_size = core::mem::size_of::<Entry>() * self.counter as usize;
-                let aligned_size =
-                    (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
+                let aligned_size = (total_size + crate::page::SIZE - 1) & !(crate::page::SIZE - 1);
 
-                let _ = crate::memory::munmap(self.former as *mut u8, aligned_size);
+                let _ = syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
                 self.former = core::ptr::null_mut();
                 self.latter = core::ptr::null_mut();
@@ -167,7 +166,7 @@ impl<'l> Iterator for Iter<'l> {
 
 // pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> Self {
 
-//         info!("Environment count: {:?}\n\n", counter);
+//         crate::info!("Environment count: {:?}\n\n", counter);
 
 //         if counter == 0 {
 //             return Self::default();
@@ -200,7 +199,7 @@ impl<'l> Iterator for Iter<'l> {
 //                 Ok(ptr) => ptr as *mut Entry<'e>,
 //                 Err(_) => {
 //                     // Allocation failed, return default vector
-//                     info!("Failed to allocate memory for environment vector\n");
+//                     crate::info!("Failed to allocate memory for environment vector\n");
 //                     return Self::default();
 //                 }
 //             }
@@ -212,7 +211,7 @@ impl<'l> Iterator for Iter<'l> {
 //                 let env_ptr = auxiliary_pointer.add(i);
 //                 let entry = Entry::from_pointer(env_ptr, i);
 //                 ptr::write(entries_ptr.add(i), entry);
-//                 // info!("Env {}: {:?}\n", i, (*entries_ptr.add(i)).value);
+//                 // crate::info!("Env {}: {:?}\n", i, (*entries_ptr.add(i)).value);
 //             }
 //         }
 
@@ -320,7 +319,7 @@ impl<'l> Iterator for Iter<'l> {
 //     }
 
 //     pub fn print(self) {
-//         info!("tobeaprint");
+//         crate::info!("tobeaprint");
 //         return ();
 //         let counter = self.counter();
 
@@ -328,16 +327,16 @@ impl<'l> Iterator for Iter<'l> {
 //             let auxv_entry = unsafe { self.entries.offset(av as isize) };
 
 //             let auxv_type = unsafe { Type::from((*auxv_entry).atype) as u64 };
-//             info!("Auxv: {} = ", auxv_type);
+//             crate::info!("Auxv: {} = ", auxv_type);
 //             if !unsafe { ((*auxv_entry).value as *const u8).is_null() } {
-//                 // info!(auxv_entry.value as *const u8);
+//                 // crate::info!(auxv_entry.value as *const u8);
 //             } else {
-//                 info!("NULL");
+//                 crate::info!("NULL");
 //             }
-//             info!("'\n");
+//             crate::info!("'\n");
 //         });
 
-//         info!("auxv at: {} \n", self.pointer.0 as u64);
+//         crate::info!("auxv at: {} \n", self.pointer.0 as u64);
 //         let mut av = 0;
 //         unsafe {
 //             while !self.entries.offset(av).is_null() && (*self.entries.offset(av)).atype != 0 {
@@ -345,21 +344,21 @@ impl<'l> Iterator for Iter<'l> {
 
 //                 let a = Type::from(auxv_entry.atype).as_str();
 //                 let b = auxv_entry.atype as u64;
-//                 info!("\tAuxv: {} ({}) = ", a, b);
+//                 crate::info!("\tAuxv: {} ({}) = ", a, b);
 
 //                 if !(auxv_entry.value as *const u8).is_null() {
 //                     let s = crate::memory::misc::as_str(auxv_entry.value as *const u8);
 //                     match auxv_entry.atype {
-//                         31 => info!("{}", s),
-//                         _ => info!("{}", auxv_entry.value as u64),
+//                         31 => crate::info!("{}", s),
+//                         _ => crate::info!("{}", auxv_entry.value as u64),
 //                     }
 //                 } else {
-//                     info!("NULL");
+//                     crate::info!("NULL");
 //                 }
-//                 info!("'\n");
+//                 crate::info!("'\n");
 //                 av += 1;
 //             }
 //         }
-//         info!("\n=======\nAuxvCount={};\n=======\n", av as u64);
+//         crate::info!("\n=======\nAuxvCount={};\n=======\n", av as u64);
 //     }
 // }

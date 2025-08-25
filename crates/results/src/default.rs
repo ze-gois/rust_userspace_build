@@ -18,7 +18,7 @@ macro_rules! result {
             ),* $(,)?
         ]
     ) => {
-        crate::macros::r#enum!(pub $result_identifier, $result_discriminant_type,[
+        macros::r#enum!(pub $result_identifier, $result_discriminant_type,[
            $([$variant_discriminant, $variant_identifier, $variant_type],)*
         ]);
 

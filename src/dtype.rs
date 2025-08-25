@@ -16,7 +16,7 @@ pub trait ELFType {
 
 pub mod ok {
 
-    crate::macros::r#struct!(pub OurStruct {
+    macros::r#struct!(pub OurStruct {
         value : usize,
         inform : u8,
     });

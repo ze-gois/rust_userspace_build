@@ -30,7 +30,7 @@ impl List {
             return (List::default(), crate::Pointer(environment_pointer));
         }
 
-        let list_pointer = crate::memory::alloc::<Entry>(counter);
+        let list_pointer = crate::alloc::<Entry>(counter);
 
         unsafe {
             // preenche cada Entry in-place
@@ -57,27 +57,27 @@ impl List {
     }
 
     pub fn print(&self) {
-        info!("Arguments {{\n");
+        crate::info!("Arguments {{\n");
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
-                info!(
+                crate::info!(
                     "\t{:?} @ {:?}\n",
                     unsafe { crate::Pointer(self.former.add(a) as crate::PointerType) },
                     e
                 );
             }
         }
-        info!("}} Arguments \n");
+        crate::info!("}} Arguments \n");
     }
 
     pub fn print_arguments(&self) {
-        info!("Argument count: {}\n", self.counter);
+        crate::info!("Argument count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
                 unsafe {
                     // se Entry tiver método para converter a string, use-o aqui
-                    info!("Arg {}: '{:?}'\n", a, entry.pointer);
+                    crate::info!("Arg {}: '{:?}'\n", a, entry.pointer);
                 }
             }
         }
@@ -123,10 +123,9 @@ impl Drop for List {
 
                 // desaloca o bloco que foi alocado por alloc
                 let total_size = core::mem::size_of::<Entry>() * self.counter as usize;
-                let aligned_size =
-                    (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
+                let aligned_size = (total_size + crate::page::SIZE - 1) & !(crate::page::SIZE - 1);
 
-                let _ = crate::memory::munmap(self.former as *mut u8, aligned_size);
+                let _ = syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
                 self.former = core::ptr::null_mut();
                 self.latter = core::ptr::null_mut();

@@ -25,3 +25,39 @@ publishing!(
     [Syscall3; 257; OPENAT; openat ; "OpenAt"],
     [Syscall4; 258; OPENAT4; openat4; "OpenAt4"]
 );
+
+pub struct Origin {}
+
+// impl<F: macros::traits::Primitive<arch::Origin, arch::Origin>>
+//     macros::traits::Primitive<crate::Origin, crate::Origin> for F
+// {
+//     const IS_PRIMITIVE: bool =
+//         <Self as macros::traits::Primitive<arch::Origin, arch::Origin>>::IS_PRIMITIVE;
+// }
+
+// impl<F: macros::traits::Bytes<arch::Origin, arch::Origin>>
+//     macros::traits::Bytes<crate::Origin, crate::Origin> for F
+// {
+//     const BYTES_SIZE: usize =
+//         <Self as macros::traits::Bytes<arch::Origin, arch::Origin>>::BYTES_SIZE;
+
+//     fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self
+//     where
+//         [(); Self::BYTES_SIZE]:,
+//     {
+//         <Self as macros::traits::Bytes<arch::Origin, arch::Origin>>::from_bytes(bytes, endianness)
+//     }
+
+//     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE]
+//     where
+//         [(); Self::BYTES_SIZE]:,
+//     {
+//         <Self as macros::traits::Bytes<arch::Origin, arch::Origin>>::to_bytes(self, endianness)
+//     }
+// }
+
+// macro_rules! naturalize {
+//     ($($trait:tt)::*, $($origin:ident),*) => {};
+// }
+
+// naturalize!(macros::traits::Bytes, arch, human);

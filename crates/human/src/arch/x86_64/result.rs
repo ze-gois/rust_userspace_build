@@ -40,7 +40,7 @@ pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
-// crate::macros::r#enum!(pub Result, u8, [
+// macros::r#enum!(pub Result, u8, [
 //     [0, Ok, Ok],
 //     [1, Err, Error]
 // ]);

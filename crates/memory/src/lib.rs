@@ -8,7 +8,13 @@ pub mod stack;
 pub use stack::Stack;
 pub mod alloc;
 pub use alloc::alloc;
-pub mod macros;
+// pub mod macros;
 
 use arch::Pointer;
 use arch::PointerType;
+
+pub struct Origin {}
+
+pub use human::info;
+
+macros::trait_implement_primitives!();
