@@ -17,7 +17,7 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
 
             stat = crate::file::fstat(fd);
 
-            ::human::info!("{:?}\n", stat);
+            crate::info!("{:?}\n", stat);
 
             license_mapping = match syscall::mmap(
                 core::ptr::null_mut(),
@@ -27,8 +27,11 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 -1,
                 0,
             ) {
-                Ok(syscall::Ok::Open(syscall::open::Ok::OPENAT(no))) => no as *const u8,
-                _ => panic!("k"),
+                Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(no))) => no as *const u8,
+                _ => {
+                    crate::info!("whereswaççy");
+                    panic!("k")
+                }
             };
 
             let _ = syscall::read(fd, license_mapping, stat.st_size as usize);
