@@ -1,21 +1,98 @@
-pub type pair = (*const usize, *const u8);
 pub type pci8 = *const i8;
+pub type pcu = *const usize;
+pub type pair = (pcu, pci8);
 
-impl macros::traits::Bytes<crate::Origin, crate::Origin> for pci8 {
-    const BYTES_SIZE: usize = core::mem::size_of::<Self>();
-    fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+macro_rules! impl_pointer {
+    ($($pointer_type:ty),*) => {
+        $(
+            impl macros::traits::Bytes<crate::Origin, crate::Origin> for $pointer_type {
+                const BYTES_SIZE: usize = core::mem::size_of::<Self>();
+                fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+                    if endianness {
+                        usize::to_le_bytes(*self as usize)
+                    } else {
+                        usize::to_be_bytes(*self as usize)
+                    }
+                }
+
+                fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+                    if endianness {
+                        usize::from_le_bytes(bytes) as Self
+                    } else {
+                        usize::from_be_bytes(bytes) as Self
+                    }
+                }
+            }
+        )*
+    };
+}
+
+impl_pointer!(pci8, pcu);
+
+impl macros::traits::Bytes<crate::Origin, crate::Origin> for pair {
+    const BYTES_SIZE: usize =
+        <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE
+            + <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+    fn to_bytes(
+        &self,
+        endianness: bool,
+    ) -> [u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
+        let mut pair_bytes =
+            [0u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+
         if endianness {
-            usize::to_le_bytes(*self as usize)
+            let mut o = 0;
+            let mut l = <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+            pair_bytes[o..l].copy_from_slice(&self.0.to_le_bytes());
+            o = l;
+            l = l + <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+            pair_bytes[o..l].copy_from_slice(&self.1.to_le_bytes());
         } else {
-            usize::to_be_bytes(*self as usize)
+            let mut o = 0;
+            let mut l = <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+            pair_bytes[o..l].copy_from_slice(&self.0.to_be_bytes());
+            o = l;
+            l = l + <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+            pair_bytes[o..l].copy_from_slice(&self.1.to_be_bytes());
         }
+
+        pair_bytes
     }
 
     fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+        let mut left_bytes =
+            [0u8; <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+        let mut right_bytes =
+            [0u8; <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+
+        let mut o = 0;
+        let mut l = <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+
+        left_bytes.copy_from_slice(&bytes[o..l]);
+
+        o = l;
+        l = l + <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+
+        right_bytes.copy_from_slice(&bytes[o..l]);
+
         if endianness {
-            usize::from_le_bytes(bytes) as Self
+            let left = <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                left_bytes,
+            );
+            let right =
+                <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                    right_bytes,
+                );
+            (left, right)
         } else {
-            usize::from_be_bytes(bytes) as Self
+            let left = <pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                left_bytes,
+            );
+            let right =
+                <pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                    right_bytes,
+                );
+            (left, right)
         }
     }
 }
@@ -61,11 +138,47 @@ macro_rules! bring_atype {
             ]
         );
 
+        {
+            macros::enum_labeled!(
+                enum_intermediario,
+                $enum_discriminant_type,
+                $enum_label,
+                [
+                    $(
+                        [
+                            $variant_discriminant;
+                            $variant_identifier;
+                            ();
+                            $variant_const_identifier;
+                            $variant_acronym;
+                            $variant_description
+                        ]
+                    ),*
+                ]
+            );
+
+            trait FromDiscriminant {
+                fn from_discriminant(discriminant: $enum_discriminant_type) -> Self;
+            }
+
+            impl FromDiscriminant for enum_intermediario {
+                fn from_discriminant(discriminant : $enum_discriminant_type ) -> enum_intermediario {
+                    match discriminant {
+                        $( $variant_discriminant => enum_intermediario::$variant_identifier(()), )*
+                        _ => enum_intermediario::TODO(())
+                    }
+                }
+            }
+        }
+
         impl AType for $enum_identifier {
             fn from_pair(etype: *const usize, p: *const u8) -> Self {
-                match $enum_identifier::from(unsafe { *etype }) {
-                    $( $enum_identifier::$identifier => EnumTyped::$identifier( unsafe { (|$argumento:$tipo|{ $($lambda)* })(p)} ),)*
-                    _ => EnumTyped::TODO(  pair(*etype, p) )
+                match enum_intermediario::from_discriminant(unsafe { *etype }) {
+                    $( enum_intermediario::$variant_identifier(()) => $enum_identifier::$variant_identifier( unsafe { p as $variant_type } ),)*
+                    _ => $enum_identifier::TODO({
+                        let v :pair =(etype, p);
+                        v
+                    })
                 }
             }
 
