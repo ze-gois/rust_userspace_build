@@ -11,7 +11,7 @@ pub fn alloc<T>(n: usize) -> *mut T {
         -1,
         0,
     ) {
-        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(p))) => p as *mut T,
+        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(p))) => p as *mut T,
         _ => panic!("Failed to allocate memory"),
     }
 }

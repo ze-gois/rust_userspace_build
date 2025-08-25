@@ -7,7 +7,7 @@ pub fn fstat(fd: isize) -> syscall::fstat::Stat {
         -1,
         0,
     ) {
-        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(no))) => no as *const u8,
+        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(no))) => no as *const u8,
         _ => panic!("ohones"),
     };
 

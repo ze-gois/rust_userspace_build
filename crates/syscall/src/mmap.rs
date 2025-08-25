@@ -28,12 +28,12 @@ pub mod ok {
     macros::r#struct!(OkSyscallMUnMap { value: usize });
 
     results::result!( Ok; "MUnMap Ok"; usize; [
-        [0; OK; Ok; usize; "Ok"; "All good"],
+        [0; OK; Default; usize; "Ok"; "All good"],
     ]);
 
     impl Ok {
         pub fn from_no(no: usize) -> Self {
-            Ok::Ok(no)
+            Ok::Default(no)
         }
     }
 }
@@ -58,7 +58,7 @@ pub type Result = core::result::Result<Ok, Error>;
 pub fn handle_result(result: arch::Result) -> crate::Result {
     match result {
         Ok(o) => match o {
-            arch::Ok::Ok(no) => core::result::Result::Ok(crate::Ok::MMap(Ok::Ok(no))),
+            arch::Ok::Ok(no) => core::result::Result::Ok(crate::Ok::MMap(Ok::Default(no))),
         },
         Err(e) => match e {
             arch::Error::Error(no) => core::result::Result::Err(crate::Error::Error(no)),

@@ -7,7 +7,7 @@ pub fn terminate(head: &str) -> *const u8 {
         -1,
         0,
     ) {
-        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(m))) => m,
+        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(m))) => m,
         _ => panic!("head"),
     };
 

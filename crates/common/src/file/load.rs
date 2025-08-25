@@ -27,9 +27,10 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 -1,
                 0,
             ) {
-                Ok(syscall::Ok::MMap(syscall::mmap::Ok::Ok(no))) => no as *const u8,
+                Ok(syscall::Ok::MMap(mmap_ok)) => match mmap_ok {
+                    syscall::mmap::Ok::Default(no) => no as *const u8,
+                },
                 _ => {
-                    crate::info!("whereswaççy");
                     panic!("k")
                 }
             };
