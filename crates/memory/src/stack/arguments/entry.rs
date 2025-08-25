@@ -1,5 +1,3 @@
-use human::info;
-
 #[repr(C)]
 pub struct Entry {
     pub prev: *mut Entry,
@@ -20,20 +18,20 @@ impl Entry {
 impl core::fmt::Debug for Entry {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         unsafe {
-            let cstr = self.pointer.0;
+            let _cstr = self.pointer.0;
 
-            write!(f, "Entry: {{ ");
+            let _ = write!(f, "Entry: {{ ");
 
             let cstr_ptr = self.pointer.0 as *mut i8;
             if !cstr_ptr.is_null() {
                 let cstr = core::ffi::CStr::from_ptr(cstr_ptr);
                 if let Ok(str_slice) = cstr.to_str() {
-                    write!(f, "\"{}\", ", str_slice);
+                    let _ = write!(f, "\"{}\", ", str_slice);
                 } else {
-                    write!(f, "<invalid utf8>, ");
+                    let _ = write!(f, "<invalid utf8>, ");
                 }
             }
-            write!(f, " }}");
+            let _ = write!(f, " }}");
             return Ok(());
         }
     }

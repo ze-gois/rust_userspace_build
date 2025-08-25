@@ -2,8 +2,8 @@ pub mod entry;
 pub use entry::*;
 pub mod atype;
 
-pub use atype::AType;
 pub use atype::Type;
+pub use atype::TypeTrait;
 
 #[repr(C)]
 #[derive(Debug)]
@@ -94,10 +94,10 @@ impl List {
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
-                unsafe {
-                    // se Entry tiver método para converter a string, use-o aqui
-                    crate::info!("Arg {}: '{:?}'", a, entry.pointer);
-                }
+                // unsafe {
+                // se Entry tiver método para converter a string, use-o aqui
+                crate::info!("Arg {}: '{:?}'", a, entry.pointer);
+                // }
             }
         }
     }

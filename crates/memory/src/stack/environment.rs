@@ -84,10 +84,10 @@ impl List {
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
                 // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
-                unsafe {
-                    // se Entry tiver método para converter a string, use-o aqui
-                    info!("Arg {}: '{:?}'\n", a, entry.pointer);
-                }
+                // unsafe {
+                // se Entry tiver método para converter a string, use-o aqui
+                info!("Arg {}: '{:?}'\n", a, entry.pointer);
+                // }
             }
         }
     }

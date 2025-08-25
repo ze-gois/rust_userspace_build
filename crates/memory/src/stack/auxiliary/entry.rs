@@ -16,15 +16,17 @@ impl Entry {
         }
     }
 
-    pub fn key(&self) -> atype::Type {
-        atype::Type::from(unsafe { *self.pointer.0 as usize })
+    pub fn key(&self) -> atype::TypeUnit {
+        use atype::FromDiscriminant;
+        atype::TypeUnit::from_discriminant(unsafe { *self.pointer.0 as usize })
     }
 
-    pub fn value(&self) -> atype::EnumTyped {
+    pub fn value(&self) -> atype::Type {
+        use atype::TypeTrait;
         unsafe {
-            atype::EnumTyped::from_kv(
+            atype::Type::from_pair(
                 self.pointer.0 as *mut usize,
-                (self.pointer.0 as *mut usize).add(1) as atype::macro_types::Mus,
+                (self.pointer.0 as *mut usize).add(1) as *const u8,
             )
         }
     }
@@ -32,14 +34,14 @@ impl Entry {
 
 impl core::fmt::Debug for Entry {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        unsafe {
-            // let cstr = core::ffi::CStr::from_ptr(self.pointer.0 as *const i8);
-            let cstr = self.pointer.0;
+        // unsafe {
+        // let cstr = core::ffi::CStr::from_ptr(self.pointer.0 as *const i8);
+        let _cstr = self.pointer.0;
 
-            write!(f, "Entry: {{ ");
-            write!(f, "{:?}, ", self.value());
-            write!(f, " }}");
-            return Ok(());
-        }
+        let _ = write!(f, "Entry: {{ ");
+        let _ = write!(f, "{:?}, ", self.value());
+        let _ = write!(f, " }}");
+        return Ok(());
+        // }
     }
 }

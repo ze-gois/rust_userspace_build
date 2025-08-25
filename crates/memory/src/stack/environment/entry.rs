@@ -46,11 +46,11 @@ impl core::fmt::Debug for Entry {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         // unsafe {
         // let cstr = core::ffi::CStr::from_ptr(self.pointer.0 as *const i8);
-        let cstr = self.pointer.0;
+        let _cstr = self.pointer.0;
 
-        write!(f, "Entry: {{ ");
-        write!(f, "{:?}, ", self.key());
-        write!(f, " }}");
+        let _ = write!(f, "Entry: {{ ");
+        let _ = write!(f, "{:?}, ", self.key());
+        let _ = write!(f, " }}");
         return Ok(());
         // }
     }
