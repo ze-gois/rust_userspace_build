@@ -1,3 +1,4 @@
+pub type pair = (*const usize, *const u8);
 pub type pci8 = *const i8;
 
 impl macros::traits::Bytes<crate::Origin, crate::Origin> for pci8 {
@@ -20,10 +21,65 @@ impl macros::traits::Bytes<crate::Origin, crate::Origin> for pci8 {
 }
 
 pub trait AType {
-    fn from_pair(key: *mut usize, value: *mut u8) -> Self;
+    fn from_pair(etype: *const usize, p: *const u8) -> Self;
+    fn is_null(&self) -> bool;
 }
 
-macros::enum_labeled! (
+macro_rules! bring_atype {
+    (
+        $enum_vis:vis $enum_identifier:ident,
+        $enum_discriminant_type:ty,
+        $enum_label:expr,
+        [
+            $(
+                [
+                    $variant_discriminant:expr;
+                    $variant_identifier:ident;
+                    $variant_type:ty;
+                    $variant_const_identifier:ident;
+                    $variant_acronym:expr;
+                    $variant_description:expr
+                ]
+            ),* $(,)?
+        ]
+    ) => {
+        macros::enum_labeled!(
+            $enum_vis $enum_identifier,
+            $enum_discriminant_type,
+            $enum_label,
+            [
+                $(
+                    [
+                        $variant_discriminant;
+                        $variant_identifier;
+                        $variant_type;
+                        $variant_const_identifier;
+                        $variant_acronym;
+                        $variant_description
+                    ]
+                ),*
+            ]
+        );
+
+        impl AType for $enum_identifier {
+            fn from_pair(etype: *const usize, p: *const u8) -> Self {
+                match $enum_identifier::from(unsafe { *etype }) {
+                    $( $enum_identifier::$identifier => EnumTyped::$identifier( unsafe { (|$argumento:$tipo|{ $($lambda)* })(p)} ),)*
+                    _ => EnumTyped::TODO(  pair(*etype, p) )
+                }
+            }
+
+            fn is_null(&self) -> bool {
+                match self {
+                    $enum_identifier::Null(0) => true,
+                    _ => false,
+                }
+            }
+        }
+    };
+}
+
+bring_atype! (
     pub Type,
     usize,
     "AT_TYPE",
@@ -58,5 +114,27 @@ macros::enum_labeled! (
         [32;   SysInfo;         usize;       AT_SYSINFO;           "SysInfo";         "System info, x86 specific"],
         [33;   SysInfoEhdr;     usize;       AT_SYSINFO_EHDR;      "SysInfoEhdr";     "System info ELF header, x86 specific"],
         [51;   MinSigStackSz;   usize;       AT_MINSIGSTKSZ;       "MinSigStackSz";   "Minimal stack size for signal delivery"],
+        [99;   TODO;            pair;        AT_TODO;               "Pkmna";          "Pokemon not found"]
     ]
 );
+
+// impl EnumTyped {
+
+//     pub fn to_kv(&self) -> ($variant, *const u8) {
+//         match *self {
+//             $(EnumTyped::$identifier(v) => (($enum_identifier::$identifier).to(), v as *const u8),)*
+//             EnumTyped::TODO(id) => ($enum_identifier::TODO.to(), id.0 as *const u8),
+//         }
+//     }
+
+//     pub fn to_k(&self) -> $enum_identifier {
+//         match *self {
+//             $(EnumTyped::$identifier(_) => $enum_identifier::$identifier,)*
+//             EnumTyped::TODO(id) => $enum_identifier::TODO,
+//         }
+//     }
+
+//     pub fn is_null(&self) -> bool {
+
+//     }
+// }

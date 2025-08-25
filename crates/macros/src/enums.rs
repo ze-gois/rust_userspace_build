@@ -9,3 +9,6 @@ pub mod flag;
 
 #[macro_use]
 pub mod typed;
+
+#[macro_use]
+pub mod opted;

@@ -44,5 +44,54 @@ macro_rules! r#struct {
                 }
             }
         }
+
+
+        type OptionDiscriminant = u8;
+        impl macros::traits::Bytes<crate::Origin,crate::Origin> for Option<$struct_identifier> {
+            const BYTES_SIZE: usize = <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE + <$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+            fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+                let mut option_bytes = [0u8; <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+                let mut o = 0;
+                let mut l = <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                option_bytes.copy_from_slice(&bytes[o..l]);
+                let option = if endianness {
+                    <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(option_bytes)
+                } else {
+                    <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(option_bytes)
+                };
+                if option == 0 {
+                    None
+                } else {
+                    o = l;
+                    l = l + <$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                    let mut value_bytes = [0u8; <$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+                    value_bytes.copy_from_slice(&bytes[o..l]);
+                    if endianness {
+                        Some(<$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(value_bytes))
+                    } else {
+                        Some(<$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(value_bytes))
+                    }
+                }
+            }
+
+            fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+                let mut bytes = [0u8; Self::BYTES_SIZE];
+                if let Some(v) = self {
+                    let mut o = 0;
+                    let mut l = <OptionDiscriminant as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                    bytes[o..l].copy_from_slice(&(1 as OptionDiscriminant).to_le_bytes());
+                    o = l;
+                    l = l + <$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                    if endianness {
+                        bytes[o..l].copy_from_slice(&<$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(v));
+                    } else {
+                        bytes[o..l].copy_from_slice(&<$struct_identifier as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(v));
+                    }
+                    bytes
+                } else {
+                    bytes
+                }
+            }
+        }
     }
 }

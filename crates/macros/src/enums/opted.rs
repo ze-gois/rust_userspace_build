@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! r#enum {
+macro_rules! enum_opted {
     ($enum_vis:vis $enum_identifier:ident, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$variant_type:ty]),* $(,)? ]) => {
         #[derive(Debug, Clone, Copy)]
         $enum_vis enum $enum_identifier {
@@ -15,7 +15,7 @@ macro_rules! r#enum {
         }
 
         impl macros::traits::Bytes<crate::Origin,crate::Origin> for $enum_identifier {
-            const BYTES_SIZE : usize = <$enum_discriminant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE + macros::expressions_upperbound!($(<$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE),*);
+            const BYTES_SIZE : usize = <$enum_discriminant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE + macros::expressions_upperbound!($(<Option<$variant_type> as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE),*);
             fn to_bytes(&self, endianness: bool) -> [u8;Self::BYTES_SIZE] {
                 let mut bytes = [0u8;Self::BYTES_SIZE];
 
