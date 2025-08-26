@@ -1,9 +1,12 @@
 #![no_std]
 #![no_main]
+#![allow(unused_variables)]
+
+use userspace;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
-    xelf::info!("eXecuting Executable and Linkable Format\n\n");
+    human::info!("eXecuting Executable and Linkable Format\n\n");
 
     common::file::print("LICENSE");
 
@@ -32,9 +35,9 @@ pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
 
     // for b in 0..header_identifier_length {
     //     let byte = unsafe { *header_identifier_pointer.offset(b as isize) };
-    //     xelf::info!("{:02X} ", byte);
+    //     info!("{:02X} ", byte);
     // }
-    // xelf::info!("\n");
+    // info!("\n");
 
     // ::common::file::print("LICENSE");
 
@@ -52,7 +55,7 @@ pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
 
     // // let tf_fd = fd;
 
-    // xelf::info!("\n{}\n", tf_fd);
+    // info!("\n{}\n", tf_fd);
 
     // let tf_stat = match syscall::mmap(
     //     core::ptr::null_mut(),
@@ -72,7 +75,7 @@ pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
 
     // let tf_stat = unsafe { *tf_stat };
 
-    // xelf::info!("{}: {:?}\n", tf_fd, tf_stat);
+    // info!("{}: {:?}\n", tf_fd, tf_stat);
 
     // let tf_content = match syscall::mmap(
     //     core::ptr::null_mut(),
@@ -90,6 +93,6 @@ pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
     // syscall::read(tf_fd, tf_content, tf_stat.st_size as usize);
     // syscall::write(1, tf_content, tf_stat.st_size as usize);
 
-    xelf::info!("eXecuting Executable and Linkable Format\n");
+    human::info!("eXecuting Executable and Linkable Format\n");
     panic!("");
 }

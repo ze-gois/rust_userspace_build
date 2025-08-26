@@ -1,7 +1,25 @@
+[workspace]
+members = ["crates/*"]
+
 [package]
 name = "userspace"
 version = "0.1.0"
 edition = "2024"
+
+[lib]
+name = "userspace"
+path = "src/lib.rs"
+test = false
+
+[[bin]]
+name = "xelf"         # The name of the target.
+path = "src/entry.rs" # The source file of the target.
+test = false          # Is tested by default.
+
+[[bin]]
+name = "what"        # The name of the target.
+path = "src/what.rs" # The source file of the target.
+test = false         # Is tested by default.
 
 [dependencies]
 arch = { path = "crates/arch" }
@@ -12,27 +30,21 @@ syscall = { path = "crates/syscall" }
 memory = { path = "crates/memory" }
 results = { path = "crates/results" }
 
-[workspace]
-members = [
-    "crates/arch",
-    "crates/common",
-    "crates/human",
-    "crates/syscall",
-    "crates/x86_64",
-    "crates/macros",
-    "crates/results",
-    "crates/memory",
-]
 
-[lib]
-name = "userspace"
-path = "src/lib.rs"
-test = false
+# [workspace.dependencies]
+# userspace = { workspace = true }
+# userspace = { path = "." }
+# arch = { path = "crates/arch" }
+# common = { path = "crates/common" }
+# human = { path = "crates/human" }
+# macros = { path = "crates/macros" }
+# syscall = { path = "crates/syscall" }
+# memory = { path = "crates/memory" }
+# results = { path = "crates/results" }
 
-[[bin]]
-name = "xelf"
-path = "src/main.rs"
-test = false
+
+# https://doc.rust-lang.org/cargo/reference/cargo-targets.html
+
 
 [profile.release]
 # codegen-units = 1

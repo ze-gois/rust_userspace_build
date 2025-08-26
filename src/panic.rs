@@ -1,6 +1,6 @@
 use core::panic::PanicInfo;
 
-use crate::info;
+pub use crate::info;
 
 #[panic_handler]
 pub fn panic(_info: &PanicInfo) -> ! {
