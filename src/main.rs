@@ -2,13 +2,14 @@
 #![no_main]
 
 #[unsafe(no_mangle)]
-pub extern "C" fn entry(_stack_pointer: arch::PointerType) -> ! {
+pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
     xelf::info!("eXecuting Executable and Linkable Format\n\n");
+
+    common::file::print("LICENSE");
 
     // let stack = memory::Stack::from_pointer(arch::Pointer(stack_pointer));
     // stack.print();
 
-    common::file::print("LICENSE");
     // let file_path_pointer = stack.arguments.get(0);
     // let file_path_pointer = file_path_pointer.unwrap();
     // let file_path_pointer = file_path_pointer.pointer.0;

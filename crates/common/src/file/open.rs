@@ -1,4 +1,4 @@
-pub fn open_path(filepath: &str) -> isize {
+pub fn open(filepath: &str) -> isize {
     match filepath.chars().nth(0) {
         _ => {
             let dfd = syscall::open::AtFlag::FDCWD as isize;

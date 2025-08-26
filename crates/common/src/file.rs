@@ -1,14 +1,39 @@
 pub mod load;
 pub use load::load;
 
-pub mod fstat;
-pub use fstat::fstat;
+pub mod information;
+pub use information::information;
 
 pub mod print;
 pub use print::print;
 
 pub mod open;
-pub use open::open_path;
+pub use open::open;
 
 pub mod seek;
 pub use seek::seek;
+
+pub struct Origin;
+
+macros::trait_implement_primitives!();
+
+// impl macros::traits::Bytes<Origin, Origin> for &str {
+//     const BYTES_SIZE: usize = core::mem::size_of::<&str>();
+//     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
+//         let bytes =
+//         memory::alloc::<char>(self.len());
+//     }
+// }
+
+pub mod a {
+    macros::r#struct!(pub Information {
+       size : usize,
+    });
+}
+pub use a::Information;
+
+macros::r#struct!(pub File {
+    pub descriptor : isize,
+    pub information : Information
+    // pub memory : Option<*const u8>
+});

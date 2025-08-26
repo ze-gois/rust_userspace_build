@@ -1,11 +1,11 @@
 #[macro_export]
 macro_rules! r#struct {
-    ($vis:vis $struct_identifier:ident {$($field_identifier:ident: $field_type:ty),*$(,)?}) => {
+    ($vis:vis $struct_identifier:ident {$($field_visibility:vis $field_identifier:ident: $field_type:ty),*$(,)?}) => {
 
         // #[repr(C,packed)]
         #[derive(Debug, Clone, Copy)]
         $vis struct $struct_identifier {
-            $($field_identifier: $field_type),*
+            $($field_visibility $field_identifier: $field_type),*
         }
 
         impl macros::traits::Bytes<crate::Origin,crate::Origin> for $struct_identifier {
@@ -17,9 +17,9 @@ macro_rules! r#struct {
                 $(
                     b[o..(o+<$field_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE)].copy_from_slice(
                         &if endianness {
-                            self.$field_identifier.to_le_bytes()
+                            <$field_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(&self.$field_identifier)
                         } else {
-                            self.$field_identifier.to_be_bytes()
+                            <$field_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(&self.$field_identifier)
                         }
                     );
                     o = o + <$field_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
@@ -44,7 +44,6 @@ macro_rules! r#struct {
                 }
             }
         }
-
 
         type OptionDiscriminant = u8;
         impl macros::traits::Bytes<crate::Origin,crate::Origin> for Option<$struct_identifier> {

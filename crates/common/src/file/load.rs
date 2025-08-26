@@ -15,7 +15,7 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 _ => break 'opening None,
             };
 
-            stat = crate::file::fstat(fd);
+            stat = crate::file::information::from_fd(fd);
 
             crate::info!("{:?}\n", stat);
 

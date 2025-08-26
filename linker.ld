@@ -47,7 +47,7 @@ SECTIONS {
     } :data
 
     .bss : ALIGN(0x1000) {
-        PROVIDE(_bss_start = .);
+        PROVIDE(_bss_start = .); /* . stands for "here" */
         *(.bss*)
         *(.bss.*)
         *(.sbss*)

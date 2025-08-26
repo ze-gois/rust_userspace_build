@@ -156,6 +156,25 @@ macro_rules! trait_implement_bytes {
                     }
                 }
             }
+
+            impl macros::traits::Bytes<crate::Origin, crate::Origin> for *const $t {
+                const BYTES_SIZE: usize = core::mem::size_of::<Self>();
+                fn to_bytes(&self, endianness: bool) -> [u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
+                    if endianness {
+                        usize::to_le_bytes(*self as usize)
+                    } else {
+                        usize::to_be_bytes(*self as usize)
+                    }
+                }
+
+                fn from_bytes(bytes: [u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
+                    if endianness {
+                        usize::from_le_bytes(bytes) as Self
+                    } else {
+                        usize::from_be_bytes(bytes) as Self
+                    }
+                }
+            }
         )*
     };
 }
@@ -227,3 +246,75 @@ macro_rules! trait_implement_bytes {
 //         }
 //     };
 // }
+
+// impl_pointer!(Pci8, Pcu);
+#[macro_export]
+macro_rules! traits_implement_bytes_tuple {
+    ($($($ordinal_type:tt)::*),*) => {
+        impl macros::traits::Bytes<crate::Origin, crate::Origin> for ($($($ordinal_type)::*),*) {
+            const BYTES_SIZE: usize = $(<$($ordinal_type)::* as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE + )* 0;
+            fn to_bytes(
+                &self,
+                endianness: bool,
+            ) -> [u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
+                let mut pair_bytes =
+                    [0u8; <Self as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+
+                if endianness {
+                    let mut o = 0;
+                    let mut l = <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    pair_bytes[o..l].copy_from_slice(&self.0.to_le_bytes());
+                    o = l;
+                    l = l + <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    pair_bytes[o..l].copy_from_slice(&self.1.to_le_bytes());
+                } else {
+                    let mut o = 0;
+                    let mut l = <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    pair_bytes[o..l].copy_from_slice(&self.0.to_be_bytes());
+                    o = l;
+                    l = l + <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    pair_bytes[o..l].copy_from_slice(&self.1.to_be_bytes());
+                }
+
+                pair_bytes
+            }
+
+            fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
+                let mut left_bytes =
+                    [0u8; <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+                let mut right_bytes =
+                    [0u8; <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+
+                let mut o = 0;
+                let mut l = <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+
+                left_bytes.copy_from_slice(&bytes[o..l]);
+
+                o = l;
+                l = l + <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+
+                right_bytes.copy_from_slice(&bytes[o..l]);
+
+                if endianness {
+                    let left = <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                        left_bytes,
+                    );
+                    let right =
+                        <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                            right_bytes,
+                        );
+                    (left, right)
+                } else {
+                    let left = <Pcu as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                        left_bytes,
+                    );
+                    let right =
+                        <Pci8 as macros::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                            right_bytes,
+                        );
+                    (left, right)
+                }
+            }
+        }
+    };
+}

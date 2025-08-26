@@ -1,4 +1,4 @@
-pub fn fstat(fd: isize) -> syscall::fstat::Stat {
+pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
     let p = match syscall::mmap(
         core::ptr::null_mut(),
         core::mem::size_of::<syscall::fstat::Stat>(),
@@ -15,4 +15,13 @@ pub fn fstat(fd: isize) -> syscall::fstat::Stat {
     let Ok(_) = syscall::fstat(fd as isize, p).map_err(|_e| panic!("natv"));
 
     unsafe { *p }
+}
+
+pub fn from_path(filepath: &str) -> syscall::fstat::Stat {
+    let file_descriptor = crate::file::open(filepath);
+    from_fd(file_descriptor)
+}
+
+pub fn information(file: &mut crate::file::File) -> bool {
+    false
 }

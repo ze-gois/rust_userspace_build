@@ -7,3 +7,4 @@ edition = "2024"
 human = { path = "../human" }
 macros = { path = "../macros" }
 syscall = { path = "../syscall" }
+memory = { path = "../memory" }
