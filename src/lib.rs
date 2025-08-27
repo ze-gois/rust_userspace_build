@@ -1,16 +1,3 @@
-// #![no_std]
-// #![allow(incomplete_features)]
-// #![feature(generic_const_exprs)]
-// #![feature(generic_const_items)]
-
-// pub use arch;
-// pub use common;
-// pub use human;
-// pub use macros;
-// pub use memory;
-// pub use results;
-// pub use syscall;
-
 #![no_std]
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
@@ -20,11 +7,10 @@ pub struct Origin;
 
 pub mod dtype;
 pub mod header;
-// pub mod macros;
 pub mod panic;
 pub mod result;
 pub use result::{Error, Ok, Result};
 
 pub use human::info;
 
-// macros::trait_implement_primitives!();
+macros::trait_implement_primitives!();

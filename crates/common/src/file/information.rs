@@ -22,6 +22,6 @@ pub fn from_path(filepath: &str) -> syscall::fstat::Stat {
     from_fd(file_descriptor)
 }
 
-pub fn information(file: &mut crate::file::File) -> bool {
+pub fn information(_file: &mut crate::file::File) -> bool {
     false
 }

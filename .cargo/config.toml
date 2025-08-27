@@ -29,3 +29,7 @@ rustflags = [
     "-C",
     "force-frame-pointers=yes",
 ]
+
+
+[alias]
+xelf = "run --bin xelf"
