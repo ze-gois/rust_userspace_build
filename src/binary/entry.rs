@@ -9,8 +9,6 @@ use userspace;
 pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
     human::info!("eXecuting Executable and Linkable Format\n\n");
 
-    common::file::print("LICENSE");
-
     // let stack = memory::Stack::from_pointer(arch::Pointer(stack_pointer));
     // stack.print();
 

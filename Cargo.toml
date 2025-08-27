@@ -21,18 +21,14 @@ name = "what"               # The name of the target.
 path = "src/binary/what.rs" # The source file of the target.
 test = false                # Is tested by default.
 
+[[bin]]
+name = "license"               # The name of the target.
+path = "src/binary/license.rs" # The source file of the target.
+test = false                   # Is tested by default.
+
+
 [dependencies]
-# userspace = { workspace = true }
-# arch = { path = "crates/arch" }
-# common = { path = "crates/common" }
-# human = { path = "crates/human" }
-# info = { path = "crates/info" }
-# macros = { path = "crates/macros" }
-# mathematics = { path = "crates/mathematics" }
-# results = { path = "crates/results" }
-# syscall = { path = "crates/syscall" }
-# memory = { path = "crates/memory" }
-arch = { path = "crates/arch" }
+target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
 info = { path = "crates/info" }
@@ -42,9 +38,8 @@ results = { path = "crates/results" }
 syscall = { path = "crates/syscall" }
 
 [workspace.dependencies]
-# userspace = { workspace = true }
 userspace = { path = "." }
-arch = { path = "crates/arch" }
+target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
 info = { path = "crates/info" }
@@ -55,14 +50,7 @@ syscall = { path = "crates/syscall" }
 
 
 # https://doc.rust-lang.org/cargo/reference/cargo-targets.html
-
-
 [profile.release]
-# codegen-units = 1
-# opt-level = "s"
-# debug = false
-# incremental = false
-# overflow-checks = false
 
 [build-dependencies]
 cc = "1.0"

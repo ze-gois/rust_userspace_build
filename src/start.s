@@ -28,12 +28,13 @@ bss_zero_loop:
        cmp     %rcx, %rax
        jl      bss_zero_loop
 bss_init_done:
-       
+
        # Initialize any relocations if needed
        # This would typically be done by the dynamic loader
        # For our static binary, we don't need much here
 
        # Call the Rust entry point
+       call    flag_license
        call    entry
 
        # We shouldn't return, but clean up anyway

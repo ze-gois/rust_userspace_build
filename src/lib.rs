@@ -7,6 +7,7 @@ pub struct Origin;
 
 pub mod dtype;
 pub mod header;
+pub mod license;
 pub mod panic;
 pub mod result;
 pub use result::{Error, Ok, Result};
