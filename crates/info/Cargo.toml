@@ -1,11 +1,8 @@
 [package]
-name = "memory"
+name = "info"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-arch = { path = "../arch" }
-syscall = { path = "../syscall" }
 macros = { path = "../macros" }
 results = { path = "../results" }
-human = { path = "../human" }

@@ -2,6 +2,7 @@
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
 #![feature(generic_const_items)]
+pub struct Origin;
 
 pub use human::info;
 
@@ -25,8 +26,6 @@ publishing!(
     [Syscall3; 257; OPENAT; openat ; "OpenAt"],
     [Syscall4; 258; OPENAT4; openat4; "OpenAt4"]
 );
-
-pub struct Origin {}
 
 // impl<F: macros::traits::Primitive<arch::Origin, arch::Origin>>
 //     macros::traits::Primitive<crate::Origin, crate::Origin> for F

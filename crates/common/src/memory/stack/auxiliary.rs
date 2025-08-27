@@ -25,8 +25,8 @@ impl Default for List {
 
 impl List {
     #[rustfmt::skip]
-    pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        let auxiliary_pointer: *mut crate::PointerType = auxiliary_pointer.0 as *mut crate::PointerType;
+    pub fn from_pointer(auxiliary_pointer: arch::Pointer) -> (List, arch::Pointer) {
+        let auxiliary_pointer: *mut arch::PointerType = auxiliary_pointer.0 as *mut arch::PointerType;
 
         let mut counter = 0;
         unsafe {
@@ -44,19 +44,19 @@ impl List {
             }
         }
 
-        let latter_pointer = unsafe { (auxiliary_pointer as crate::PointerType).add(1 + counter) };
+        let latter_pointer = unsafe { (auxiliary_pointer as arch::PointerType).add(1 + counter) };
 
         if counter == 0 {
-            return (List::default(), crate::Pointer(latter_pointer));
+            return (List::default(), arch::Pointer(latter_pointer));
         }
 
-        let list_pointer = crate::alloc::<Entry>(counter);
+        let list_pointer = crate::memory::alloc::<Entry>(counter);
 
         unsafe {
             // preenche cada Entry in-place
             for a in 0..counter {
-                let entry_pointer = auxiliary_pointer.add(a) as crate::PointerType;
-                let entry = Entry::from_pointer(crate::Pointer(entry_pointer));
+                let entry_pointer = auxiliary_pointer.add(a) as arch::PointerType;
+                let entry = Entry::from_pointer(arch::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
             // liga prev/next
@@ -73,7 +73,7 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, crate::Pointer(latter_pointer))
+        (list, arch::Pointer(latter_pointer))
     }
 
     pub fn print(&self) {
@@ -81,7 +81,7 @@ impl List {
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
                 crate::info!("\t{:?} @ ", unsafe {
-                    crate::Pointer(self.former.add(a) as crate::PointerType)
+                    arch::Pointer(self.former.add(a) as arch::PointerType)
                 },);
                 crate::info!("{:?}\n", e);
             }
@@ -93,7 +93,7 @@ impl List {
         crate::info!("Auxiliary count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
-                // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
+                // Assumindo Entry tem campo `value: *arch::PointerType` ou similar; ajustar conforme Entry real.
                 // unsafe {
                 // se Entry tiver método para converter a string, use-o aqui
                 crate::info!("Arg {}: '{:?}'", a, entry.pointer);
@@ -142,7 +142,8 @@ impl Drop for List {
 
                 // desaloca o bloco que foi alocado por alloc
                 let total_size = core::mem::size_of::<Entry>() * self.counter as usize;
-                let aligned_size = (total_size + crate::page::SIZE - 1) & !(crate::page::SIZE - 1);
+                let aligned_size =
+                    (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
 
                 let _ = syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
@@ -167,7 +168,7 @@ impl<'l> Iterator for Iter<'l> {
     }
 }
 
-// pub fn from_pointer(auxiliary_pointer: crate::Pointer) -> Self {
+// pub fn from_pointer(auxiliary_pointer: arch::Pointer) -> Self {
 
 //         crate::info!("Environment count: {:?}\n\n", counter);
 
@@ -242,7 +243,7 @@ impl<'l> Iterator for Iter<'l> {
 // #[repr(C)]
 // #[derive(Debug, Clone, Copy)]
 // pub struct Vector {
-//     pub pointer: crate::Pointer,
+//     pub pointer: arch::Pointer,
 //     pub counter: Option<usize>,
 //     pub entries: *mut Entry,
 // }
@@ -257,7 +258,7 @@ impl<'l> Iterator for Iter<'l> {
 // }
 
 // impl Vector {
-//     pub fn from_pointer(auxv_pointer: crate::Pointer) -> Self {
+//     pub fn from_pointer(auxv_pointer: arch::Pointer) -> Self {
 //         Self::default()
 //     }
 

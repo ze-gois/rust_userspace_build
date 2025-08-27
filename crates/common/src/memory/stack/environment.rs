@@ -23,8 +23,8 @@ impl Default for List {
 
 impl List {
     #[rustfmt::skip]
-    pub fn from_pointer(environment_pointer: crate::Pointer) -> (List, crate::Pointer) {
-        let environment_pointer: *mut crate::PointerType = environment_pointer.0 as *mut crate::PointerType;
+    pub fn from_pointer(environment_pointer: arch::Pointer) -> (List, arch::Pointer) {
+        let environment_pointer: *mut arch::PointerType = environment_pointer.0 as *mut arch::PointerType;
 
         let mut counter = 0;
         unsafe {
@@ -33,19 +33,19 @@ impl List {
             }
         }
 
-        let auxiliary_pointer = unsafe { (environment_pointer as crate::PointerType).add(1 + counter) };
+        let auxiliary_pointer = unsafe { (environment_pointer as arch::PointerType).add(1 + counter) };
 
         if counter == 0 {
-            return (List::default(), crate::Pointer(auxiliary_pointer));
+            return (List::default(), arch::Pointer(auxiliary_pointer));
         }
 
-        let list_pointer = crate::alloc::<Entry>(counter);
+        let list_pointer = crate::memory::alloc::<Entry>(counter);
 
         unsafe {
             // preenche cada Entry in-place
             for a in 0..counter {
                 let entry_pointer = *(environment_pointer.add(a));
-                let entry = Entry::from_pointer(crate::Pointer(entry_pointer));
+                let entry = Entry::from_pointer(arch::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
             // liga prev/next
@@ -62,7 +62,7 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, crate::Pointer(auxiliary_pointer))
+        (list, arch::Pointer(auxiliary_pointer))
     }
 
     pub fn print(&self) {
@@ -71,7 +71,7 @@ impl List {
             if let Some(e) = self.get(a) {
                 info!(
                     "\t{:?} @ {:?}\n",
-                    unsafe { crate::Pointer(self.former.add(a) as crate::PointerType) },
+                    unsafe { arch::Pointer(self.former.add(a) as arch::PointerType) },
                     e
                 );
             }
@@ -83,7 +83,7 @@ impl List {
         info!("Environment count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
-                // Assumindo Entry tem campo `value: *crate::PointerType` ou similar; ajustar conforme Entry real.
+                // Assumindo Entry tem campo `value: *arch::PointerType` ou similar; ajustar conforme Entry real.
                 // unsafe {
                 // se Entry tiver método para converter a string, use-o aqui
                 info!("Arg {}: '{:?}'\n", a, entry.pointer);
@@ -132,7 +132,8 @@ impl Drop for List {
 
                 // desaloca o bloco que foi alocado por alloc
                 let total_size = core::mem::size_of::<Entry>() * self.counter as usize;
-                let aligned_size = (total_size + crate::page::SIZE - 1) & !(crate::page::SIZE - 1);
+                let aligned_size =
+                    (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
 
                 let _ = syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
@@ -157,7 +158,7 @@ impl<'l> Iterator for Iter<'l> {
     }
 }
 
-// pub fn from_pointer(environment_pointer: crate::Pointer) -> Self {
+// pub fn from_pointer(environment_pointer: arch::Pointer) -> Self {
 
 //         info!("Environment count: {:?}\n\n", counter);
 

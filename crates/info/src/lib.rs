@@ -2,14 +2,14 @@
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
 #![feature(generic_const_items)]
-
 pub struct Origin;
 
-pub use human::info;
+pub mod arch;
+// pub mod macros;
+pub mod result;
+pub mod stdout;
+pub mod syscall;
 
-pub mod file;
-pub mod memory;
-
-pub mod types;
+pub use result::{Error, Ok, Result};
 
 macros::trait_implement_primitives!();

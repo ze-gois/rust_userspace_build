@@ -13,9 +13,7 @@ pub use open::open;
 pub mod seek;
 pub use seek::seek;
 
-pub struct Origin;
-
-macros::trait_implement_primitives!();
+pub mod format;
 
 // impl macros::traits::Bytes<Origin, Origin> for &str {
 //     const BYTES_SIZE: usize = core::mem::size_of::<&str>();

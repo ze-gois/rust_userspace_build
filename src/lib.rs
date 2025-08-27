@@ -27,4 +27,4 @@ pub use result::{Error, Ok, Result};
 
 pub use human::info;
 
-macros::trait_implement_primitives!();
+// macros::trait_implement_primitives!();

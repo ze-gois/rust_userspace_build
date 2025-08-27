@@ -12,35 +12,46 @@ path = "src/lib.rs"
 test = false
 
 [[bin]]
-name = "xelf"         # The name of the target.
-path = "src/entry.rs" # The source file of the target.
-test = false          # Is tested by default.
+name = "xelf"                # The name of the target.
+path = "src/binary/entry.rs" # The source file of the target.
+test = false                 # Is tested by default.
 
 [[bin]]
-name = "what"        # The name of the target.
-path = "src/what.rs" # The source file of the target.
-test = false         # Is tested by default.
+name = "what"               # The name of the target.
+path = "src/binary/what.rs" # The source file of the target.
+test = false                # Is tested by default.
 
 [dependencies]
-arch = { path = "crates/arch" }
-common = { path = "crates/common" }
-human = { path = "crates/human" }
-macros = { path = "crates/macros" }
-syscall = { path = "crates/syscall" }
-memory = { path = "crates/memory" }
-results = { path = "crates/results" }
-
-
-# [workspace.dependencies]
 # userspace = { workspace = true }
-# userspace = { path = "." }
 # arch = { path = "crates/arch" }
 # common = { path = "crates/common" }
 # human = { path = "crates/human" }
+# info = { path = "crates/info" }
 # macros = { path = "crates/macros" }
+# mathematics = { path = "crates/mathematics" }
+# results = { path = "crates/results" }
 # syscall = { path = "crates/syscall" }
 # memory = { path = "crates/memory" }
-# results = { path = "crates/results" }
+arch = { path = "crates/arch" }
+common = { path = "crates/common" }
+human = { path = "crates/human" }
+info = { path = "crates/info" }
+macros = { path = "crates/macros" }
+mathematics = { path = "crates/mathematics" }
+results = { path = "crates/results" }
+syscall = { path = "crates/syscall" }
+
+[workspace.dependencies]
+# userspace = { workspace = true }
+userspace = { path = "." }
+arch = { path = "crates/arch" }
+common = { path = "crates/common" }
+human = { path = "crates/human" }
+info = { path = "crates/info" }
+macros = { path = "crates/macros" }
+mathematics = { path = "crates/mathematics" }
+results = { path = "crates/results" }
+syscall = { path = "crates/syscall" }
 
 
 # https://doc.rust-lang.org/cargo/reference/cargo-targets.html

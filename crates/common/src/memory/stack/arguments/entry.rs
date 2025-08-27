@@ -2,11 +2,11 @@
 pub struct Entry {
     pub prev: *mut Entry,
     pub next: *mut Entry,
-    pub pointer: crate::Pointer, // armazenar o ponteiro cru
+    pub pointer: arch::Pointer, // armazenar o ponteiro cru
 }
 
 impl Entry {
-    pub fn from_pointer(pointer: crate::Pointer) -> Entry {
+    pub fn from_pointer(pointer: arch::Pointer) -> Entry {
         Entry {
             prev: core::ptr::null_mut(),
             next: core::ptr::null_mut(),
