@@ -1,8 +1,6 @@
 pub mod class_64;
 pub use class_64::UChar;
 
-// pub mod traits;
-
 #[macro_use]
 pub mod macros;
 pub mod endianness;

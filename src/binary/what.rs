@@ -6,8 +6,8 @@
 use userspace;
 
 #[unsafe(no_mangle)]
-pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
-    human::info!("Say whaaaaat?!");
+pub extern "C" fn entry(stack_pointer: target::arch::PointerType) -> ! {
+    common::info!("Say whaaaaat?!");
 
-    syscall::exit(32)
+    target::os::syscall::exit(32)
 }

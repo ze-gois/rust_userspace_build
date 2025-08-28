@@ -37,9 +37,11 @@ target = { path = "crates/target" }
 common = { path = "crates/common" }
 macros = { path = "crates/macros" }
 
-
-# https://doc.rust-lang.org/cargo/reference/cargo-targets.html
-[profile.release]
-
 [build-dependencies]
 cc = "1.0"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
