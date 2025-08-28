@@ -4,11 +4,11 @@
 #![feature(generic_const_items)]
 pub struct Origin;
 
-pub mod arch;
+pub mod architecture;
+pub mod target;
 // pub mod macros;
 pub mod result;
 pub mod stdout;
-pub mod syscall;
 
 pub use result::{Error, Ok, Result};
 

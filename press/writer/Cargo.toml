@@ -3,6 +3,11 @@ name = "writer"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "writer"
+path = "src/library.rs"
+
+
 [dependencies]
 macros = { path = "../macros" }
 results = { path = "../results" }

@@ -3,4 +3,9 @@ name = "mathematics"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "mathematics"
+path = "src/library.rs"
+crate-type = ["lib"]
+
 [dependencies]

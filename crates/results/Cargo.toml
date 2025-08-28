@@ -3,5 +3,10 @@ name = "results"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "results"
+path = "src/library.rs"
+crate-type = ["lib"]
+
 [dependencies]
 macros = { path = "../macros" }

@@ -26,27 +26,24 @@ name = "license"               # The name of the target.
 path = "src/binary/license.rs" # The source file of the target.
 test = false                   # Is tested by default.
 
-
 [dependencies]
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
-writer = { path = "crates/writer" }
+# writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
 mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }
-syscall = { path = "crates/syscall" }
 
 [workspace.dependencies]
 userspace = { path = "." }
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
-writer = { path = "crates/writer" }
+# writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
 mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }
-syscall = { path = "crates/syscall" }
 
 
 # https://doc.rust-lang.org/cargo/reference/cargo-targets.html
