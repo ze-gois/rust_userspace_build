@@ -31,7 +31,7 @@ test = false                   # Is tested by default.
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
-info = { path = "crates/info" }
+writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
 mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }
@@ -42,7 +42,7 @@ userspace = { path = "." }
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 human = { path = "crates/human" }
-info = { path = "crates/info" }
+writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
 mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }

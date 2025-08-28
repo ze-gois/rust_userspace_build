@@ -4,4 +4,4 @@
 #![feature(generic_const_items)]
 pub struct Origin {}
 
-pub use info::info;
+pub use writer::info;

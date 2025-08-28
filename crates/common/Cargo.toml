@@ -9,4 +9,4 @@ syscall = { workspace = true }
 results = { workspace = true }
 macros = { workspace = true }
 human = { workspace = true }
-info = { workspace = true }
+writer = { workspace = true }
