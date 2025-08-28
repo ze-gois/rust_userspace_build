@@ -10,8 +10,5 @@ crate-type = ["lib"]
 
 [dependencies]
 target = { workspace = true }
-# syscall = { workspace = true }
 results = { workspace = true }
 macros = { workspace = true }
-human = { workspace = true }
-# writer = { workspace = true }

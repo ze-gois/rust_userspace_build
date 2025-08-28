@@ -21,13 +21,13 @@ impl Default for List {
 
 impl List {
     #[rustfmt::skip]
-    pub fn from_pointer(stack_pointer: target::Pointer) -> (List, target::Pointer) {
+    pub fn from_pointer(stack_pointer: target::arch::Pointer) -> (List, target::arch::Pointer) {
         let counter = unsafe { *(stack_pointer.0) } as usize;
-        let argument_pointers = unsafe { (stack_pointer.0).add(1) as *const target::PointerType };
+        let argument_pointers = unsafe { (stack_pointer.0).add(1) as *const target::arch::PointerType };
         let environment_pointer = unsafe { (stack_pointer.0).add(2 + counter) };
 
         if counter == 0 {
-            return (List::default(), target::Pointer(environment_pointer));
+            return (List::default(), target::arch::Pointer(environment_pointer));
         }
 
         let list_pointer = crate::memory::alloc::<Entry>(counter);
@@ -36,7 +36,7 @@ impl List {
             // preenche cada Entry in-place
             for a in 0..counter {
                 let entry_pointer = *(argument_pointers.add(a));
-                let entry = Entry::from_pointer(target::Pointer(entry_pointer));
+                let entry = Entry::from_pointer(target::arch::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
             // liga prev/next
@@ -53,7 +53,7 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, target::Pointer(environment_pointer))
+        (list, target::arch::Pointer(environment_pointer))
     }
 
     pub fn print(&self) {
@@ -62,7 +62,9 @@ impl List {
             if let Some(e) = self.get(a) {
                 crate::info!(
                     "\t{:?} @ {:?}\n",
-                    unsafe { target::Pointer(self.former.add(a) as target::PointerType) },
+                    unsafe {
+                        target::arch::Pointer(self.former.add(a) as target::arch::PointerType)
+                    },
                     e
                 );
             }
@@ -74,7 +76,7 @@ impl List {
         crate::info!("Argument count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
-                // Assumindo Entry tem campo `value: *target::PointerType` ou similar; ajustar conforme Entry real.
+                // Assumindo Entry tem campo `value: *target::arch::PointerType` ou similar; ajustar conforme Entry real.
                 // unsafe {
                 // se Entry tiver método para converter a string, use-o aqui
                 crate::info!("Arg {}: '{:?}'\n", a, entry.pointer);

@@ -13,8 +13,8 @@ pub enum Status {
 #[repr(C)]
 #[derive(Debug)]
 pub struct Stack {
-    pub former: target::Pointer,
-    pub latter: target::Pointer,
+    pub former: target::arch::Pointer,
+    pub latter: target::arch::Pointer,
     // pub size: usize,
     // pub size_modified: usize,
     pub arguments: arguments::List,
@@ -24,7 +24,7 @@ pub struct Stack {
 }
 
 impl Stack {
-    pub fn from_pointer(stack_pointer: target::Pointer) -> Self {
+    pub fn from_pointer(stack_pointer: target::arch::Pointer) -> Self {
         let (arguments, environment_pointer) = arguments::List::from_pointer(stack_pointer);
         let (environment, auxiliary_pointer) = environment::List::from_pointer(environment_pointer);
         let (auxiliary, latter_pointer) = auxiliary::List::from_pointer(auxiliary_pointer);
@@ -40,15 +40,15 @@ impl Stack {
     }
 
     pub fn current() -> Self {
-        Self::from_pointer(target::Pointer::current())
+        Self::from_pointer(target::arch::Pointer::current())
     }
 
     pub fn print(&self) {
         info!("--- Stack Contents ---\n");
         info!(
             "pub struct Stack {{
-                pub former: target::Pointer = {:?},
-                pub latter: target::Pointer = {:?},
+                pub former: target::arch::Pointer = {:?},
+                pub latter: target::arch::Pointer = {:?},
                 pub arguments: arguments::List = {:?},
                 pub status: Status = {:?},
             }}\n",

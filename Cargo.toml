@@ -8,7 +8,7 @@ edition = "2024"
 
 [lib]
 name = "userspace"
-path = "src/lib.rs"
+path = "src/library.rs"
 test = false
 
 [[bin]]
@@ -29,20 +29,14 @@ test = false                   # Is tested by default.
 [dependencies]
 target = { path = "crates/target" }
 common = { path = "crates/common" }
-human = { path = "crates/human" }
-# writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
-mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }
 
 [workspace.dependencies]
 userspace = { path = "." }
 target = { path = "crates/target" }
 common = { path = "crates/common" }
-human = { path = "crates/human" }
-# writer = { path = "crates/writer" }
 macros = { path = "crates/macros" }
-mathematics = { path = "crates/mathematics" }
 results = { path = "crates/results" }
 
 
