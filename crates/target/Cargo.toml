@@ -10,4 +10,3 @@ crate-type = ["lib"]
 
 [dependencies]
 macros = { path = "../macros" }
-results = { path = "../results" }

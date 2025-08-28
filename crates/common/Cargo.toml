@@ -10,5 +10,4 @@ crate-type = ["lib"]
 
 [dependencies]
 target = { workspace = true }
-results = { workspace = true }
 macros = { workspace = true }

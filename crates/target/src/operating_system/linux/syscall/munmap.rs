@@ -11,7 +11,7 @@ pub fn munmap(addr: *mut u8, length: usize) -> crate::Result {
 pub mod ok {
     macros::r#struct!(OkSyscallMUnMap { value: usize });
 
-    results::result!( Ok; "MUnMap Ok"; usize; [
+    macros::result!( Ok; "MUnMap Ok"; usize; [
         [0; OK; Default; usize; "Ok"; "All good"],
     ]);
 
@@ -23,7 +23,7 @@ pub mod ok {
 }
 
 pub mod error {
-    results::result!(Error; "MUnMap error"; usize; [
+    macros::result!(Error; "MUnMap error"; usize; [
         [1; ERROR; Default; usize; "Error"; "Something wicked this way comes"],
     ]);
 

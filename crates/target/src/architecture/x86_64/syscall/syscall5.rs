@@ -21,7 +21,7 @@ pub fn syscall5(n: usize, a1: usize, a2: usize, a3: usize, a4: usize, a5: usize)
 }
 
 pub mod ok {
-    results::result!(
+    macros::result!(
         Ok;
         "Human Ok";
         usize;
@@ -38,7 +38,7 @@ pub mod ok {
 }
 
 pub mod error {
-    results::result!(
+    macros::result!(
         Error;
         "Human error";
         usize;

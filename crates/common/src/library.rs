@@ -5,11 +5,7 @@
 
 pub struct Origin;
 
-pub use human::info;
-
 pub mod file;
+pub mod macros;
 pub mod memory;
-
 pub mod types;
-
-macros::trait_implement_primitives!();

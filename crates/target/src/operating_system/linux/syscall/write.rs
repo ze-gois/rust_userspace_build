@@ -16,7 +16,7 @@ pub fn write(file_descriptor: isize, byte_buffer: *const u8, byte_count: usize) 
 pub mod ok {
     macros::r#struct!(OkSyscallMUnMap { value: usize });
 
-    results::result!( Ok; "MUnMap Ok"; usize; [
+    macros::result!( Ok; "MUnMap Ok"; usize; [
         [0; OK; Ok; usize; "Ok"; "All good"],
     ]);
 
@@ -28,7 +28,7 @@ pub mod ok {
 }
 
 pub mod error {
-    results::result!(Error; "MUnMap error"; usize; [
+    macros::result!(Error; "MUnMap error"; usize; [
         [0;  ERROR2;   Default;           usize; "Error"; "Something wicked this way comes"],
         [1;  ERROR;   Error;             usize; "Error"; "Something wicked this way comes"],
         [9;  EBADF;   BadFileDescriptor; usize;   "EBADF";     "Bad file descriptor"],

@@ -1,5 +1,5 @@
 pub mod ok {
-    results::result!(
+    macros::result!(
         Ok;
         "Human Ok";
         usize;
@@ -19,7 +19,7 @@ pub mod ok {
 }
 
 pub mod error {
-    results::result!(
+    macros::result!(
         Error;
         "Human error";
         usize;
