@@ -8,7 +8,10 @@ pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
         0,
     ) {
         Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(no))) => no as *const u8,
-        _ => panic!("ohones"),
+        _ => {
+            crate::info!("Failed to mmap file");
+            panic!("ohones")
+        }
     };
 
     let p = p as *const syscall::fstat::Stat;

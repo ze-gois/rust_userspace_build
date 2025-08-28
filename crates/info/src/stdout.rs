@@ -28,6 +28,10 @@ macro_rules! info {
         let _ = write!(&mut writer, $($arg)*);
     }};
     ($($arg:tt)*) => {{
+
+        // let file = file!();
+        // let out = info::syscall::write(1, file.as_ptr(), file.len());
+
         use core::fmt::Write;
         let mut writer = $crate::stdout::Stdout;
         // let _ = write!(&mut writer, "\n[ {}:{}:{} ] ",file!(),line!(),column!());

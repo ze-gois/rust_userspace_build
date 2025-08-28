@@ -17,7 +17,7 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
 
             stat = crate::file::information::from_fd(fd);
 
-            crate::info!("{:?}\n", stat);
+            // crate::info!("{:?}\n", stat);
 
             license_mapping = match syscall::mmap(
                 core::ptr::null_mut(),
@@ -31,6 +31,7 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                     syscall::mmap::Ok::Default(no) => no as *const u8,
                 },
                 _ => {
+                    crate::info!("Failed to mmap file");
                     panic!("k")
                 }
             };

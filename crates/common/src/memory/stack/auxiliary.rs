@@ -25,8 +25,8 @@ impl Default for List {
 
 impl List {
     #[rustfmt::skip]
-    pub fn from_pointer(auxiliary_pointer: arch::Pointer) -> (List, arch::Pointer) {
-        let auxiliary_pointer: *mut arch::PointerType = auxiliary_pointer.0 as *mut arch::PointerType;
+    pub fn from_pointer(auxiliary_pointer: target::Pointer) -> (List, target::Pointer) {
+        let auxiliary_pointer: *mut target::PointerType = auxiliary_pointer.0 as *mut target::PointerType;
 
         let mut counter = 0;
         unsafe {
@@ -44,10 +44,10 @@ impl List {
             }
         }
 
-        let latter_pointer = unsafe { (auxiliary_pointer as arch::PointerType).add(1 + counter) };
+        let latter_pointer = unsafe { (auxiliary_pointer as target::PointerType).add(1 + counter) };
 
         if counter == 0 {
-            return (List::default(), arch::Pointer(latter_pointer));
+            return (List::default(), target::Pointer(latter_pointer));
         }
 
         let list_pointer = crate::memory::alloc::<Entry>(counter);
@@ -55,8 +55,8 @@ impl List {
         unsafe {
             // preenche cada Entry in-place
             for a in 0..counter {
-                let entry_pointer = auxiliary_pointer.add(a) as arch::PointerType;
-                let entry = Entry::from_pointer(arch::Pointer(entry_pointer));
+                let entry_pointer = auxiliary_pointer.add(a) as target::PointerType;
+                let entry = Entry::from_pointer(target::Pointer(entry_pointer));
                 core::ptr::write(list_pointer.add(a), entry);
             }
             // liga prev/next
@@ -73,7 +73,7 @@ impl List {
             latter: unsafe { list_pointer.add(counter - 1) },
         };
 
-        (list, arch::Pointer(latter_pointer))
+        (list, target::Pointer(latter_pointer))
     }
 
     pub fn print(&self) {
@@ -81,7 +81,7 @@ impl List {
         for a in 0..self.counter {
             if let Some(e) = self.get(a) {
                 crate::info!("\t{:?} @ ", unsafe {
-                    arch::Pointer(self.former.add(a) as arch::PointerType)
+                    target::Pointer(self.former.add(a) as target::PointerType)
                 },);
                 crate::info!("{:?}\n", e);
             }
@@ -93,7 +93,7 @@ impl List {
         crate::info!("Auxiliary count: {}\n", self.counter);
         for a in 0..self.counter {
             if let Some(entry) = self.get(a) {
-                // Assumindo Entry tem campo `value: *arch::PointerType` ou similar; ajustar conforme Entry real.
+                // Assumindo Entry tem campo `value: *target::PointerType` ou similar; ajustar conforme Entry real.
                 // unsafe {
                 // se Entry tiver método para converter a string, use-o aqui
                 crate::info!("Arg {}: '{:?}'", a, entry.pointer);
@@ -168,7 +168,7 @@ impl<'l> Iterator for Iter<'l> {
     }
 }
 
-// pub fn from_pointer(auxiliary_pointer: arch::Pointer) -> Self {
+// pub fn from_pointer(auxiliary_pointer: target::Pointer) -> Self {
 
 //         crate::info!("Environment count: {:?}\n\n", counter);
 
@@ -238,12 +238,12 @@ impl<'l> Iterator for Iter<'l> {
 
 // use human::info;
 
-// use core::arch::x86_64;
+// use core::target::x86_64;
 
 // #[repr(C)]
 // #[derive(Debug, Clone, Copy)]
 // pub struct Vector {
-//     pub pointer: arch::Pointer,
+//     pub pointer: target::Pointer,
 //     pub counter: Option<usize>,
 //     pub entries: *mut Entry,
 // }
@@ -258,7 +258,7 @@ impl<'l> Iterator for Iter<'l> {
 // }
 
 // impl Vector {
-//     pub fn from_pointer(auxv_pointer: arch::Pointer) -> Self {
+//     pub fn from_pointer(auxv_pointer: target::Pointer) -> Self {
 //         Self::default()
 //     }
 

@@ -28,7 +28,7 @@ macro_rules! publishing {
         }
 
         pub mod signatures {
-            $(pub type $syscall_ident = ::arch::traits::callable::$syscall_signature;)*
+            $(pub type $syscall_ident = ::target::traits::callable::$syscall_signature;)*
         }
 
         #[repr(usize)]

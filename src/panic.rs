@@ -3,7 +3,14 @@ use core::panic::PanicInfo;
 pub use crate::info;
 
 #[panic_handler]
-pub fn panic(_info: &PanicInfo) -> ! {
+pub fn panic(info: &PanicInfo) -> ! {
+    if let Some(location) = info.location() {
+        // Example: send to UART or RTT instead of println
+        let filename = location.file();
+        let fileline = location.line() as u32;
+        let filecolumn = location.column() as u32;
+        info!("panic at file:{}:{}:{}", filename, fileline, filecolumn);
+    }
     let mut count = 5;
     loop {
         count -= 1;

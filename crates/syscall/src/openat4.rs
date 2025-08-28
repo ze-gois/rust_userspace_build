@@ -1,16 +1,16 @@
-use arch::{Arch, traits::Callable};
+use target::{Arch, traits::Callable};
 
 pub use crate::open::flags;
 pub use crate::open::{Error, Ok, Result};
 
 hooking!(OPENAT4);
 
-pub fn handle_result(arch_result: arch::Result) -> crate::Result {
+pub fn handle_result(arch_result: target::Result) -> crate::Result {
     match arch_result {
-        Err(arch::Error::Error(no)) => {
+        Err(target::Error::Error(no)) => {
             core::result::Result::Err(crate::Error::Open(Error::OPENAT4(no)))
         }
-        Ok(arch::Ok::Ok(no)) => core::result::Result::Ok(crate::Ok::Open(Ok::OPENAT4(no))),
+        Ok(target::Ok::Ok(no)) => core::result::Result::Ok(crate::Ok::Open(Ok::OPENAT4(no))),
     }
 }
 

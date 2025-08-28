@@ -1,6 +1,6 @@
 macro_rules! handle_result {
     ($($body:tt)*) => {
-        fn handle_result(result: arch::Result) -> crate::Result {
+        fn handle_result(result: target::Result) -> crate::Result {
             match result {
                 Ok(signed_result) => Ok(signed_result),
                 Err(err) => {
@@ -19,7 +19,7 @@ macro_rules! handle_result {
 }
 
 
-        fn handle_result(result: arch::Result<isize>) -> crate::result::Result<isize> {
+        fn handle_result(result: target::Result<isize>) -> crate::result::Result<isize> {
             match result {
                 Ok(signed_result) => Ok(signed_result),
                 Err(err) => {

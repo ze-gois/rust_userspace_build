@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-arch = { path = "../arch" }
-human = { path = "../human" }
-syscall = { path = "../syscall" }
-# memory = { path = "../memory" }
-macros = { path = "../macros" }
+target = { workspace = true }
+syscall = { workspace = true }
+results = { workspace = true }
+macros = { workspace = true }
+human = { workspace = true }
+info = { workspace = true }

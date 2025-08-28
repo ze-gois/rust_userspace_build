@@ -6,7 +6,7 @@
 use userspace;
 
 #[unsafe(no_mangle)]
-pub extern "C" fn entry(stack_pointer: arch::PointerType) -> ! {
+pub extern "C" fn entry(stack_pointer: target::PointerType) -> ! {
     human::info!("eXecuting Executable and Linkable Format\n\n");
 
     // let stack = memory::Stack::from_pointer(arch::Pointer(stack_pointer));

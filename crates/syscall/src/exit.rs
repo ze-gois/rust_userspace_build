@@ -1,4 +1,4 @@
-use arch::{Arch, traits::Callable};
+use target::{Arch, traits::Callable};
 
 hooking!(EXIT);
 

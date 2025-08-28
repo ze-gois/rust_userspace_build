@@ -1,4 +1,4 @@
-use arch::{Arch, traits::Callable};
+use target::{Arch, traits::Callable};
 
 pub mod stat;
 pub use stat::Stat;
@@ -42,13 +42,13 @@ pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
-pub fn handle_result(result: arch::Result) -> crate::Result {
+pub fn handle_result(result: target::Result) -> crate::Result {
     match result {
         Ok(o) => match o {
-            arch::Ok::Ok(no) => core::result::Result::Ok(crate::Ok::FStat(Ok::Ok(no))),
+            target::Ok::Ok(no) => core::result::Result::Ok(crate::Ok::FStat(Ok::Ok(no))),
         },
         Err(e) => match e {
-            arch::Error::Error(no) => core::result::Result::Err(crate::Error::Error(no)),
+            target::Error::Error(no) => core::result::Result::Err(crate::Error::Error(no)),
         },
     }
 }
