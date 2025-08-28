@@ -1,3 +1,5 @@
+use target::os::syscall;
+
 pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
     let p = match syscall::mmap(
         core::ptr::null_mut(),
@@ -7,7 +9,9 @@ pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
         -1,
         0,
     ) {
-        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(no))) => no as *const u8,
+        Ok(target::Ok::Os(target::os::Ok::Syscall(target::os::syscall::Ok::MMap(
+            target::os::syscall::mmap::Ok::Default(m),
+        )))) => m as *const u8,
         _ => {
             crate::info!("Failed to mmap file");
             panic!("ohones")

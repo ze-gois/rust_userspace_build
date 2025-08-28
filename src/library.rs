@@ -12,6 +12,6 @@ pub mod panic;
 pub mod result;
 pub use result::{Error, Ok, Result};
 
-pub use human::info;
+pub use common::info;
 
 macros::trait_implement_primitives!();

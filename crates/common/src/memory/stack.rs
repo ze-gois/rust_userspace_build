@@ -1,4 +1,4 @@
-pub use human::info;
+pub use crate::info;
 pub mod arguments;
 pub mod auxiliary;
 pub mod environment;

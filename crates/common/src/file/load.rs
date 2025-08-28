@@ -1,3 +1,5 @@
+use target::os::syscall;
+
 pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> {
     let filepath = crate::types::string::terminate(filepath);
     let license_mapping;
@@ -11,7 +13,10 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 filepath,
                 syscall::open::flags::Flag::RDONLY as i32,
             ) {
-                Ok(syscall::Ok::Open(syscall::open::Ok::OPENAT(no))) => no as isize,
+                // Ok(syscall::Ok::Open(syscall::open::Ok::OPENAT(no))) => no as isize,
+                core::result::Result::Ok(target::Ok::Os(target::os::Ok::Syscall(
+                    target::os::syscall::Ok::Open(target::os::syscall::open::Ok::OPENAT(fd)),
+                ))) => fd as isize,
                 _ => break 'opening None,
             };
 
@@ -27,9 +32,9 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 -1,
                 0,
             ) {
-                Ok(syscall::Ok::MMap(mmap_ok)) => match mmap_ok {
-                    syscall::mmap::Ok::Default(no) => no as *const u8,
-                },
+                core::result::Result::Ok(target::Ok::Os(target::os::Ok::Syscall(
+                    target::os::syscall::Ok::MMap(target::os::syscall::mmap::Ok::Default(fd)),
+                ))) => fd as *const u8,
                 _ => {
                     crate::info!("Failed to mmap file");
                     panic!("k")

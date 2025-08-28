@@ -1,4 +1,5 @@
-use human::info;
+use crate::info;
+use target::os::syscall;
 
 pub mod entry;
 pub use entry::*;

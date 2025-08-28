@@ -1,3 +1,5 @@
+use target;
+use target::os::syscall;
 pub fn terminate(head: &str) -> *const u8 {
     let tailed = match syscall::mmap(
         core::ptr::null_mut(),
@@ -7,7 +9,9 @@ pub fn terminate(head: &str) -> *const u8 {
         -1,
         0,
     ) {
-        Ok(syscall::Ok::MMap(syscall::mmap::Ok::Default(m))) => m,
+        Ok(target::Ok::Os(target::os::Ok::Syscall(target::os::syscall::Ok::MMap(
+            target::os::syscall::mmap::Ok::Default(m),
+        )))) => m,
         _ => panic!("head"),
     };
 

@@ -17,7 +17,7 @@ pub fn panic(info: &PanicInfo) -> ! {
         info!("x.");
         if count == 0 {
             info!("..:");
-            syscall::exit(23);
+            target::os::syscall::exit(23);
         }
     }
 }

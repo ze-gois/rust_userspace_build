@@ -7,7 +7,7 @@ use userspace;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn entry(stack_pointer: target::arch::PointerType) -> ! {
-    human::info!("eXecuting Executable and Linkable Format\n\n");
+    userspace::info!("eXecuting Executable and Linkable Format\n\n");
 
     // let stack = memory::Stack::from_pointer(arch::Pointer(stack_pointer));
     // stack.print();
@@ -92,6 +92,6 @@ pub extern "C" fn entry(stack_pointer: target::arch::PointerType) -> ! {
     // syscall::read(tf_fd, tf_content, tf_stat.st_size as usize);
     // syscall::write(1, tf_content, tf_stat.st_size as usize);
 
-    human::info!("eXecuting Executable and Linkable Format\n");
+    userspace::info!("eXecuting Executable and Linkable Format\n");
     panic!("");
 }

@@ -1,7 +1,7 @@
 pub mod ok {
     macros::result!( Ok; "Human Ok"; usize; [
         [0; OK; Default; usize; "Ok"; "All good"],
-        [1; SyscallOK; X86_64Syscall; super::super::syscall::Ok; "Ok"; "All good"],
+        [1; X86_64SYSCALL_OK; X86_64Syscall; super::super::syscall::Ok; "Ok"; "All good"],
     ]);
 
     impl Ok {

@@ -128,7 +128,7 @@ impl Drop for List {
                 let aligned_size =
                     (total_size + crate::memory::page::SIZE - 1) & !(crate::memory::page::SIZE - 1);
 
-                let _ = syscall::munmap(self.former as *mut u8, aligned_size);
+                let _ = target::os::syscall::munmap(self.former as *mut u8, aligned_size);
                 // opcional: limpar para evitar double-drop
                 self.former = core::ptr::null_mut();
                 self.latter = core::ptr::null_mut();
