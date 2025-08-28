@@ -1,12 +1,12 @@
 [package]
-name = "writer"
+name = "target"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "writer"
+name = "target"
 path = "src/library.rs"
-
+crate-type = ["lib"]
 
 [dependencies]
 macros = { path = "../macros" }

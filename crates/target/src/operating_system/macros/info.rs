@@ -1,10 +1,10 @@
 pub struct Stdout;
 
 fn print(msg: &str) -> crate::Result {
-    let out = crate::syscall::write(1, msg.as_ptr(), msg.len());
+    let out = crate::operating_system::syscall::write(1, msg.as_ptr(), msg.len());
 
     match out {
-        _ => Ok(crate::Ok::StdoutOk(32)),
+        _ => Ok(crate::Ok::Info(32)),
     }
 }
 
