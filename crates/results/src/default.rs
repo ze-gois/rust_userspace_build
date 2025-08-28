@@ -11,7 +11,7 @@ macro_rules! result {
                     $variant_discriminant:expr;
                     $variant_const_identifier:ident;
                     $variant_identifier:ident;
-                    $variant_type:ty;
+                    $($variant_type:tt)::*;
                     $variant_acronym:expr;
                     $variant_description:expr
                 ]
@@ -19,7 +19,7 @@ macro_rules! result {
         ]
     ) => {
         macros::r#enum!(pub $result_identifier, $result_discriminant_type,[
-           $([$variant_discriminant, $variant_identifier, $variant_type],)*
+           $([$variant_discriminant, $variant_identifier, $($variant_type)::*],)*
         ]);
 
         pub mod constants {
@@ -43,8 +43,8 @@ macro_rules! result {
             //     match no {
             //         $(
             //             $variant_discriminant => {
-            //                 let payload : $variant_type;
-            //                 payload = <$variant_type>::from_le_bytes(no.to_le_bytes());
+            //                 let payload : $($variant_type)::*;
+            //                 payload = <$($variant_type)::*>::from_le_bytes(no.to_le_bytes());
             //                 Self::$variant_identifier(payload)
             //             },
             //         )*

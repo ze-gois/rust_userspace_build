@@ -1,9 +1,9 @@
 #[macro_export]
 macro_rules! r#enum {
-    ($enum_vis:vis $enum_identifier:ident, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$variant_type:ty]),* $(,)? ]) => {
+    ($enum_vis:vis $enum_identifier:ident, $enum_discriminant_type:ty, [$([$variant_discriminant:expr,$variant_identifier:ident,$($variant_type:tt)::*]),* $(,)? ]) => {
         #[derive(Debug, Clone, Copy)]
         $enum_vis enum $enum_identifier {
-            $($variant_identifier($variant_type)),*
+            $($variant_identifier($($variant_type)::*)),*
         }
 
         impl $enum_identifier {
@@ -15,7 +15,7 @@ macro_rules! r#enum {
         }
 
         impl macros::traits::Bytes<crate::Origin,crate::Origin> for $enum_identifier {
-            const BYTES_SIZE : usize = <$enum_discriminant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE + macros::expressions_upperbound!($(<$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE),*);
+            const BYTES_SIZE : usize = <$enum_discriminant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE + macros::expressions_upperbound!($(<$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE),*);
             fn to_bytes(&self, endianness: bool) -> [u8;Self::BYTES_SIZE] {
                 let mut bytes = [0u8;Self::BYTES_SIZE];
 
@@ -33,11 +33,11 @@ macro_rules! r#enum {
                                 }
                             );
                             o = o + <$enum_discriminant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
-                            bytes[o..(o+<$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE)].copy_from_slice(
+                            bytes[o..(o+<$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE)].copy_from_slice(
                                 &if endianness {
-                                    <$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(payload)
+                                    <$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(payload)
                                 } else {
-                                    <$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(payload)
+                                    <$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(payload)
                                 }
                             );
                             bytes
@@ -60,12 +60,12 @@ macro_rules! r#enum {
                     $(
                         $variant_discriminant => {
                             Self::$variant_identifier({
-                                let mut payload = [0u8; <$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
-                                payload.copy_from_slice(&bytes[o..(o+<$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE)]);
+                                let mut payload = [0u8; <$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+                                payload.copy_from_slice(&bytes[o..(o+<$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE)]);
                                 if endianness {
-                                    <$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(payload)
+                                    <$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(payload)
                                 } else {
-                                    <$variant_type as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(payload)
+                                    <$($variant_type)::* as macros::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(payload)
                                 }
                             })
                         },
