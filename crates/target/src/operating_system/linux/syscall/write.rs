@@ -29,7 +29,7 @@ pub mod ok {
 
 pub mod error {
     results::result!(Error; "MUnMap error"; usize; [
-        [0;  ERROR2;   Deault;           usize; "Error"; "Something wicked this way comes"],
+        [0;  ERROR2;   Default;           usize; "Error"; "Something wicked this way comes"],
         [1;  ERROR;   Error;             usize; "Error"; "Something wicked this way comes"],
         [9;  EBADF;   BadFileDescriptor; usize;   "EBADF";     "Bad file descriptor"],
         [14; EFAULT;  InvalidBuffer;     usize;  "EFAULT";    "Invalid buffer pointer"],

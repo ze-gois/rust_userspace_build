@@ -57,7 +57,7 @@ pub fn handle_result(result: crate::Result) -> crate::Result {
             _ => core::result::Result::Err(crate::Error::Info(2)),
         },
         crate::Result::Err(_) => core::result::Result::Err(crate::Error::Os(
-            crate::os::Error::Syscall(crate::os::syscall::Error::Close(Error::Default(3))),
+            crate::os::Error::Syscall(crate::os::syscall::Error::Read(Error::BadFileDescriptor(3))),
         )),
     }
 }

@@ -34,9 +34,7 @@ macro_rules! result {
             $( pub const $variant_const_identifier : &str = $variant_description; )*
         }
 
-        pub use results::traits::Result as ResultTrait;
-
-        impl ResultTrait for $result_identifier {
+        impl macros::traits::enums::Result for $result_identifier {
             type ResultType = $result_discriminant_type;
 
             // fn from_no(no: Self::ResultType) -> Self {

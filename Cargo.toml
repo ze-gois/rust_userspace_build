@@ -30,14 +30,12 @@ test = false                   # Is tested by default.
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 macros = { path = "crates/macros" }
-results = { path = "crates/results" }
 
 [workspace.dependencies]
 userspace = { path = "." }
 target = { path = "crates/target" }
 common = { path = "crates/common" }
 macros = { path = "crates/macros" }
-results = { path = "crates/results" }
 
 
 # https://doc.rust-lang.org/cargo/reference/cargo-targets.html

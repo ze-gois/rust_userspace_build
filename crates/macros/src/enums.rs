@@ -12,3 +12,6 @@ pub mod typed;
 
 #[macro_use]
 pub mod opted;
+
+#[macro_use]
+pub mod result;
