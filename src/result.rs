@@ -3,8 +3,8 @@ macros::result!(
     "Human Ok";
     usize;
     [
-        [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
-        // [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
+        [1; USERSPACE_DEFAULT_OK; Default; usize; "ZE"; "Entry to ze"],
+        // [2; USERSPACE_TARGET_OK; Target; target::Ok; "ZE"; "Entry to ze"],
         [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
     ];
     Error;
@@ -17,7 +17,7 @@ macros::result!(
 
 impl Ok {
     pub fn from_no(no: usize) -> Self {
-        Ok::HumanOk(no)
+        Ok::Default(no)
     }
 }
 
