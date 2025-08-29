@@ -1,51 +1,31 @@
-pub mod traits {
-    macros::trait_place_result!();
-}
+macros::result!(
+    Ok;
+    "Human Ok";
+    usize;
+    [
+        [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
+        // [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
+        [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
+    ];
+    Error;
+    "Human error";
+    usize;
+    [
+        [1; ERROR; Error; usize; "ZE"; "Entry to ze"],
+    ]
+);
 
-pub mod ok {
-
-    macros::r#struct!(pub OurStruct {
-        value : usize,
-        inform : u8,
-    });
-
-    macros::result!(
-        Ok;
-        "Human Ok";
-        usize;
-        [
-            [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
-            [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
-            [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
-        ]
-    );
-
-    impl Ok {
-        pub fn from_no(no: usize) -> Self {
-            Ok::HumanOk(no)
-        }
+impl Ok {
+    pub fn from_no(no: usize) -> Self {
+        Ok::HumanOk(no)
     }
 }
 
-pub mod error {
-    macros::result!(
-        Error;
-        "Human error";
-        usize;
-        [
-            [1; ERROR; Error; usize; "ZE"; "Entry to ze"],
-        ]
-    );
-
-    impl Error {
-        pub fn from_no(no: usize) -> Self {
-            Error::Error(no)
-        }
+impl Error {
+    pub fn from_no(no: usize) -> Self {
+        Error::Error(no)
     }
 }
-
-pub use error::Error;
-pub use ok::Ok;
 
 pub type Result = core::result::Result<Ok, Error>;
 
