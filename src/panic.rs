@@ -17,8 +17,8 @@ pub fn panic(info: &PanicInfo) -> ! {
         info!("x.");
         if count == 0 {
             info!("..:");
-            unsafe { core::arch::asm!("call entry") };
-            // target::os::syscall::exit(23);
+            // unsafe { core::arch::asm!("call entry") };
+            target::os::syscall::exit(23);
         }
     }
 }

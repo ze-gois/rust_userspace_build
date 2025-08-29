@@ -8,7 +8,7 @@
       "initialization_options": {
         "cargo": {
           // compila o código alvo no target bare metal
-          "target": "x86_64-unknown-none"
+          "target": "x86_64-unknown-linux-gnu"
           // "target": "stable-x86_64-unknown-linux-gnu"
         }
         // "check": {

@@ -15,19 +15,19 @@ pub fn read(file_descriptor: isize, byte_buffer: *const u8, byte_length: usize) 
 
 pub mod ok {
     macros::result!( Ok; "MUnMap Ok"; usize; [
-        [0; OK; Ok; usize; "Ok"; "All good"],
+        [0; OK; Default; usize; "Ok"; "All good"],
     ]);
 
     impl Ok {
         pub fn from_no(no: usize) -> Self {
-            Ok::Ok(no)
+            Ok::Default(no)
         }
     }
 }
 
 pub mod error {
     macros::result!(Error; "MUnMap error"; usize; [
-        [1; ERROR;          Error;            usize; "Error"; "Something wicked this way comes"],
+        [1; ERROR;          Default;            usize; "Error"; "Something wicked this way comes"],
         [4;   EINTR;        Interrupted;      usize;            "EINTR";     "System call was interrupted"],
         [5;   EIO;          IOError;          usize;              "EIO";       "Input/output error"],
         [9;   EBADF;        BadFileDescriptor;usize;            "EBADF";     "Bad file descriptor"],
@@ -39,7 +39,7 @@ pub mod error {
 
     impl Error {
         pub fn from_no(no: usize) -> Self {
-            Error::Error(no)
+            Error::Default(no)
         }
     }
 }
@@ -52,12 +52,15 @@ pub type Result = core::result::Result<Ok, Error>;
 pub fn handle_result(result: crate::Result) -> crate::Result {
     // Err(crate::Error::Default(1))
     match result {
-        crate::Result::Ok(_ok) => match _ok {
-            // crate::Ok::Arch(crate::arch::Ok::X86_64Syscall(crate::arch::syscall::Ok::X86_64Syscall1(crate::arch::syscall::syscall1::Ok::Default(no)))) => core::result::Result::Ok(crate::Ok::Os(crate::os::Ok::Syscall()
-            _ => core::result::Result::Err(crate::Error::Info(2)),
-        },
-        crate::Result::Err(_) => core::result::Result::Err(crate::Error::Os(
-            crate::os::Error::Syscall(crate::os::syscall::Error::Read(Error::BadFileDescriptor(3))),
-        )),
+        crate::Result::Ok(crate::Ok::Arch(crate::arch::Ok::X86_64Syscall(
+            crate::arch::syscall::Ok::X86_64Syscall3(crate::arch::syscall::syscall3::Ok::Default(
+                m,
+            )),
+        ))) => core::result::Result::Ok(crate::Ok::Os(crate::os::Ok::Syscall(
+            crate::os::syscall::Ok::Read(crate::os::syscall::read::Ok::Default(m)),
+        ))),
+        _ => core::result::Result::Err(crate::Error::Os(crate::os::Error::Syscall(
+            crate::os::syscall::Error::Read(Error::Default(3)),
+        ))),
     }
 }

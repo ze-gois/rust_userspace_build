@@ -8,13 +8,14 @@ pub struct Origin;
 pub use macros;
 pub use target;
 
-pub mod dtype;
-pub mod header;
+pub mod file;
 pub mod license;
+pub mod memory;
 pub mod panic;
 pub mod result;
+pub mod types;
 pub use result::{Error, Ok, Result};
 
-pub use common::info;
+pub use target::info;
 
 macros::trait_implement_primitives!();

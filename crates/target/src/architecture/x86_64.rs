@@ -6,6 +6,7 @@
 pub mod callable;
 pub mod result;
 pub mod syscall;
+// pub use syscall::*;
 
 pub mod page {
     pub const SIZE: usize = 0x1000;

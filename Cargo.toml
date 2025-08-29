@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*"]
+members = ["crates/*", "example/server", "example/xelf"]
 
 [package]
 name = "userspace"
@@ -11,30 +11,16 @@ name = "userspace"
 path = "src/library.rs"
 test = false
 
-[[bin]]
-name = "xelf"                # The name of the target.
-path = "src/binary/entry.rs" # The source file of the target.
-test = false                 # Is tested by default.
-
-[[bin]]
-name = "what"               # The name of the target.
-path = "src/binary/what.rs" # The source file of the target.
-test = false                # Is tested by default.
-
-[[bin]]
-name = "license"               # The name of the target.
-path = "src/binary/license.rs" # The source file of the target.
-test = false                   # Is tested by default.
-
 [dependencies]
 target = { path = "crates/target" }
-common = { path = "crates/common" }
+# common = { path = "crates/common" }
 macros = { path = "crates/macros" }
 
 [workspace.dependencies]
 userspace = { path = "." }
+xelf = { path = "example/xelf" }
 target = { path = "crates/target" }
-common = { path = "crates/common" }
+# common = { path = "crates/common" }
 macros = { path = "crates/macros" }
 
 [build-dependencies]

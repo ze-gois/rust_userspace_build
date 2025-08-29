@@ -23,12 +23,15 @@ pub fn openat(
 pub fn handle_result(result: crate::Result) -> crate::Result {
     // Err(crate::Error::Default(1))
     match result {
-        crate::Result::Ok(_ok) => match _ok {
-            // crate::Ok::Arch(crate::arch::Ok::X86_64Syscall(crate::arch::syscall::Ok::X86_64Syscall1(crate::arch::syscall::syscall1::Ok::Default(no)))) => core::result::Result::Ok(crate::Ok::Os(crate::os::Ok::Syscall()
-            _ => core::result::Result::Err(crate::Error::Info(2)),
-        },
-        crate::Result::Err(_) => core::result::Result::Err(crate::Error::Os(
-            crate::os::Error::Syscall(crate::os::syscall::Error::Open(Error::OPENAT(3))),
-        )),
+        crate::Result::Ok(crate::Ok::Arch(crate::arch::Ok::X86_64Syscall(
+            crate::arch::syscall::Ok::X86_64Syscall3(crate::arch::syscall::syscall3::Ok::Default(
+                m,
+            )),
+        ))) => core::result::Result::Ok(crate::Ok::Os(crate::os::Ok::Syscall(
+            crate::os::syscall::Ok::Open(crate::os::syscall::open::Ok::OPENAT(m)),
+        ))),
+        _ => core::result::Result::Err(crate::Error::Os(crate::os::Error::Syscall(
+            crate::os::syscall::Error::Open(Error::Default(3)),
+        ))),
     }
 }
