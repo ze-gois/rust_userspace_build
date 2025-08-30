@@ -32,4 +32,4 @@ rustflags = [
 
 
 [alias]
-xelf = "run --bin xelf"
+xelf = "run -p xelf"
