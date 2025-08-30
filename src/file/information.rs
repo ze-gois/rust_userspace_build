@@ -9,8 +9,10 @@ pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
         -1,
         0,
     ) {
-        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
-            crate::target::os::syscall::Ok::MMap(crate::target::os::syscall::mmap::Ok::Default(m)),
+        core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
+            crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::MMap(
+                crate::target::os::syscall::mmap::Ok::Default(m),
+            )),
         ))) => m as *const u8,
         _ => {
             crate::info!("Failed to mmap file");

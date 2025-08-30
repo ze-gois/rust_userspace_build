@@ -4,7 +4,7 @@ fn print(msg: &str) -> crate::Result {
     let out = crate::target::operating_system::syscall::write(1, msg.as_ptr(), msg.len());
 
     match out {
-        _ => Ok(crate::Ok::Info(32)),
+        _ => Ok(crate::Ok::Target(crate::target::Ok::Info(32))),
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::target::{self, os::syscall};
+use crate::target::os::syscall;
 
 pub fn alloc<T>(n: usize) -> *mut T {
     let t_size = core::mem::size_of::<T>();
@@ -13,9 +13,9 @@ pub fn alloc<T>(n: usize) -> *mut T {
         -1,
         0,
     ) {
-        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
-            crate::target::os::syscall::Ok::LSeek(crate::target::os::syscall::lseek::Ok::Default(
-                m,
+        core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
+            crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::LSeek(
+                crate::target::os::syscall::lseek::Ok::Default(m),
             )),
         ))) => m as *mut T,
         _ => panic!("Failed to allocate memory"),

@@ -57,8 +57,9 @@ pub fn handle_result(result: crate::Result) -> crate::Result {
     match result {
         crate::Result::Ok(crate::Ok::Target(crate::target::Ok::Arch(
             crate::target::arch::Ok::X86_64Syscall(
-                crate::target::arch::syscall::syscall3::Ok::Default(m),
-                crate::target::arch::syscall::Ok::X86_64Syscall3(),
+                crate::target::arch::syscall::Ok::X86_64Syscall3(
+                    crate::target::arch::syscall::syscall3::Ok::Default(m),
+                ),
             ),
         ))) => core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
             crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::Write(

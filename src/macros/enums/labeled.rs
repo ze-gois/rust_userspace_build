@@ -72,14 +72,12 @@ macro_rules! enum_labeled {
             fn description(&self) -> &str {
                 match self {
                     $(Self::$variant_identifier(_) => $variant_description,)*
-                    _ => "TODO"
                 }
             }
 
             fn acronym(&self) -> &str {
                 match *self {
                     $(Self::$variant_identifier(_) => $variant_acronym,)*
-                    _ => "Unknown error",
                 }
             }
         }

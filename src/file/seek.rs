@@ -6,9 +6,9 @@ pub fn seek(file_descriptor: isize, offset: i64) -> usize {
         offset,
         syscall::lseek::Flag::SET as i32,
     ) {
-        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
-            crate::target::os::syscall::Ok::LSeek(crate::target::os::syscall::lseek::Ok::Default(
-                m,
+        core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
+            crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::LSeek(
+                crate::target::os::syscall::lseek::Ok::Default(m),
             )),
         ))) => m,
         _ => 0,

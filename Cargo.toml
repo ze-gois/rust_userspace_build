@@ -12,7 +12,6 @@ documentation = "https://docs.rs/bitflags"
 repository = "https://github.com/ze-gois/rust_userspace"
 readme = "README.md"
 homepage = "https://userspace.builders"
-license = "BSD 3-Clause"
 license-file = "LICENSE"
 keywords = ["architecture", "operating system"]
 categories = ["no-std", "os"]
