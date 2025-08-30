@@ -5,6 +5,15 @@ members = ["crates/*", "example/server", "example/xelf"]
 name = "userspace"
 version = "0.1.0"
 edition = "2024"
+authors = ["José Gois <ze.gois.00@gmail.com>"]
+description = "Standard library for userspace applications"
+documentation = "https://docs.rs/bitflags"
+repository = "https://github.com/ze-gois/rust_userspace"
+readme = "README.md"
+homepage = "https://userspace.builders"
+license = "BSD 3-Clause"
+license-file = "LICENSE"
+keywords = ["architecture", "operating system"]
 
 [lib]
 name = "userspace"
