@@ -61,16 +61,16 @@ pub type Result = core::result::Result<Ok, Error>;
 
 pub fn handle_result(result: usize) -> crate::Result {
     if (result as isize) < 0 {
-        Err(crate::target::Error::Arch(
+        core::result::Result::Err(crate::Error::Target(crate::target::Error::Arch(
             crate::target::arch::Error::X86_64Syscall(
                 crate::target::arch::syscall::Error::X86_64Syscall5(Error::Default(result)),
             ),
-        ))
+        )))
     } else {
-        Ok(crate::target::Ok::Arch(
+        core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Arch(
             crate::target::arch::Ok::X86_64Syscall(
                 crate::target::arch::syscall::Ok::X86_64Syscall5(Ok::Default(result)),
             ),
-        ))
+        )))
     }
 }

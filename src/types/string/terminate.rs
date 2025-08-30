@@ -8,9 +8,9 @@ pub fn terminate(head: &str) -> *const u8 {
         -1,
         0,
     ) {
-        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
+        Ok(crate::Ok::Target(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
             crate::target::os::syscall::Ok::MMap(crate::target::os::syscall::mmap::Ok::Default(m)),
-        ))) => m,
+        )))) => m,
         _ => panic!("head"),
     };
 

@@ -41,8 +41,12 @@ pub type Result = core::result::Result<Ok, Error>;
 
 pub fn handle_result(result: usize) -> crate::Result {
     if (result as isize) < 0 {
-        Err(crate::target::Error::Os(Error::from_no(result)))
+        core::result::Result::Err(crate::Error::Target(crate::target::Error::Os(
+            Error::from_no(result),
+        )))
     } else {
-        Ok(crate::target::Ok::Os(Ok::from_no(result)))
+        core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(Ok::from_no(
+            result,
+        ))))
     }
 }

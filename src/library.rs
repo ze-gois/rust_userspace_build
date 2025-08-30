@@ -7,12 +7,13 @@ pub struct Origin;
 
 #[macro_use]
 pub mod macros;
+#[macro_use]
+pub mod target;
 pub mod file;
 pub mod license;
 pub mod memory;
 pub mod panic;
 pub mod result;
-pub mod target;
 pub mod traits;
 pub mod types;
 pub use result::{Error, Ok, Result};
