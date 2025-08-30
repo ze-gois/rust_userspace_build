@@ -1,5 +1,5 @@
 pub mod endianness {
-    ::macros::enum_labeled!(
+    enum_labeled!(
         pub Endianness,
         u8,
         "endianness",
@@ -15,7 +15,7 @@ pub mod endianness {
 
 pub use endianness::Endianness;
 
-// ::macros::define_error!(
+// define_error!(
 //     "DType",
 //     [
 //         [0; InvalidData; NONE; "NONE";  "No " ],

@@ -1,4 +1,4 @@
-use target::os::syscall;
+use crate::target::os::syscall;
 
 pub fn seek(file_descriptor: isize, offset: i64) -> usize {
     match syscall::lseek(
@@ -6,9 +6,11 @@ pub fn seek(file_descriptor: isize, offset: i64) -> usize {
         offset,
         syscall::lseek::Flag::SET as i32,
     ) {
-        Ok(target::Ok::Os(target::os::Ok::Syscall(target::os::syscall::Ok::LSeek(
-            target::os::syscall::lseek::Ok::Default(m),
-        )))) => m,
+        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
+            crate::target::os::syscall::Ok::LSeek(crate::target::os::syscall::lseek::Ok::Default(
+                m,
+            )),
+        ))) => m,
         _ => 0,
     }
 }

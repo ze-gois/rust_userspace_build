@@ -7,4 +7,4 @@ pub use alloc::alloc;
 
 pub struct Origin {}
 
-// macros::trait_implement_primitives!();
+// trait_implement_primitives!();

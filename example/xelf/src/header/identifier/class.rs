@@ -1,4 +1,4 @@
-::macros::enum_labeled!(
+enum_labeled!(
     pub Class,
     u8,
     "Class of pointer power",

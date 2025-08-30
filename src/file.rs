@@ -15,7 +15,7 @@ pub use seek::seek;
 
 pub mod format;
 
-// impl macros::traits::Bytes<Origin, Origin> for &str {
+// impl traits::Bytes<Origin, Origin> for &str {
 //     const BYTES_SIZE: usize = core::mem::size_of::<&str>();
 //     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
 //         let bytes =
@@ -24,13 +24,13 @@ pub mod format;
 // }
 
 pub mod a {
-    macros::r#struct!(pub Information {
+    r#struct!(pub Information {
        size : usize,
     });
 }
 pub use a::Information;
 
-macros::r#struct!(pub File {
+r#struct!(pub File {
     pub descriptor : isize,
     pub information : Information
     // pub memory : Option<*const u8>

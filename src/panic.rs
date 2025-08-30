@@ -18,7 +18,7 @@ pub fn panic(info: &PanicInfo) -> ! {
         if count == 0 {
             info!("..:");
             // unsafe { core::arch::asm!("call entry") };
-            target::os::syscall::exit(23);
+            crate::target::os::syscall::exit(23);
         }
     }
 }

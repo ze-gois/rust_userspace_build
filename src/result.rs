@@ -1,10 +1,10 @@
-macros::result!(
+result!(
     Ok;
     "Human Ok";
     usize;
     [
         [1; USERSPACE_DEFAULT_OK; Default; usize; "ZE"; "Entry to ze"],
-        // [2; USERSPACE_TARGET_OK; Target; target::Ok; "ZE"; "Entry to ze"],
+        [2; USERSPACE_TARGET_OK; Target; crate::target::Ok; "ZE"; "Entry to ze"],
         [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
     ];
     Error;
@@ -12,6 +12,7 @@ macros::result!(
     usize;
     [
         [1; ERROR; Error; usize; "ZE"; "Entry to ze"],
+        [2; USERSPACE_TARGET_ERR; Target; crate::target::Error; "ZE"; "Entry to ze"],
     ]
 );
 
@@ -37,13 +38,13 @@ pub fn handle_result(result: usize) -> Result {
     }
 }
 
-// // use macros::result::ErrorTrait;
+// // use result::ErrorTrait;
 
 // pub mod error {
-//     ::macros::define_error!("ELF", []);
+//     define_error!("ELF", []);
 // }
 
-// // ::macros::define_error_nested! (
+// // define_error_nested! (
 // //     "ELF",
 // //     [
 // //         [0; Elf;     self::error;     ERR_ELF;     "Local error";   "ERR_ELF"],
@@ -61,13 +62,13 @@ pub fn handle_result(result: usize) -> Result {
 // }
 
 // mod ok {
-//     ::macros::enum_typed!(Ok; usize; "AT_TYPE"; crate::result::macro_types; [
+//     enum_typed!(Ok; usize; "AT_TYPE"; crate::result::macro_types; [
 //         [0;    Null;            usize;  |p: Franco| { *p as usize };     AT_NULL;          "Null";          "End of vector"],
 //         [1;    Ignore;          usize;  |p: Franco| { *p as usize };     AT_IGNORE;        "Ignore";        "Entry should be ignored"],
 //     ]);
 // }
 
-// ::macros::error_typed!("ELF Type"; crate::result::macro_types; [
+// error_typed!("ELF Type"; crate::result::macro_types; [
 //    [0; Elf;     elf_error; p; { elf_error::from_ptr(p) };  { p.to_no() as Franco };                ERR_ELF; "ERR_ELF";   "ERR_ELF"],
 //    [1; DType; dtype_error; p; { dtype_error::from_ptr(p)}; { p as *const dtype_error as Franco}; ERR_DTYPE; "ERR_DTYPE"; "ERR_DTYPE"],
 // ]);

@@ -1,4 +1,4 @@
-::macros::enum_labeled!(
+enum_labeled!(
     pub Magic,
     u8,
     "Dope",

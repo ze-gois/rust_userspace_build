@@ -25,7 +25,7 @@ macro_rules! bring_atype {
             ),* $(,)?
         ]
     ) => {
-        macros::enum_labeled!(
+        enum_labeled!(
             $enum_vis $enum_identifier,
             $enum_discriminant_type,
             $enum_label,
@@ -44,7 +44,7 @@ macro_rules! bring_atype {
         );
 
         pub mod unit {
-            macros::enum_labeled!(
+            enum_labeled!(
                 pub TypeUnit,
                 $enum_discriminant_type,
                 $enum_label,

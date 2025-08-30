@@ -8,12 +8,12 @@ use userspace::target;
 use xelf;
 
 #[unsafe(no_mangle)]
-pub extern "C" fn entry(stack_pointer: target::arch::PointerType) -> ! {
+pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
-    target::os::syscall::exit(30)
+    crate::target::os::syscall::exit(30)
 }

@@ -1,6 +1,6 @@
 use core::ops::Not;
 
-pub use target::arch::page::SIZE;
+pub use crate::target::arch::page::SIZE;
 
 pub const ALIGNMENT: usize = SIZE - 1;
 pub const MASK: usize = !ALIGNMENT;

@@ -14,12 +14,12 @@ pub trait ELFType {
 
 pub mod ok {
 
-    macros::r#struct!(pub OurStruct {
+    r#struct!(pub OurStruct {
         value : usize,
         inform : u8,
     });
 
-    macros::result!(
+    result!(
         Ok;
         "Human Ok";
         usize;
@@ -38,7 +38,7 @@ pub mod ok {
 }
 
 pub mod error {
-    macros::result!(
+    result!(
         Error;
         "Human error";
         usize;

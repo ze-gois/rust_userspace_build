@@ -1,4 +1,4 @@
-use target::os::syscall;
+use crate::target::os::syscall;
 
 pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> {
     let filepath = crate::types::string::terminate(filepath);
@@ -14,8 +14,10 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 syscall::open::flags::Flag::RDONLY as i32,
             ) {
                 // Ok(syscall::Ok::Open(syscall::open::Ok::OPENAT(no))) => no as isize,
-                core::result::Result::Ok(target::Ok::Os(target::os::Ok::Syscall(
-                    target::os::syscall::Ok::Open(target::os::syscall::open::Ok::OPENAT(fd)),
+                core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
+                    crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::Open(
+                        crate::target::os::syscall::open::Ok::OPENAT(fd),
+                    )),
                 ))) => fd as isize,
                 _ => break 'opening None,
             };
@@ -32,8 +34,10 @@ pub fn load(filepath: &str) -> Option<(isize, syscall::fstat::Stat, *const u8)> 
                 -1,
                 0,
             ) {
-                core::result::Result::Ok(target::Ok::Os(target::os::Ok::Syscall(
-                    target::os::syscall::Ok::MMap(target::os::syscall::mmap::Ok::Default(fd)),
+                core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
+                    crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::MMap(
+                        crate::target::os::syscall::mmap::Ok::Default(fd),
+                    )),
                 ))) => fd as *const u8,
                 _ => {
                     crate::info!("Failed to mmap file");

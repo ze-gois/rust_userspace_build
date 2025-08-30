@@ -1,4 +1,4 @@
-use target::os::syscall;
+use crate::target::os::syscall;
 
 pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
     let p = match syscall::mmap(
@@ -9,9 +9,9 @@ pub fn from_fd(fd: isize) -> syscall::fstat::Stat {
         -1,
         0,
     ) {
-        Ok(target::Ok::Os(target::os::Ok::Syscall(target::os::syscall::Ok::MMap(
-            target::os::syscall::mmap::Ok::Default(m),
-        )))) => m as *const u8,
+        Ok(crate::target::Ok::Os(crate::target::os::Ok::Syscall(
+            crate::target::os::syscall::Ok::MMap(crate::target::os::syscall::mmap::Ok::Default(m)),
+        ))) => m as *const u8,
         _ => {
             crate::info!("Failed to mmap file");
             panic!("ohones")

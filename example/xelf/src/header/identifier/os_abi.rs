@@ -1,7 +1,7 @@
 // use crate::dtype::ELFType;
 // use crate::dtype::UChar as T;
 
-::macros::enum_labeled!(
+enum_labeled!(
     pub OsABI,
     u8,
     "Operating System Application Binary Interface",
