@@ -13,7 +13,7 @@ repository = "https://github.com/ze-gois/rust_userspace"
 readme = "README.md"
 homepage = "https://userspace.builders"
 license-file = "LICENSE"
-keywords = ["architecture", "operating system"]
+keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
 
 [lib]
