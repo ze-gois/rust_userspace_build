@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! dtype_impl {
+macro_rules! file_format_elf_dtype_impl {
     ($($dtype:ident),*) => {
         trait_implement_primitive!(false, $($dtype),*);
         trait_implement_bytes!($($dtype),*);
@@ -92,3 +92,4 @@ macro_rules! dtype_impl {
         )*
     };
 }
+pub use file_format_elf_dtype_impl;

@@ -118,3 +118,4 @@ macro_rules! define_error{
         pub type Result = core::result::Result<usize, Error>;
     };
 }
+pub use define_error;

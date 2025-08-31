@@ -11,3 +11,4 @@ macro_rules! wrap_syscall {
         }
     }
 }
+pub use wrap_syscall;

@@ -1,16 +1,18 @@
-pub mod class_64;
-pub use class_64::UChar;
+use super::ELFType;
 
-#[macro_use]
-pub mod macros;
-pub mod endianness;
-pub use endianness::Endianness;
+crate::dtype_define!(pub Null, u8); //Unsigned file offset
+crate::dtype_define!(pub UChar, u8); //Unsigned file offset
+crate::dtype_define!(pub SXWord, i64); //Unsigned program address
+crate::dtype_define!(pub Half, u16); //Unsigned medium integer
+crate::dtype_define!(pub SWord, i32); //Unsigned integer
+crate::dtype_define!(pub XWord, u64); //Signed integer
+crate::dtype_define!(pub Word, u32); //Unsigned long integer
+crate::dtype_define!(pub Off, u64); //Signed long integer
+crate::dtype_define!(pub Addr, u64); //Unsigned small integer
 
-pub trait ELFType {
-    type Inner;
-    const SIZE_BITS: usize;
-    const SIZE_BYTES: usize;
-}
+crate::dtype_impl!(Null, UChar, SXWord, Half, SWord, XWord, Word, Off, Addr);
+
+// result!()
 
 pub mod ok {
     r#struct!(pub OurStruct {
@@ -63,13 +65,3 @@ pub mod error {
 
 pub use error::Error;
 pub use ok::Ok;
-
-pub type Result = core::result::Result<Ok, Error>;
-
-pub fn handle_result(result: usize) -> Result {
-    if (result as isize) < 0 {
-        Err(Error::from_no(result))
-    } else {
-        Ok(Ok::from_no(result))
-    }
-}

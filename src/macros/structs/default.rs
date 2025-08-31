@@ -94,3 +94,4 @@ macro_rules! r#struct {
         }
     }
 }
+pub use r#struct;

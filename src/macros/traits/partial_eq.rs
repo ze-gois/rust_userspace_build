@@ -44,3 +44,4 @@ macro_rules! trait_implement_partial_eq {
         )*
     }
 }
+pub use trait_implement_partial_eq;

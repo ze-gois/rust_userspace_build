@@ -77,3 +77,4 @@ macro_rules! enum_opted {
         }
     };
 }
+pub use enum_opted;

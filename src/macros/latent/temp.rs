@@ -7,3 +7,4 @@ macro_rules! chain_latter {
         chain_latter!($latter)
     };
 }
+pub use chain_latter;

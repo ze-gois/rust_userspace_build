@@ -12,3 +12,4 @@ macro_rules! trait_place_result {
         }
     };
 }
+pub use trait_place_result;

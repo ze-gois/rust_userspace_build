@@ -16,3 +16,4 @@ macro_rules! trait_implement_from {
         )*
     }
 }
+pub use trait_implement_from;

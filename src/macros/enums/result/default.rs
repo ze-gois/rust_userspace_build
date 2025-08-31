@@ -22,7 +22,7 @@ macro_rules! result {
     ) => {
         $(
             r#enum!(pub $result_identifier, $result_discriminant_type,[
-            $([$variant_discriminant, $variant_identifier, $($variant_type)::*],)*
+                $([$variant_discriminant, $variant_identifier, $($variant_type)::*],)*
             ]);
         )*
 
@@ -70,3 +70,4 @@ macro_rules! result {
         )*
     }
 }
+pub use result;

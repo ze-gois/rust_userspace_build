@@ -230,3 +230,5 @@ macro_rules! traits_implement_bytes_tuple {
         }
     };
 }
+pub use trait_implement_bytes;
+pub use traits_implement_bytes_tuple;

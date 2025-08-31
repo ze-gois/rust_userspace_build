@@ -1,8 +1,8 @@
 [workspace]
-members = ["example/server", "example/xelf"]
+members = []
 
 [package]
-version = "0.1.11"
+version = "0.1.12"
 publish = true
 license-file = "LICENSE"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
@@ -29,14 +29,13 @@ test = false
 [dependencies]
 
 [workspace.dependencies]
-userspace = { path = ".", version = "0.1.0" }
-xelf = { path = "example/xelf", version = "0.1.0" }
+userspace = { path = "." }
 
 [build-dependencies]
 cc = "1.0"
-userspace_build = { package = "userspace", version = "0.1.10", features = [
-    "with_std",
-] }
+# userspace_build = { package = "userspace", version = "0.1.11", features = [
+#     "with_std",
+# ] }
 
 [features]
 default = ["no_std"]

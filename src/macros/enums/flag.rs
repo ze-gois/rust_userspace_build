@@ -134,3 +134,4 @@ macro_rules! enum_flag {
         }
     };
 }
+pub use enum_flag;

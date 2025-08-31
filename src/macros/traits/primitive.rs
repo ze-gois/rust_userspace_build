@@ -8,3 +8,4 @@ macro_rules! trait_implement_primitive {
         )*
     };
 }
+pub use trait_implement_primitive;

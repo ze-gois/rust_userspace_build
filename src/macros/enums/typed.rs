@@ -137,3 +137,4 @@ macro_rules! enum_typed {
         }
     };
 }
+pub use enum_typed;

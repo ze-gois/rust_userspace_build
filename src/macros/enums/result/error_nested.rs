@@ -194,3 +194,4 @@ macro_rules! define_error_nested {
         pub type Result = core::result::Result<(usize,usize), Error>;
     };
 }
+pub use define_error_nested;

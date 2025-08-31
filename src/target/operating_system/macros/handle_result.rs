@@ -40,3 +40,4 @@ fn handle_result(result: crate::target::Result<isize>) -> crate::result::Result<
         }
     }
 }
+pub use handle_result;

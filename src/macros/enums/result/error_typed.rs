@@ -126,3 +126,4 @@ macro_rules! error_typed {
         }
     };
 }
+pub use error_typed;

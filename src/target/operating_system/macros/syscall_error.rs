@@ -81,3 +81,6 @@ macro_rules! define_syscall_error {
         }
     };
 }
+
+pub use define_syscall_error;
+pub use define_syscall_error;

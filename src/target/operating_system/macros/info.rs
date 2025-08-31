@@ -62,3 +62,5 @@ macro_rules! tinfo {
         let _ = write!(&mut writer, $($arg)*);
     }};
 }
+pub use info;
+pub use tinfo;

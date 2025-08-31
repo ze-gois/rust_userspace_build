@@ -60,3 +60,4 @@ publishing!(
 // }
 
 // naturalize!(traits::Bytes, arch, human);
+pub use naturalize;

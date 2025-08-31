@@ -43,3 +43,5 @@ macro_rules! trait_implement_primitives {
 //         );
 //     };
 // }
+// pub use trait_implement_defaut_for_primitives_by_crate;
+pub use trait_implement_primitives;
