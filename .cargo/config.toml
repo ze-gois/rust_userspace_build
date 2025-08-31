@@ -32,4 +32,5 @@ rustflags = [
 
 
 [alias]
-xelf = "run -p xelf"
+xelf_std = "run -p xelf -Z build-std=std,core,compiler_builtins --features with_std"
+xelf_no_std = "run -p xelf"

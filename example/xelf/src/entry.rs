@@ -13,8 +13,8 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
 
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
 
-    let argc = stack_pointer.0 as *const usize;
-    userspace::info!("argc={:?}", unsafe { *argc });
+    // let argc = stack_pointer.0 as *const usize;
+    // userspace::info!("argc={:?}", unsafe { *argc });
     // let stack = userspace::memory::Stack::from_pointer(stack_pointer);
 
     // stack.print();

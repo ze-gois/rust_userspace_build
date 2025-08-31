@@ -1,11 +1,8 @@
-// #![no_std]
-
-// use userspace_build::target;
-// use userspace_build::info;
-use std::println as info;
+use userspace_build::info;
+use userspace_build::target;
 
 fn main() {
-    // userspace_build::file::print("build.rs");
+    userspace_build::file::print("build.rs");
     info!("cargo:rerun-if-changed=build.rs");
     info!("cargo:rerun-if-changed=linker.ld");
     info!("cargo:rerun-if-changed=src/");

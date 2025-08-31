@@ -17,5 +17,6 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
     let stack = userspace::memory::Stack::from_pointer(stack_pointer);
     stack.print();
 
+    panic!();
     crate::target::os::syscall::exit(30)
 }

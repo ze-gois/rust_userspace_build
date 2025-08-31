@@ -34,7 +34,9 @@ xelf = { path = "example/xelf", version = "0.1.0" }
 
 [build-dependencies]
 cc = "1.0"
-# userspace_build = { package = "userspace", version = "0.1.1", rename = "userspace_build" }
+userspace_build = { package = "userspace", version = "0.1.10", features = [
+    "with_std",
+] }
 
 [features]
 default = ["no_std"]

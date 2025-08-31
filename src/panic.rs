@@ -1,3 +1,4 @@
+#[cfg(not(feature = "with_std"))]
 use core::panic::PanicInfo;
 
 pub use crate::info;
@@ -5,6 +6,7 @@ pub use crate::info;
 #[panic_handler]
 #[cfg(not(feature = "with_std"))]
 pub fn panic(info: &PanicInfo) -> ! {
+    hook();
     if let Some(location) = info.location() {
         // Example: send to UART or RTT instead of println
         let filename = location.file();
@@ -21,8 +23,16 @@ pub fn panic(info: &PanicInfo) -> ! {
         info!("x.");
         if count == 0 {
             info!("..:");
-            // unsafe { core::arch::asm!("call entry") };
+            unsafe { core::arch::asm!("call flag_license") };
             crate::target::os::syscall::exit(23);
         }
     }
+}
+
+pub fn hook() -> () {
+    // #[cfg(feature = "with_std")]
+    // std::panic::set_hook(std::boxed::Box::new(|info| {
+    //     info!("Custom panic: {}", info);
+    //     unsafe { core::arch::asm!("call flag_license") };
+    // }));
 }
