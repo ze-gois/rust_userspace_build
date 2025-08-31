@@ -2,7 +2,7 @@
 members = []
 
 [package]
-version = "0.1.12"
+version = "0.1.120"
 publish = true
 license-file = "LICENSE"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
