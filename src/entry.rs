@@ -18,5 +18,4 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
     stack.print();
 
     panic!();
-    crate::target::os::syscall::exit(30)
 }
