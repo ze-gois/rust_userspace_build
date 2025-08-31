@@ -2,65 +2,65 @@
 macro_rules! trait_implement_bytes {
     ($($t:ty),*) => {
         $(
-            impl traits::Bytes<crate::Origin,crate::Origin> for $t {
+            impl $crate::traits::Bytes<crate::Origin,crate::Origin> for $t {
                 const BYTES_SIZE: usize = core::mem::size_of::<Self>();
 
-                fn to_bytes(&self, endianness: bool) -> [u8; <Self as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE] {
+                fn to_bytes(&self, endianness: bool) -> [u8; <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE] {
                     if endianness {
-                        <Self as traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(self)
+                        <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(self)
                     } else {
-                        <Self as traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(self)
+                        <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(self)
                     }
                 }
 
-                fn from_bytes(bytes: [u8; <Self as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
+                fn from_bytes(bytes: [u8; <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
                     if endianness {
-                        <Self as traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(bytes)
+                        <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(bytes)
                     } else {
-                        <Self as traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(bytes)
+                        <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(bytes)
                     }
                 }
             }
 
-            impl traits::Bytes<crate::Origin,crate::Origin> for Option<$t> {
-                const BYTES_SIZE: usize = core::mem::size_of::<u8>() + <$t as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
-                fn from_bytes(bytes: [u8; <Self as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
-                    let mut option_bytes = [0u8; <u8 as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+            impl $crate::traits::Bytes<crate::Origin,crate::Origin> for Option<$t> {
+                const BYTES_SIZE: usize = core::mem::size_of::<u8>() + <$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                fn from_bytes(bytes: [u8; <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
+                    let mut option_bytes = [0u8; <u8 as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
                     let mut o = 0;
-                    let mut l = <u8 as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                    let mut l = <u8 as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
                     option_bytes.copy_from_slice(&bytes[o..l]);
                     let option = if endianness {
-                        <u8 as traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(option_bytes)
+                        <u8 as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(option_bytes)
                     } else {
-                        <u8 as traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(option_bytes)
+                        <u8 as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(option_bytes)
                     };
                     if option == 0 {
                         None
                     } else {
                         o = l;
-                        l = l + <$t as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
-                        let mut value_bytes = [0u8; <$t as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+                        l = l + <$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                        let mut value_bytes = [0u8; <$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
                         value_bytes.copy_from_slice(&bytes[o..l]);
                         if endianness {
-                            Some(<$t as traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(value_bytes))
+                            Some(<$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_le_bytes(value_bytes))
                         } else {
-                            Some(<$t as traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(value_bytes))
+                            Some(<$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::from_be_bytes(value_bytes))
                         }
                     }
                 }
 
-                fn to_bytes(&self, endianness: bool) -> [u8; <Self as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE] {
-                    let mut bytes = [0u8; <Self as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
+                fn to_bytes(&self, endianness: bool) -> [u8; <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE] {
+                    let mut bytes = [0u8; <Self as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE];
                     if let Some(v) = self {
                         let mut o = 0;
-                        let mut l = <u8 as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                        let mut l = <u8 as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
                         bytes[o..l].copy_from_slice(&1u8.to_le_bytes());
                         o = l;
-                        l = l + <$t as traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
+                        l = l + <$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::BYTES_SIZE;
                         if endianness {
-                            bytes[o..l].copy_from_slice(&<$t as traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(v));
+                            bytes[o..l].copy_from_slice(&<$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::to_le_bytes(v));
                         } else {
-                            bytes[o..l].copy_from_slice(&<$t as traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(v));
+                            bytes[o..l].copy_from_slice(&<$t as $crate::traits::Bytes<crate::Origin,crate::Origin>>::to_be_bytes(v));
                         }
                         bytes
                     } else {
@@ -69,9 +69,9 @@ macro_rules! trait_implement_bytes {
                 }
             }
 
-            impl traits::Bytes<crate::Origin, crate::Origin> for *const $t {
+            impl $crate::traits::Bytes<crate::Origin, crate::Origin> for *const $t {
                 const BYTES_SIZE: usize = core::mem::size_of::<Self>();
-                fn to_bytes(&self, endianness: bool) -> [u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
+                fn to_bytes(&self, endianness: bool) -> [u8; <Self as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
                     if endianness {
                         usize::to_le_bytes(*self as usize)
                     } else {
@@ -79,7 +79,7 @@ macro_rules! trait_implement_bytes {
                     }
                 }
 
-                fn from_bytes(bytes: [u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
+                fn from_bytes(bytes: [u8; <Self as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE], endianness: bool) -> Self {
                     if endianness {
                         usize::from_le_bytes(bytes) as Self
                     } else {
@@ -163,28 +163,28 @@ macro_rules! trait_implement_bytes {
 #[macro_export]
 macro_rules! traits_implement_bytes_tuple {
     ($($($ordinal_type:tt)::*),*) => {
-        impl traits::Bytes<crate::Origin, crate::Origin> for ($($($ordinal_type)::*),*) {
-            const BYTES_SIZE: usize = $(<$($ordinal_type)::* as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE + )* 0;
+        impl $crate::traits::Bytes<crate::Origin, crate::Origin> for ($($($ordinal_type)::*),*) {
+            const BYTES_SIZE: usize = $(<$($ordinal_type)::* as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE + )* 0;
             fn to_bytes(
                 &self,
                 endianness: bool,
-            ) -> [u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
+            ) -> [u8; <Self as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE] {
                 let mut pair_bytes =
-                    [0u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+                    [0u8; <Self as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
 
                 if endianness {
                     let mut o = 0;
-                    let mut l = <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    let mut l = <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
                     pair_bytes[o..l].copy_from_slice(&self.0.to_le_bytes());
                     o = l;
-                    l = l + <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    l = l + <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
                     pair_bytes[o..l].copy_from_slice(&self.1.to_le_bytes());
                 } else {
                     let mut o = 0;
-                    let mut l = <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    let mut l = <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
                     pair_bytes[o..l].copy_from_slice(&self.0.to_be_bytes());
                     o = l;
-                    l = l + <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                    l = l + <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
                     pair_bytes[o..l].copy_from_slice(&self.1.to_be_bytes());
                 }
 
@@ -193,35 +193,35 @@ macro_rules! traits_implement_bytes_tuple {
 
             fn from_bytes(bytes: [u8; Self::BYTES_SIZE], endianness: bool) -> Self {
                 let mut left_bytes =
-                    [0u8; <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+                    [0u8; <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
                 let mut right_bytes =
-                    [0u8; <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
+                    [0u8; <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE];
 
                 let mut o = 0;
-                let mut l = <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                let mut l = <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
 
                 left_bytes.copy_from_slice(&bytes[o..l]);
 
                 o = l;
-                l = l + <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
+                l = l + <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE;
 
                 right_bytes.copy_from_slice(&bytes[o..l]);
 
                 if endianness {
-                    let left = <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                    let left = <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
                         left_bytes,
                     );
                     let right =
-                        <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
+                        <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::from_le_bytes(
                             right_bytes,
                         );
                     (left, right)
                 } else {
-                    let left = <Pcu as traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                    let left = <Pcu as $crate::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
                         left_bytes,
                     );
                     let right =
-                        <Pci8 as traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
+                        <Pci8 as $crate::traits::Bytes<crate::Origin, crate::Origin>>::from_be_bytes(
                             right_bytes,
                         );
                     (left, right)
