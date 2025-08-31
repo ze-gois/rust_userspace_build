@@ -14,8 +14,8 @@ pub fn alloc<T>(n: usize) -> *mut T {
         0,
     ) {
         core::result::Result::Ok(crate::Ok::Target(crate::target::Ok::Os(
-            crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::LSeek(
-                crate::target::os::syscall::lseek::Ok::Default(m),
+            crate::target::os::Ok::Syscall(crate::target::os::syscall::Ok::MMap(
+                crate::target::os::syscall::mmap::Ok::Default(m),
             )),
         ))) => m as *mut T,
         _ => panic!("Failed to allocate memory"),

@@ -9,7 +9,10 @@ pub fn panic(info: &PanicInfo) -> ! {
         let filename = location.file();
         let fileline = location.line() as u32;
         let filecolumn = location.column() as u32;
-        info!("\npanic at file:{}:{}:{}\n", filename, fileline, filecolumn);
+        info!(
+            "\npanic at file: {}:{}:{}\n",
+            filename, fileline, filecolumn
+        );
     }
     let mut count = 5;
     loop {
