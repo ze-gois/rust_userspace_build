@@ -2,6 +2,7 @@
 members = ["example/server", "example/xelf"]
 
 [package]
+version = "0.1.11"
 publish = true
 license-file = "LICENSE"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
@@ -11,7 +12,6 @@ description = "Standard library for userspace applications"
 documentation = "https://docs.rs/bitflags"
 name = "userspace"
 readme = "README.md"
-version = "0.1.10"
 edition = "2024"
 keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
