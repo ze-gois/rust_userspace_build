@@ -35,8 +35,8 @@ bss_init_done:
        # For our static binary, we don't need much here
 
        # Call the Rust entry point
+       call    flag_license
        call    entry
-       #call    flag_license
 
        # We shouldn't return, but clean up anyway
        mov     %rbp, %rsp

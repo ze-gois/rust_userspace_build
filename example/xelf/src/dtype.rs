@@ -13,7 +13,6 @@ pub trait ELFType {
 }
 
 pub mod ok {
-
     r#struct!(pub OurStruct {
         value : usize,
         inform : u8,

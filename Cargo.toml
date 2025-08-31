@@ -21,7 +21,6 @@ name = "userspace"
 path = "src/library.rs"
 test = false
 
-
 [[bin]]
 name = "userspace"
 path = "src/entry.rs"
@@ -35,6 +34,12 @@ xelf = { path = "example/xelf", version = "0.1.0" }
 
 [build-dependencies]
 cc = "1.0"
+# userspace_build = { package = "userspace", version = "0.1.1", rename = "userspace_build" }
+
+[features]
+default = ["no_std"]
+no_std = []
+with_std = []
 
 [profile.dev]
 # panic = "abort"

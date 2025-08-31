@@ -3,6 +3,7 @@ use core::panic::PanicInfo;
 pub use crate::info;
 
 #[panic_handler]
+#[cfg(not(feature = "with_std"))]
 pub fn panic(info: &PanicInfo) -> ! {
     if let Some(location) = info.location() {
         // Example: send to UART or RTT instead of println

@@ -1,16 +1,23 @@
+// #![no_std]
+
+// use userspace_build::target;
+// use userspace_build::info;
+use std::println as info;
+
 fn main() {
-    println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=linker.ld");
-    println!("cargo:rerun-if-changed=src/");
-    println!("cargo:rerun-if-changed=crates/");
+    // userspace_build::file::print("build.rs");
+    info!("cargo:rerun-if-changed=build.rs");
+    info!("cargo:rerun-if-changed=linker.ld");
+    info!("cargo:rerun-if-changed=src/");
+    info!("cargo:rerun-if-changed=crates/");
 
     // Static linking flags
-    println!("cargo:rustc-link-arg=-static");
-    println!("cargo:rustc-link-arg=--no-dynamic-linker");
-    println!("cargo:rustc-link-arg=-n");
+    info!("cargo:rustc-link-arg=-static");
+    info!("cargo:rustc-link-arg=--no-dynamic-linker");
+    info!("cargo:rustc-link-arg=-n");
 
     // Disable position independent code
-    println!("cargo:rustc-link-arg=--no-pie");
+    info!("cargo:rustc-link-arg=--no-pie");
 
     // Compile assembly startup code
     cc::Build::new()

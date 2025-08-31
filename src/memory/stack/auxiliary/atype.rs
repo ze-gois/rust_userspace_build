@@ -75,9 +75,6 @@ macro_rules! bring_atype {
                     match discriminant {
                         $( $variant_discriminant => TypeUnit::$variant_identifier(()), )*
                         _ => {
-                            crate::info!("todo?");
-                            // todo!()//TypeUnit::TODO(())
-                            // TypeUnit::TODO(())
                             TypeUnit::Ignore(())
                         }
                     }
