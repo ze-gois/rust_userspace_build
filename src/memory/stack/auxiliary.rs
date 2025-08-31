@@ -38,11 +38,17 @@ impl List {
                 let key_pointer = key_pointer as *mut usize;
                 let value_pointer = key_pointer.add(1) as *mut u8;
                 counter += 1;
-                if Type::from_pair(key_pointer, value_pointer).is_null() {
+                crate::info!("Pair #{} ({:?}): ", counter, *key_pointer);
+                let pair = Type::from_pair(key_pointer, value_pointer);
+                crate::info!(" {:?}\n",pair);
+                if pair.is_null() {
+                // crate::target::os::syscall::exit(1);
                     break
                 }
             }
         }
+
+        crate::info!("done counting\n");
 
         let latter_pointer = unsafe { (auxiliary_pointer as crate::target::arch::PointerType).add(1 + counter) };
 

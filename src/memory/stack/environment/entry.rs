@@ -1,12 +1,14 @@
+use crate::target::arch::Pointer;
+
 #[repr(C)]
 pub struct Entry {
     pub prev: *mut Entry,
     pub next: *mut Entry,
-    pub pointer: crate::target::arch::Pointer, // armazenar o ponteiro cru
+    pub pointer: Pointer, // armazenar o ponteiro cru
 }
 
 impl Entry {
-    pub fn from_pointer(pointer: crate::target::arch::Pointer) -> Entry {
+    pub fn from_pointer(pointer: Pointer) -> Entry {
         Entry {
             prev: core::ptr::null_mut(),
             next: core::ptr::null_mut(),
@@ -16,7 +18,7 @@ impl Entry {
 
     pub fn key(&self) -> &str {
         // Create a slice from the raw pointer
-        // let s = core::slice::from_raw_parts(env_ptr, l);
+        // let s = unsafe { core::slice::from_raw_parts(self.pointer.0, l) };
         let c_str = unsafe { core::ffi::CStr::from_ptr(self.pointer.0 as *mut i8) };
 
         let r_str = c_str.to_str().unwrap();
@@ -49,7 +51,7 @@ impl core::fmt::Debug for Entry {
         let _cstr = self.pointer.0;
 
         let _ = write!(f, "Entry: {{ ");
-        let _ = write!(f, "{:?}, ", self.key());
+        let _ = write!(f, "{:?} = {:?}, ", self.key(), self.value());
         let _ = write!(f, " }}");
         return Ok(());
         // }

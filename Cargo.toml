@@ -2,23 +2,29 @@
 members = ["example/server", "example/xelf"]
 
 [package]
-name = "userspace"
 publish = true
-version = "0.1.0"
-edition = "2024"
+license-file = "LICENSE"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
+homepage = "https://userspace.builders"
+repository = "https://github.com/ze-gois/rust_userspace"
 description = "Standard library for userspace applications"
 documentation = "https://docs.rs/bitflags"
-repository = "https://github.com/ze-gois/rust_userspace"
+name = "userspace"
 readme = "README.md"
-homepage = "https://userspace.builders"
-license-file = "LICENSE"
+version = "0.1.0"
+edition = "2024"
 keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
 
 [lib]
 name = "userspace"
 path = "src/library.rs"
+test = false
+
+
+[[bin]]
+name = "userspace"
+path = "src/entry.rs"
 test = false
 
 [dependencies]
@@ -31,7 +37,7 @@ xelf = { path = "example/xelf", version = "0.1.0" }
 cc = "1.0"
 
 [profile.dev]
-panic = "abort"
+# panic = "abort"
 
 [profile.release]
-panic = "abort"
+# panic = "abort"

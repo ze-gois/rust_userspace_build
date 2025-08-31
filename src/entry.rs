@@ -5,7 +5,6 @@
 
 use userspace;
 use userspace::target;
-use xelf;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
@@ -14,10 +13,12 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
     userspace::info!("eXecuting Executable and Linkable Format\n\n");
 
     let argc = stack_pointer.0 as *const usize;
-    userspace::info!("argc={:?}", unsafe { *argc });
-    // let stack = userspace::memory::Stack::from_pointer(stack_pointer);
+    userspace::info!("argc={:?}\n", unsafe { *argc });
+    let stack = userspace::memory::Stack::from_pointer(stack_pointer);
 
-    // stack.print();
+    stack.print();
+
+    unsafe { core::arch::asm!("call flag_license") }
 
     crate::target::os::syscall::exit(30)
 }

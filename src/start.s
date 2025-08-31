@@ -22,20 +22,21 @@
        mov     $_bss_end, %rcx
        cmp     %rcx, %rax
        je      bss_init_done
+
 bss_zero_loop:
        movq    $0, (%rax)
        add     $8, %rax
        cmp     %rcx, %rax
        jl      bss_zero_loop
-bss_init_done:
 
+bss_init_done:
        # Initialize any relocations if needed
        # This would typically be done by the dynamic loader
        # For our static binary, we don't need much here
 
        # Call the Rust entry point
-       call    flag_license
        call    entry
+       #call    flag_license
 
        # We shouldn't return, but clean up anyway
        mov     %rbp, %rsp

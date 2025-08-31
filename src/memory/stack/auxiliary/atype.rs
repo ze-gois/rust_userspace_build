@@ -1,6 +1,10 @@
 pub type Pci8 = *const i8;
 pub type Pcu = *const usize;
-pub type Pair = (Pcu, Pci8);
+
+r#struct!(pub Pair{
+    key: Pcu,
+    value: Pci8
+});
 
 pub trait TypeTrait {
     fn from_pair(etype: *const usize, p: *const u8) -> Self;
@@ -70,12 +74,16 @@ macro_rules! bring_atype {
                 fn from_discriminant(discriminant : $enum_discriminant_type ) -> TypeUnit {
                     match discriminant {
                         $( $variant_discriminant => TypeUnit::$variant_identifier(()), )*
-                        _ => todo!()//TypeUnit::TODO(())
+                        _ => {
+                            crate::info!("todo?");
+                            // todo!()//TypeUnit::TODO(())
+                            // TypeUnit::TODO(())
+                            TypeUnit::Ignore(())
+                        }
                     }
                 }
             }
         }
-
 
         pub use unit::{FromDiscriminant, TypeUnit};
 
@@ -83,7 +91,7 @@ macro_rules! bring_atype {
             fn from_pair(etype: *const usize, p: *const u8) -> Self {
                 match TypeUnit::from_discriminant(unsafe { *etype }) {
                     // $( TypeUnit::$variant_identifier(()) => $enum_identifier::$variant_identifier( unsafe { p as $variant_type } ),)*
-                    $( TypeUnit::$variant_identifier(()) => $enum_identifier::$variant_identifier( p as $variant_type ),)*
+                    $( TypeUnit::$variant_identifier(()) => $enum_identifier::$variant_identifier( unsafe { *(p as *const $variant_type) }),)*
                     // _ => unreachable!()
                     // _ => $enum_identifier::TODO({
                     //     let v :pair =(etype, p);
@@ -137,7 +145,7 @@ bring_atype! (
         [32;   SysInfo;         usize;       AT_SYSINFO;           "SysInfo";         "System info, x86 specific"],
         [33;   SysInfoEhdr;     usize;       AT_SYSINFO_EHDR;      "SysInfoEhdr";     "System info ELF header, x86 specific"],
         [51;   MinSigStackSz;   usize;       AT_MINSIGSTKSZ;       "MinSigStackSz";   "Minimal stack size for signal delivery"],
-        // [99;   TODO;            pair;        AT_TODO;               "Pkmna";          "Pokemon not found"]
+        // [99;   TODO;            Pair;        AT_TODO;               "Pkmna";          "Pokemon not found"]
     ]
 );
 

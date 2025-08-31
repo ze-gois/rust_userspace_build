@@ -1,65 +1,51 @@
 #[macro_export]
 macro_rules! r#tuple {
-    ($struct_visualization:vis $struct_identifier:ident, $($field_type:ty),*) => {
-        $struct_visualization struct $struct_identifier($($field_type),*);
-
-        pub use traits::XElfSize;
-
-        impl XElfSize for $struct_identifier {
-            const SIZE: usize = $(<$field_type>::XELF_SIZE + )* 0;
-        }
+    ($tuple_visualization:vis $tuple_identifier:ident, $($ordinal_type:ty),*) => {
+        $tuple_visualization struct $tuple_identifier($($ordinal_type),*);
 
 
-        impl $struct_identifier {
-            pub fn to_bytes(&self, endianness: bool) -> [u8; $struct_identifier::XELF_SIZE] {
-                let mut b = [0u8; $struct_identifier::XELF_SIZE];
+
+        // impl macros::traits::ByteXElfSize for $tuple_identifier {
+        //     const SIZE: usize = $(<$ordinal_type>::BYTES_SIZE + )* 0;
+        // }
+
+
+        impl crate::traits::Bytes<crate::Origin,crate::Origin> for $tuple_identifier {
+
+            fn to_bytes(&self, endianness: bool) -> [u8; $tuple_identifier::BYTES_SIZE] {
+                let mut b = [0u8; $tuple_identifier::BYTES_SIZE];
                 let mut o = 0;
                 $(
-                    b[o..(o+<$field_type>::XELF_SIZE)].copy_from_slice(
+                    b[o..(o+<$ordinal_type>::BYTES_SIZE)].copy_from_slice(
                         &if endianness {
-                            self.$field_identifier.to_le_bytes()
+                            self.$ordinal_type.to_le_bytes()
                         } else {
-                            self.$field_identifier.to_be_bytes()
+                            self.$ordinal_type.to_be_bytes()
                         }
                     );
-                    o = o + <$field_type>::XELF_SIZE;
+                    o = o + <$ordinal_type>::BYTES_SIZE;
                 )*
                 b
             }
 
-            pub fn to_le_bytes(&self) -> [u8; $struct_identifier::XELF_SIZE] {
-                self.to_bytes(true)
-            }
-
-            pub fn to_be_bytes(&self) -> [u8; $struct_identifier::XELF_SIZE] {
-                self.to_bytes(false)
-            }
-
-            pub fn from_bytes(bytes : [u8; $struct_identifier::XELF_SIZE], endianness: bool) -> $struct_identifier {
+            fn from_bytes(bytes : [u8; $tuple_identifier::BYTES_SIZE], endianness: bool) -> $tuple_identifier {
                 let mut o = 0;
-                $(
-                    let mut field_bytes = [0u8; <$field_type>::XELF_SIZE];
-                    field_bytes.copy_from_slice(&bytes[o..(o+<$field_type>::XELF_SIZE)]);
-                    let $field_identifier = if endianness {
-                        <$field_type>::from_le_bytes(field_bytes)
-                    } else {
-                        <$field_type>::from_be_bytes(field_bytes)
-                    };
-                    o = o + <$field_type>::XELF_SIZE;
-                )*
-                $struct_identifier {
-                    $($field_identifier,)*
-                }
-            }
-
-            pub fn from_le_bytes(bytes : [u8; $struct_identifier::XELF_SIZE]) -> $struct_identifier {
-                $struct_identifier::from_bytes(bytes,true)
-            }
-
-            pub fn from_be_bytes(bytes : [u8; $struct_identifier::XELF_SIZE]) -> $struct_identifier {
-                $struct_identifier::from_bytes(bytes,false)
+                $tuple_identifier (
+                    $(
+                        {
+                            let mut field_bytes = [0u8; <$ordinal_type>::BYTES_SIZE];
+                            field_bytes.copy_from_slice(&bytes[o..(o+<$ordinal_type>::BYTES_SIZE)]);
+                            let ordinal = if endianness {
+                                <$ordinal_type>::from_le_bytes(field_bytes)
+                            } else {
+                                <$ordinal_type>::from_be_bytes(field_bytes)
+                            };
+                            o = o + <$ordinal_type>::BYTES_SIZE;
+                            ordinal
+                        }
+                    ),*
+                )
             }
         }
-
     };
 }

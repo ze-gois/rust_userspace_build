@@ -28,7 +28,7 @@ impl Stack {
         let (arguments, environment_pointer) = arguments::List::from_pointer(stack_pointer);
         let (environment, auxiliary_pointer) = environment::List::from_pointer(environment_pointer);
         let (auxiliary, latter_pointer) = auxiliary::List::from_pointer(auxiliary_pointer);
-
+        // let latter_pointer = auxiliary_pointer;
         Self {
             former: stack_pointer,
             latter: latter_pointer,
