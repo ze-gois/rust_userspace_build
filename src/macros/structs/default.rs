@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! r#struct {
+macro_rules! ample::r#struct {
     ($vis:vis $struct_identifier:ident {$($field_visibility:vis $field_identifier:ident: $field_type:ty),*$(,)?}) => {
 
         // #[repr(C,packed)]
@@ -94,4 +94,4 @@ macro_rules! r#struct {
         }
     }
 }
-pub use r#struct;
+pub use ample::r#struct;

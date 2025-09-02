@@ -12,15 +12,15 @@ crate::dtype_define!(pub Addr, u64); //Unsigned small integer
 
 crate::dtype_impl!(Null, UChar, SXWord, Half, SWord, XWord, Word, Off, Addr);
 
-// result!()
+// ample::result!()
 
 pub mod ok {
-    r#struct!(pub OurStruct {
+    ample::r#struct!(pub OurStruct {
         value : usize,
         inform : u8,
     });
 
-    result!(
+    ample::result!(
         Ok;
         "Human Ok";
         usize;
@@ -39,7 +39,7 @@ pub mod ok {
 }
 
 pub mod error {
-    result!(
+    ample::result!(
         Error;
         "Human error";
         usize;

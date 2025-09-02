@@ -24,7 +24,7 @@ pub mod format;
 // }
 
 pub mod a {
-    r#struct!(pub Information {
+    ample::r#struct!(pub Information {
        size : usize,
     });
 }

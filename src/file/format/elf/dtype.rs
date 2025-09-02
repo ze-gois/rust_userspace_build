@@ -14,12 +14,12 @@ pub trait ELFType {
 }
 
 pub mod ok {
-    r#struct!(pub OurStruct {
+    ample::r#struct!(pub OurStruct {
         value : usize,
         inform : u8,
     });
 
-    result!(
+    ample::result!(
         Ok;
         "Human Ok";
         usize;
@@ -38,7 +38,7 @@ pub mod ok {
 }
 
 pub mod error {
-    result!(
+    ample::result!(
         Error;
         "Human error";
         usize;
