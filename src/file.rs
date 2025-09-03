@@ -15,6 +15,9 @@ pub use seek::seek;
 
 pub mod format;
 
+pub mod result;
+pub use result::{Error, Ok, Result};
+
 // impl traits::Bytes<Origin, Origin> for &str {
 //     const BYTES_SIZE: usize = core::mem::size_of::<&str>();
 //     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
@@ -30,7 +33,7 @@ pub mod a {
 }
 pub use a::Information;
 
-r#struct!(pub File {
+ample::r#struct!(pub File {
     pub descriptor : isize,
     pub information : Information
     // pub memory : Option<*const u8>

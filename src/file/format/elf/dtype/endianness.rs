@@ -1,14 +1,14 @@
 pub mod endianness {
-    enum_labeled!(
+    ample::enum_labeled!(
         pub Endianness,
         u8,
         "endianness",
         [
-            [0; None;      (); NONE; "no"; "No endianness provided"],
-            [1; LSB;       (); LSB;  "no"; "No endianness provided"],
-            [2; MSB;       (); MSB;  "no"; "No endianness provided"],
-            [3; Number;    (); NUM;  "no"; "No endianness provided"],
-            [4; Undefined; (); UN;   "no"; "No endianness provided"]
+            [0; None;      ();   NONE; "no"; "No endianness provided"],
+            [1; LSB;       bool; LSB;  "no"; "No endianness provided"],
+            [2; MSB;       bool; MSB;  "no"; "No endianness provided"],
+            [3; Number;    ();   NUM;  "no"; "No endianness provided"],
+            [4; Undefined; ();   UN;   "no"; "No endianness provided"]
         ]
     );
 }

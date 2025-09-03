@@ -1,8 +1,8 @@
 fn main() {
-    println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=linker.ld");
-    println!("cargo:rerun-if-changed=src/");
-    println!("cargo:rerun-if-changed=crates/");
+    println!("cargo:rerun-if-changed=./build.rs");
+    println!("cargo:rerun-if-changed=./linker.ld");
+    println!("cargo:rerun-if-changed=./src/");
+    println!("cargo:rerun-if-changed=./crates/");
 
     // Static linking flags
     println!("cargo:rustc-link-arg=-static");

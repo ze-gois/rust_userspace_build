@@ -1,67 +1,66 @@
-use super::ELFType;
+// use super::ELFType;
 
-crate::dtype_define!(pub Null, u8); //Unsigned file offset
-crate::dtype_define!(pub UChar, u8); //Unsigned file offset
-crate::dtype_define!(pub SXWord, i64); //Unsigned program address
-crate::dtype_define!(pub Half, u16); //Unsigned medium integer
-crate::dtype_define!(pub SWord, i32); //Unsigned integer
-crate::dtype_define!(pub XWord, u64); //Signed integer
-crate::dtype_define!(pub Word, u32); //Unsigned long integer
-crate::dtype_define!(pub Off, u64); //Signed long integer
-crate::dtype_define!(pub Addr, u64); //Unsigned small integer
+crate::publish_types!(class_32, Class32,[
+    [pub Null, usize],
+    [pub UChar, u8],
+    [pub SXWord, i32],
+    [pub Half, u16],
+    [pub SWord, i32],
+    [pub XWord, u32],
+    [pub Word, u32],
+    [pub Off, u32],
+    [pub Addr, u32],
+]);
 
-crate::dtype_impl!(Null, UChar, SXWord, Half, SWord, XWord, Word, Off, Addr);
+ample::result!(
+    Ok;
+    "Human Ok";
+    usize;
+    [
+        [0; NULL_OK;       Null;    Null;  "UChar_32";  "UChar_32"],
+        [1; UCHAR_32_OK;   UChar;   UChar;     "UChar_32";  "UChar_32"],
+        [2; SXWORD_32_OK;  SXWord;  SXWord;   "SXWord_32"; "SXWord_32"],
+        [3; HALF_32_OK;    Half;    Half;     "Half_32";   "Half_32"],
+        [4; SWORD_32_OK;   SWord;   SWord;    "SWord_32";  "SWord_32"],
+        [5; XWORD_32_OK;   XWord;   XWord;    "XWord_32";  "XWord_32"],
+        [6; WORD_32_OK;    Word;    Word;     "Word_32";   "Word_32"],
+        [7; OFF_32_OK;     Off;     Off;      "Off_32";    "Off_32"],
+        [8; ADDR_32_OK;    Addr;    Addr;     "Addr_32";   "Addr_32"]
+    ];
+    Error;
+    "Human error";
+    usize;
+    [
+        [0; NULL_ERROR;       Null;    Null;     "UChar_32";  "UChar_32"],
+        [1; UCHAR_32_ERROR;   UChar;   UChar;     "UChar_32";  "UChar_32"],
+        [2; SXWORD_32_ERROR;  SXWord;  SXWord;   "SXWord_32"; "SXWord_32"],
+        [3; HALF_32_ERROR;    Half;    Half;     "Half_32";   "Half_32"],
+        [4; SWORD_32_ERROR;   SWord;   SWord;    "SWord_32";  "SWord_32"],
+        [5; XWORD_32_ERROR;   XWord;   XWord;    "XWord_32";  "XWord_32"],
+        [6; WORD_32_ERROR;    Word;    Word;     "Word_32";   "Word_32"],
+        [7; OFF_32_ERROR;     Off;     Off;      "Off_32";    "Off_32"],
+        [8; ADDR_32_ERROR;    Addr;    Addr;     "Addr_32";   "Addr_32"]
+    ]
+);
 
-// ample::result!()
-
-pub mod ok {
-    ample::r#struct!(pub OurStruct {
-        value : usize,
-        inform : u8,
-    });
-
-    ample::result!(
-        Ok;
-        "Human Ok";
-        usize;
-        [
-            [1; ZE_ENTRY; HumanOk; usize; "ZE"; "Entry to ze"],
-            [2; SYSCALL; SyscallOk; OurStruct; "ZE"; "Entry to ze"],
-            [3; STDOUT; StdoutOk; usize; "ZE"; "Entry to ze"],
-        ]
-    );
-
-    impl Ok {
-        pub fn from_no(no: usize) -> Self {
-            Ok::HumanOk(no)
-        }
+impl Ok {
+    pub fn from_no(no: usize) -> Self {
+        Ok::Null(Null(no))
     }
 }
 
-pub mod error {
-    ample::result!(
-        Error;
-        "Human error";
-        usize;
-        [
-            [0; ERR_NULL;       Null;    usize;     "UChar_64";  "UChar_64"],
-            [1; ERR_UCHAR_64;   UChar;   u8;     "UChar_64";  "UChar_64"],
-            [2; ERR_SXWORD_64;  SXWord;  i64;   "SXWord_64"; "SXWord_64"],
-            [3; ERR_HALF_64;    Half;    u16;     "Half_64";   "Half_64"],
-            [4; ERR_SWORD_64;   SWord;   i32;    "SWord_64";  "SWord_64"],
-            [5; ERR_XWORD_64;   XWord;   u64;    "XWord_64";  "XWord_64"],
-            [6; ERR_WORD_64;    Word;    u32;     "Word_64";   "Word_64"],
-            [7; ERR_OFF_64;     Off;     u64;      "Off_64";    "Off_64"],
-            [8; ERR_ADDR_64;    Addr;    u64;     "Addr_64";   "Addr_64"]
-        ]
-    );
-
-    impl Error {
-        pub fn from_no(no: usize) -> Self {
-            Error::Null(no)
-        }
+impl Error {
+    pub fn from_no(no: usize) -> Self {
+        Error::Null(Null(no))
     }
 }
 
-pub use error::Error;
-pub use ok::Ok;
+pub type Result = core::result::Result<Ok, Error>;
+
+pub fn handle_result(result: usize) -> Result {
+    if (result as isize) < 0 {
+        Err(Error::from_no(result))
+    } else {
+        Ok(Ok::from_no(result))
+    }
+}

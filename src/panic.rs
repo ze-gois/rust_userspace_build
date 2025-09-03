@@ -23,7 +23,7 @@ pub fn panic(info: &PanicInfo) -> ! {
         info!("x.");
         if count == 0 {
             info!("..:");
-            unsafe { core::arch::asm!("call flag_license") };
+            // unsafe { core::arch::asm!("call flag_license") };
             crate::target::os::syscall::exit(23);
         }
     }
