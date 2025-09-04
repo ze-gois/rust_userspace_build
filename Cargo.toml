@@ -10,19 +10,19 @@ homepage = "https://userspace.builders"
 repository = "https://github.com/ze-gois/rust_userspace"
 description = "Standard library for userspace applications"
 documentation = "https://docs.rs/bitflags"
-name = "userspace"
+name = "userspace_build"
 readme = "README.md"
 edition = "2024"
 keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
 
 [lib]
-name = "userspace"
+name = "userspace_build"
 path = "src/library.rs"
 test = false
 
 [[bin]]
-name = "userspace"
+name = "userspace_build"
 path = "src/entry.rs"
 test = false
 
@@ -30,11 +30,9 @@ test = false
 ample = { path = "../ample" }
 
 [workspace.dependencies]
-userspace = { path = "." }
 
 [build-dependencies]
 cc = "1.0"
-userspace_build = { version = "0.1.123", features = ["with_std"] }
 
 [features]
 default = ["no_std"]
