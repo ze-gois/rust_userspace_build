@@ -3,14 +3,14 @@ members = []
 
 [package]
 version = "0.1.124"
-publish = false
+publish = true
 license-file = "LICENSE"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
 homepage = "https://userspace.builders"
 repository = "https://github.com/ze-gois/rust_userspace"
 description = "Standard library for userspace applications"
 documentation = "https://docs.rs/bitflags"
-name = "userspace"
+name = "userspace_build"
 readme = "README.md"
 edition = "2024"
 keywords = ["architecture", "operating_system"]
