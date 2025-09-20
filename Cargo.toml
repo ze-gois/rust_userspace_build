@@ -1,6 +1,3 @@
-[workspace]
-members = []
-
 [package]
 version = "0.1.124"
 publish = true
@@ -30,10 +27,7 @@ test = false
 # The functionality is now provided as a module inside the library
 
 [dependencies]
-ample = { version = "0.1.1" }
-
-[workspace.dependencies]
-userspace = { path = "." }
+ample = { path = "../ample" }
 
 [build-dependencies]
 cc = "1.0"
@@ -42,9 +36,3 @@ cc = "1.0"
 default = ["no_std"]
 no_std = []
 with_std = []
-
-[profile.dev]
-# panic = "abort"
-
-[profile.release]
-# panic = "abort"
