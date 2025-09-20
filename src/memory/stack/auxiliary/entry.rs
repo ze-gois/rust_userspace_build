@@ -1,11 +1,13 @@
 use super::atype;
 
-#[repr(C)]
-pub struct Entry {
-    pub prev: *mut Entry,
-    pub next: *mut Entry,
-    pub pointer: crate::target::arch::Pointer, // armazenar o ponteiro cru
-}
+ample::r#struct!(
+    #[repr(C)]
+    pub struct Entry {
+        pub prev: *mut Entry,
+        pub next: *mut Entry,
+        pub pointer: crate::target::arch::Pointer, // armazenar o ponteiro cru
+    }
+);
 
 impl Entry {
     pub fn from_pointer(pointer: crate::target::arch::Pointer) -> Entry {
@@ -36,11 +38,14 @@ impl core::fmt::Debug for Entry {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         // unsafe {
         // let cstr = core::ffi::CStr::from_ptr(self.pointer.0 as *const i8);
-        let _cstr = self.pointer.0;
+        // let _cstr = self.pointer.0;
 
         let _ = write!(f, "Entry: {{ ");
-        let _ = write!(f, "{:?}, ", self.value());
+        let _ = write!(f, "{:?}, ", self.prev);
+        let _ = write!(f, "{:?}, ", self.next);
+        let _ = write!(f, "{:?}, ", self.pointer);
         let _ = write!(f, " }}");
+
         return Ok(());
         // }
     }

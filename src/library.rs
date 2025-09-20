@@ -4,7 +4,10 @@
 #![feature(generic_const_exprs)]
 #![feature(generic_const_items)]
 
-pub struct Origin;
+ample::r#struct!(
+    #[derive(Debug)]
+    pub struct Origin {}
+);
 
 #[macro_use]
 pub mod target;
@@ -13,27 +16,54 @@ pub mod license;
 pub mod memory;
 pub mod panic;
 pub mod result;
+pub mod traits;
+
+pub use file::File;
 pub use result::{Error, Ok, Result};
 
 ample::trait_implement_primitives!();
-// impl<F: traits::Bytes<crate::target::Origin, crate::target::Origin>>
-//     traits::Bytes<crate::Origin, crate::Origin> for F
-// {
-//     const BYTES_SIZE: usize = F::BYTES_SIZE;
+
+// impl ample::traits::Bytes<crate::Origin, crate::Origin> for u8 {
+//     const BYTES_SIZE: usize = 1;
+//     const BYTES_ALIGN: usize = 1;
+
 //     fn from_bytes(
-//         bytes: [u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE],
+//         bytes: [u8; <Self as crate::traits::Bytes<Origin, Origin>>::BYTES_SIZE],
+//         _endianness: bool,
+//     ) -> Self {
+//         bytes[0]
+//     }
+
+//     fn to_bytes(
+//         &self,
+//         _endianness: bool,
+//     ) -> [u8; <Self as crate::traits::Bytes<Origin, Origin>>::BYTES_SIZE] {
+//         [*self]
+//     }
+// }
+
+// ample::trait_bytes_naturalize!(ample, crate);
+
+// impl<A: ample::traits::Bytes<ample::Origin>> crate::traits::Bytes<Origin, Destination> for A {
+//     const BYTES_SIZE: usize = A::BYTES_SIZE;
+//     const BYTES_ALIGN: usize = A::BYTES_ALIGN;
+
+//     fn from_bytes(
+//         bytes: [u8; <Self as crate::traits::Bytes<Origin, Destination>>::BYTES_SIZE],
 //         endianness: bool,
 //     ) -> Self
 //     where
-//         [u8; <Self as traits::Bytes<crate::Origin, crate::Origin>>::BYTES_SIZE]:,
-//         [(); Self::BYTES_SIZE]:,
+//         [u8; <A as ample::traits::Bytes<ample::Origin>>::BYTES_SIZE]:,
 //     {
-//         let target_bytes =
-//             [0u8; <F as traits::Bytes<crate::target::Origin, crate::target::Origin>>::BYTES_SIZE];
-//         F::from_bytes(target_bytes, endianness)
+//         let mut ample_bytes = [0u8; <A as ample::traits::Bytes<ample::Origin>>::BYTES_SIZE];
+//         ample_bytes.copy_from_slice(&bytes);
+//         <A as ample::traits::Bytes<ample::Origin>>::from_bytes(ample_bytes, endianness)
 //     }
-//     fn to_bytes(&self, endianness: bool) -> [u8; Self::BYTES_SIZE] {
-//         // F::to_bytes(&self, endianness)
-//         [0u8; Self::BYTES_SIZE]
+
+//     fn to_bytes(
+//         &self,
+//         endianness: bool,
+//     ) -> [u8; <Self as crate::traits::Bytes<Origin, Destination>>::BYTES_SIZE] {
+//         <A as ample::traits::Bytes<ample::Origin>>::to_bytes(self, endianness)
 //     }
 // }
