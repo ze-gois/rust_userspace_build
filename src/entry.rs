@@ -10,10 +10,10 @@
 #![feature(fundamental)]
 
 use ample::traits::Bytes;
-use userspace;
-use userspace::info;
-use userspace::memory::heap::Allocating;
-use userspace::target;
+use userspace_build;
+use userspace_build::info;
+use userspace_build::memory::heap::Allocating;
+use userspace_build::target;
 
 #[derive(Debug)]
 pub struct Origin;
@@ -28,7 +28,7 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
 
     let argc = stack_pointer.0 as *const usize;
     info!("argc={:?}\n\n", unsafe { *argc });
-    let stack = userspace::memory::Stack::from_pointer(stack_pointer);
+    let stack = userspace_build::memory::Stack::from_pointer(stack_pointer);
     stack.print();
     stack.arguments.print();
 
@@ -40,11 +40,11 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
             let cstr = core::ffi::CStr::from_ptr(arg0.pointer.0 as *mut i8);
             let self_path = cstr.to_str().unwrap();
 
-            userspace::info!("\n{:?}\n\n", self_path);
+            userspace_build::info!("\n{:?}\n\n", self_path);
 
-            let self_fd = userspace::file::open(self_path);
+            let self_fd = userspace_build::file::open(self_path);
 
-            let (fd, stat, ptr) = userspace::file::load(self_path).unwrap();
+            let (fd, stat, ptr) = userspace_build::file::load(self_path).unwrap();
 
             info!("fd={:?}\n\n stat={:?}\n\n ptr={:?}\n\n", fd, stat, ptr);
 
@@ -52,31 +52,31 @@ pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
                 info!("*ptr.add({:?}) as char == {:?}\n", c, *ptr.add(c) as char);
             }
 
-            let entries = userspace::memory::stack::auxiliary::Entry::allocate_slice(10);
+            let entries = userspace_build::memory::stack::auxiliary::Entry::allocate_slice(10);
 
             for e in entries.iter_mut() {
                 info!("{:?}\n", e);
             }
 
-            use userspace::file::traits::Readable;
+            use userspace_build::file::traits::Readable;
 
             let identifier =
-                userspace::file::format::elf::header::Identifier::read_from_pointer(ptr, 0, true);
-            userspace::info!("{:?}\n\n", identifier);
-            let identifier = userspace::file::format::elf::header::Identifier::read_from_path(
+                userspace_build::file::format::elf::header::Identifier::read_from_pointer(ptr, 0, true);
+            userspace_build::info!("{:?}\n\n", identifier);
+            let identifier = userspace_build::file::format::elf::header::Identifier::read_from_path(
                 self_path, 0, true,
             );
 
-            userspace::info!("{:?}\n\n", identifier);
+            userspace_build::info!("{:?}\n\n", identifier);
 
-            userspace::info!(
+            userspace_build::info!(
                 "{:?}\n",
-                userspace::file::format::elf::header::Identifier::BYTES_SIZE
+                userspace_build::file::format::elf::header::Identifier::BYTES_SIZE
             );
         }
     }
 
-    // let uchar32 = userspace::file::format::elf::dtype::class_32::UChar(3);
+    // let uchar32 = userspace_build::file::format::elf::dtype::class_32::UChar(3);
 
     info!("<<< we\n");
     info!("<<< we are\n");

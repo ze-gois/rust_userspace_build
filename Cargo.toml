@@ -92,7 +92,7 @@ no_std = []
 with_std = []
 
 [badges]
-github-actions = { repository = "ze-gois/rust_userspace_build" }
+github-actions = { repository = "ze-gois/rust_userspace" }
 # # travis-ci = { repository = "ze-gois/rust_ample", branch = "main" }
 
 # [profile.dev]
