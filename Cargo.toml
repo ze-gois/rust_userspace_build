@@ -14,12 +14,12 @@ keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
 
 [lib]
-name = "userspace"
+name = "userspace_build"
 path = "src/library.rs"
 test = false
 
 [[bin]]
-name = "userspace"
+name = "userspace_build"
 path = "src/entry.rs"
 test = false
 
