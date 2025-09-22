@@ -81,7 +81,7 @@ required-features = []        # nenhuma feature obrigatória
 doc = true                     # gera docs
 
 [dependencies]
-ample = { path = "../ample" }
+ample = { version="0.1.124", path = "../ample" }
 
 [build-dependencies]
 cc = "1.0"
