@@ -30,7 +30,7 @@ certs-source = "webpki"       # default: webpki (pode ser "native")
 # --- Versionamento ---
 shared-version = true         # todas as crates do workspace sobem juntas
 dependent-version = "upgrade" # default: upgrade
-metadata = "optional"         # default: keep (pode ser "remove")
+metadata = "optional"             # default: keep (pode ser "remove")
 
 # --- Mensagens ---
 pre-release-commit-message = "chore: release {{version}}"
