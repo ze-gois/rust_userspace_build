@@ -1,4 +1,4 @@
-ample::enum_labeled!(
+ample::enum_labeled_typed!(
     pub enum Magic,
     u8,
     "Dope",
