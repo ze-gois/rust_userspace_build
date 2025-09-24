@@ -2,7 +2,7 @@
 macro_rules! file_format_elf_dtype_class {
     ($class:ident, $class_ident:ident, [$([$vis:vis $name:ident, $inner:ty]),* $(,)?]) => {
         $(
-            ample::r#tuple!(
+            ample::struct_tuple!(
                 #[derive(Debug, Clone, Copy, PartialEq)]
                 $vis struct $name(0: pub $inner)
             );
