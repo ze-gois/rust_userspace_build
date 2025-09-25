@@ -3,19 +3,13 @@ macro_rules! file_format_elf_dtype_class {
     ($class:ident, $class_ident:ident, [$([$vis:vis $name:ident, $inner:ty]),* $(,)?]) => {
         $(
             ample::struct_tuple!(
-                #[derive(Debug, Clone, Copy, PartialEq)]
+                #[derive(Debug, PartialEq)]
                 $vis struct $name(0: pub $inner)
             );
 
 
             impl $crate::file::format::elf::dtype::Trait for $name {
                 type Inner = $inner;
-            }
-
-            impl Default for $name {
-                fn default() -> Self {
-                    Self(0)
-                }
             }
 
             impl core::fmt::Display for $name {
