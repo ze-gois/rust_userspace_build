@@ -1,13 +1,13 @@
 [package]
 name = "userspace_build"
-version = "0.1.129"
+version = "0.2.0"
 edition = "2024"
 authors = ["José Gois <ze.gois.00@gmail.com>"]
 description = "userspace_build library"
-documentation = "https://docs.rs/bitflags"
+documentation = "https://userspace.zegois.com/userspace_build/doc"
 repository = "https://github.com/ze-gois/rust_userspace_build"
 readme = "README.md"
-homepage = "https://userspace.builders"
+homepage = "https://userspace.zegois.com/userspace_build/"
 license-file = "LICENSE"
 keywords = ["architecture", "operating_system"]
 categories = ["no-std", "os"]
@@ -81,7 +81,7 @@ required-features = []        # nenhuma feature obrigatória
 doc = true                     # gera docs
 
 [dependencies]
-ample = { version= "0.1.129", path = "../ample" }
+ample = { version= "0.2.0", path = "../ample" }
 
 [build-dependencies]
 cc = "1.0"
