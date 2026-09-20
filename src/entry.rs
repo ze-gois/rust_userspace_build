@@ -1,19 +1,9 @@
 #![no_std]
 #![no_main]
-#![allow(unused_variables)]
-#![allow(unused_imports)]
 #![allow(incomplete_features)]
-#![allow(unused_assignments)]
 #![feature(generic_const_exprs)]
-#![feature(generic_const_items)]
-#![feature(const_trait_impl)]
-#![feature(fundamental)]
 
-use ample::traits::Bytes;
-use userspace_build;
 use userspace_build::info;
-use userspace_build::memory::heap::Allocating;
-use userspace_build::target;
 
 #[derive(Debug)]
 pub struct Origin;
@@ -21,71 +11,24 @@ pub struct Origin;
 ample::trait_implement_primitives!();
 
 #[unsafe(no_mangle)]
-pub extern "C" fn entry(stack_pointer: crate::target::arch::PointerType) -> ! {
-    let stack_pointer = crate::target::arch::Pointer(stack_pointer);
-
-    info!("eXecuting Executable and Linkable Format\n\n\n");
-
-    let argc = stack_pointer.0 as *const usize;
-    info!("argc={:?}\n\n", unsafe { *argc });
+pub extern "C" fn entry(stack_pointer: userspace_build::target::arch::PointerType) -> ! {
+    let stack_pointer = userspace_build::target::arch::Pointer(stack_pointer);
     let stack = userspace_build::memory::Stack::from_pointer(stack_pointer);
     stack.print();
-    stack.arguments.print();
 
-    let arg0 = stack.arguments.get(0).unwrap();
-    let arg0_pointer = arg0.pointer;
+    let target_path = match stack.arguments.get(1) {
+        Some(argument) if !argument.pointer.0.is_null() => {
+            use userspace_build::traits::Str;
+            <&str>::from_null_terminated_pointer(argument.pointer.0 as *const u8)
+        }
+        _ => "/usr/bin/ls",
+    };
 
-    if !arg0.pointer.0.is_null() {
-        unsafe {
-            let cstr = core::ffi::CStr::from_ptr(arg0.pointer.0 as *mut i8);
-            let self_path = cstr.to_str().unwrap();
-
-            userspace_build::info!("\n{:?}\n\n", self_path);
-
-            let self_fd = userspace_build::file::open(self_path);
-
-            let (fd, stat, ptr) = userspace_build::file::load(self_path).unwrap();
-
-            info!("fd={:?}\n\n stat={:?}\n\n ptr={:?}\n\n", fd, stat, ptr);
-
-            for c in 0..=15 {
-                info!("*ptr.add({:?}) as char == {:?}\n", c, *ptr.add(c) as char);
-            }
-
-            let entries = userspace_build::memory::stack::auxiliary::Entry::allocate_slice(10);
-
-            for e in entries.iter_mut() {
-                info!("{:?}\n", e);
-            }
-
-            use userspace_build::file::traits::Readable;
-
-            let identifier =
-                userspace_build::file::format::elf::header::Identifier::read_from_pointer(ptr, 0, true);
-            userspace_build::info!("{:?}\n\n", identifier);
-            let identifier = userspace_build::file::format::elf::header::Identifier::read_from_path(
-                self_path, 0, true,
-            );
-
-            userspace_build::info!("{:?}\n\n", identifier);
-
-            userspace_build::info!(
-                "{:?}\n",
-                userspace_build::file::format::elf::header::Identifier::BYTES_SIZE
-            );
+    match userspace_build::file::format::elf::execute_from_path(target_path, stack_pointer.0) {
+        Ok(()) => unsafe { core::hint::unreachable_unchecked() },
+        Err(error) => {
+            info!("ELF execution failed: {:?}\n", error);
+            userspace_build::target::os::syscall::exit(126);
         }
     }
-
-    // let uchar32 = userspace_build::file::format::elf::dtype::class_32::UChar(3);
-
-    info!("<<< we\n");
-    info!("<<< we are\n");
-    info!("<<< we are executing\n");
-    info!("<<< we are executing an\n");
-    info!("<<< we are executing an executable\n");
-    info!("<<< we are executing an executable and\n");
-    info!("<<< we are executing an executable and linkable\n");
-    info!("<<< we are executing an executable and linkable format\n");
-    info!("<<< we are executing an executable and linkable format\n\n\n");
-    panic!();
 }

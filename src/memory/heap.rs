@@ -7,8 +7,6 @@ ample::r#struct!(
     pub struct Allocator {}
 );
 
-// ample::traits_impl_blanket_bytes!(Allocator);
-
 pub type AllocatorPointer = *mut Allocator;
 
 impl ample::traits::Allocatable<Origin> for Allocator {
@@ -56,7 +54,7 @@ pub trait Allocating<T> {
 impl<T> Allocating<T> for T
 where
     T: ample::traits::Bytes<Origin, Origin>,
-    T: Default,
+    // T: Default,
 {
     fn allocate(numerosity: usize) -> *mut T {
         let numerosity_of_bytes = numerosity * T::BYTES_SIZE + T::BYTES_ALIGN;
@@ -88,11 +86,11 @@ where
     fn allocate_slice(numerosity: usize) -> &'static mut [T] {
         let ptr = Self::allocate(numerosity) as *mut T;
 
-        for i in 0..numerosity {
-            unsafe {
-                *ptr.add(i) = T::default();
-            }
-        }
+        // for i in 0..numerosity {
+        //     unsafe {
+        //         *ptr.add(i) = T::default();
+        //     }
+        // }
 
         unsafe { core::slice::from_raw_parts_mut(ptr, numerosity) }
     }
@@ -105,7 +103,7 @@ where
 impl<T> Allocating<T> for &[T]
 where
     T: ample::traits::Bytes<Origin, Origin>,
-    T: Default,
+    // T: Default,
 {
     fn allocate(numerosity: usize) -> *mut T {
         match <Allocator as ample::traits::Allocatable<Origin>>::allocate(
@@ -134,11 +132,11 @@ where
             Err(_) => core::ptr::null_mut(),
         };
 
-        for i in 0..numerosity {
-            unsafe {
-                *ptr.add(i) = T::default();
-            }
-        }
+        // for i in 0..numerosity {
+        //     unsafe {
+        //         *ptr.add(i) = T::default();
+        //     }
+        // }
 
         unsafe { core::slice::from_raw_parts_mut(ptr, numerosity) }
     }

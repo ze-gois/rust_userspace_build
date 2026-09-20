@@ -1,8 +1,8 @@
 #![no_std]
 #![allow(incomplete_features)]
-#![allow(unused_assignments)]
 #![feature(generic_const_exprs)]
-#![feature(generic_const_items)]
+#![feature(associated_type_defaults)]
+// #![feature(never_type)]
 
 ample::r#struct!(
     #[derive(Debug)]
