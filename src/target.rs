@@ -11,6 +11,5 @@ pub mod result;
 pub use architecture as arch;
 pub use architecture::Arch;
 pub use operating_system as os;
-pub use operating_system::Os;
 
 pub use result::{Error, Ok, Result};
