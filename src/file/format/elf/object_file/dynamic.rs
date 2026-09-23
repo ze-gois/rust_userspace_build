@@ -66,6 +66,183 @@ impl<'file> ObjectFile<'file> {
         )
     }
 
+    pub fn validate_dynamic_array(
+        &self,
+        index: usize,
+    ) -> Result<(), dynamic::validation::ValidationError> {
+        use dynamic::validation::ValidationError;
+
+        let Some(program_header) = self.program_headers.get(index).copied() else {
+            return Ok(());
+        };
+        if !matches!(program_header.r#type, program_header::Type::Dynamic) {
+            return Ok(());
+        }
+
+        let array = self
+            .dynamic_array_from_program_header(index)
+            .ok_or(ValidationError::MalformedDynamicArray)?;
+
+        if !matches!(array.entries.last().map(|entry| entry.tag), Some(Tag::Null)) {
+            return Err(ValidationError::MissingNullTerminator);
+        }
+
+        for (entry_index, entry) in array.iter().enumerate() {
+            if let Tag::Reserved(raw) = entry.tag {
+                return Err(ValidationError::ReservedTag {
+                    index: entry_index,
+                    raw,
+                });
+            }
+        }
+
+        if !matches!(
+            self.header.r#type,
+            header::Type::Executable | header::Type::SharedObject
+        ) {
+            return Ok(());
+        }
+
+        let string_table = array
+            .first(Tag::StringTable)
+            .ok_or(ValidationError::MissingStringTable)?;
+        let string_table_size = array
+            .first(Tag::StringTableSize)
+            .ok_or(ValidationError::MissingStringTableSize)?;
+        let symbol_table = array
+            .first(Tag::SymbolTable)
+            .ok_or(ValidationError::MissingSymbolTable)?;
+        let symbol_entry_size = array
+            .first(Tag::SymbolEntrySize)
+            .ok_or(ValidationError::MissingSymbolEntrySize)?;
+
+        let _ = (string_table, string_table_size, symbol_table);
+
+        if array.first(Tag::Hash).is_none() && array.first(Tag::SymbolTableSize).is_none() {
+            return Err(ValidationError::MissingHashOrSymbolTableSize);
+        }
+
+        let expected_symbol_entry_size = match self.header.identification.class {
+            Class::Class32 => core::mem::size_of::<symbol::class_32::Representation>() as u64,
+            Class::Class64 => core::mem::size_of::<symbol::class_64::Representation>() as u64,
+            Class::None | Class::Reserved(_) => return Ok(()),
+        };
+
+        if symbol_entry_size.payload != expected_symbol_entry_size {
+            return Err(ValidationError::SymbolEntrySizeMismatch {
+                expected: expected_symbol_entry_size,
+                actual: symbol_entry_size.payload,
+            });
+        }
+
+        if let Some(symbol_table_size) = array.first(Tag::SymbolTableSize) {
+            if symbol_table_size.payload % symbol_entry_size.payload != 0 {
+                return Err(ValidationError::SymbolTableSizeNotEntryMultiple);
+            }
+        }
+
+        let expected_rel_entry_size = match self.header.identification.class {
+            Class::Class32 => {
+                core::mem::size_of::<relocation::class_32::RelRepresentation>() as u64
+            }
+            Class::Class64 => {
+                core::mem::size_of::<relocation::class_64::RelRepresentation>() as u64
+            }
+            Class::None | Class::Reserved(_) => return Ok(()),
+        };
+        let expected_rela_entry_size = match self.header.identification.class {
+            Class::Class32 => {
+                core::mem::size_of::<relocation::class_32::RelaRepresentation>() as u64
+            }
+            Class::Class64 => {
+                core::mem::size_of::<relocation::class_64::RelaRepresentation>() as u64
+            }
+            Class::None | Class::Reserved(_) => return Ok(()),
+        };
+
+        let rel = array.first(Tag::Relocation);
+        let rela = array.first(Tag::RelocationWithAddend);
+
+        if matches!(self.header.r#type, header::Type::Executable) && rel.is_none() && rela.is_none() {
+            return Err(ValidationError::ExecutableMissingRelocationTable);
+        }
+
+        if rel.is_some() {
+            let size = array
+                .first(Tag::RelocationSize)
+                .ok_or(ValidationError::RelocationMissingSize)?;
+            let entry_size = array
+                .first(Tag::RelocationEntrySize)
+                .ok_or(ValidationError::RelocationMissingEntrySize)?;
+
+            if entry_size.payload != expected_rel_entry_size {
+                return Err(ValidationError::RelocationEntrySizeMismatch {
+                    expected: expected_rel_entry_size,
+                    actual: entry_size.payload,
+                });
+            }
+            if size.payload % entry_size.payload != 0 {
+                return Err(ValidationError::RelocationSizeNotEntryMultiple);
+            }
+        }
+
+        if rela.is_some() {
+            let size = array
+                .first(Tag::RelocationWithAddendSize)
+                .ok_or(ValidationError::RelocationWithAddendMissingSize)?;
+            let entry_size = array
+                .first(Tag::RelocationWithAddendEntrySize)
+                .ok_or(ValidationError::RelocationWithAddendMissingEntrySize)?;
+
+            if entry_size.payload != expected_rela_entry_size {
+                return Err(ValidationError::RelocationWithAddendEntrySizeMismatch {
+                    expected: expected_rela_entry_size,
+                    actual: entry_size.payload,
+                });
+            }
+            if size.payload % entry_size.payload != 0 {
+                return Err(ValidationError::RelocationWithAddendSizeNotEntryMultiple);
+            }
+        }
+
+        if array.first(Tag::JumpRelocation).is_some() {
+            let size = array
+                .first(Tag::ProcedureLinkageTableRelocationSize)
+                .ok_or(ValidationError::JumpRelocationMissingSize)?;
+            let format = array
+                .first(Tag::ProcedureLinkageTableRelocation)
+                .ok_or(ValidationError::JumpRelocationMissingFormat)?;
+
+            let entry_size = match Tag::from_raw(
+                i64::try_from(format.payload).unwrap_or(i64::MIN),
+            ) {
+                Tag::Relocation => expected_rel_entry_size,
+                Tag::RelocationWithAddend => expected_rela_entry_size,
+                _ => {
+                    return Err(ValidationError::JumpRelocationInvalidFormat {
+                        raw: format.payload,
+                    })
+                }
+            };
+
+            if size.payload % entry_size != 0 {
+                return Err(ValidationError::JumpRelocationSizeNotEntryMultiple);
+            }
+        }
+
+        if let Some(flags) = array.first(Tag::Flags) {
+            let reserved = flags.payload & !Flags::DEFINED_MASK;
+            if reserved != 0 {
+                return Err(ValidationError::ReservedFlags { bits: reserved });
+            }
+        }
+
+        self.validate_dynamic_relative_relocation(index)?;
+        self.validate_dynamic_initialization_and_termination(index)?;
+
+        Ok(())
+    }
+
     pub fn dynamic_flags_from_program_header(&self, index: usize) -> Option<Flags> {
         let array = self.dynamic_array_from_program_header(index)?;
         Some(Flags::from_raw(
@@ -192,6 +369,59 @@ impl<'file> ObjectFile<'file> {
         ))
     }
 
+    pub fn validate_dynamic_linking_tables(
+        &self,
+        index: usize,
+    ) -> Result<(), dynamic::validation::ValidationError> {
+        use dynamic::validation::ValidationError;
+
+        let array = self
+            .dynamic_array_from_program_header(index)
+            .ok_or(ValidationError::MalformedDynamicArray)?;
+
+        let strings = self
+            .dynamic_string_table_from_program_header(index)
+            .ok_or(ValidationError::DynamicStringTableUnavailable)?;
+        strings
+            .validate()
+            .map_err(ValidationError::DynamicStringTableInvalid)?;
+
+        for (entry_index, entry) in array.iter().enumerate() {
+            let string_is_meaningful = match entry.tag {
+                Tag::Needed | Tag::RunPath => true,
+                Tag::SharedObjectName => matches!(self.header.r#type, header::Type::SharedObject),
+                Tag::RuntimeSearchPath => matches!(self.header.r#type, header::Type::Executable),
+                _ => false,
+            };
+
+            if string_is_meaningful && strings.get(entry.payload as usize).is_none() {
+                return Err(ValidationError::InvalidStringOffset {
+                    index: entry_index,
+                    tag: entry.tag,
+                    offset: entry.payload,
+                });
+            }
+        }
+
+        let symbols = self
+            .dynamic_symbol_table_from_program_header(index)
+            .ok_or(ValidationError::DynamicSymbolTableUnavailable)?;
+        symbols
+            .validate()
+            .map_err(ValidationError::DynamicSymbolTableInvalid)?;
+
+        if array.first(Tag::Hash).is_some() {
+            let hash = self
+                .dynamic_hash_table_from_program_header(index)
+                .ok_or(ValidationError::DynamicHashTableUnavailable)?;
+            hash.table
+                .validate(symbols.len())
+                .map_err(ValidationError::DynamicHashTableInvalid)?;
+        }
+
+        Ok(())
+    }
+
     pub fn dynamic_hash_table_from_program_header(
         &self,
         index: usize,
@@ -310,6 +540,42 @@ impl<'file> ObjectFile<'file> {
             return Err(ValidationError::RelativeRelocationSizeNotEntryMultiple);
         }
 
+        if size != 0 {
+            let address = array
+                .first(Tag::RelativeRelocation)
+                .expect("DT_RELR presence checked above")
+                .payload;
+            let bytes = self
+                .file_range_for_virtual_address(address, size)
+                .ok_or(ValidationError::RelativeRelocationTableUnavailable)?;
+
+            let first = match self.header.identification.class {
+                Class::Class32 => {
+                    let representation = relative::class_32::Representation::decode(
+                        bytes,
+                        0,
+                        self.header.identification.data,
+                    )
+                    .ok_or(ValidationError::RelativeRelocationTableUnavailable)?;
+                    relative::Entry::from(representation)
+                }
+                Class::Class64 => {
+                    let representation = relative::class_64::Representation::decode(
+                        bytes,
+                        0,
+                        self.header.identification.data,
+                    )
+                    .ok_or(ValidationError::RelativeRelocationTableUnavailable)?;
+                    relative::Entry::from(representation)
+                }
+                Class::None | Class::Reserved(_) => return Ok(()),
+            };
+
+            if !matches!(first, relative::Entry::Address(_)) {
+                return Err(ValidationError::RelativeRelocationFirstEntryMustBeAddress);
+            }
+        }
+
         Ok(())
     }
 
@@ -365,14 +631,25 @@ impl<'file> ObjectFile<'file> {
                 .first(Tag::ProcedureLinkageTableRelocation)
                 .map(|entry| entry.payload),
         ) {
-            let (addend, entry_size) = match Tag::from_raw(i64::try_from(format).ok()?) {
-                Tag::Relocation => (
+            let (addend, entry_size) = match (
+                self.header.identification.class,
+                Tag::from_raw(i64::try_from(format).ok()?),
+            ) {
+                (Class::Class32, Tag::Relocation) => (
                     DynamicRelocationAddend::Implicit,
-                    array.first(Tag::RelocationEntrySize)?.payload,
+                    core::mem::size_of::<relocation::class_32::RelRepresentation>() as u64,
                 ),
-                Tag::RelocationWithAddend => (
+                (Class::Class32, Tag::RelocationWithAddend) => (
                     DynamicRelocationAddend::Explicit,
-                    array.first(Tag::RelocationWithAddendEntrySize)?.payload,
+                    core::mem::size_of::<relocation::class_32::RelaRepresentation>() as u64,
+                ),
+                (Class::Class64, Tag::Relocation) => (
+                    DynamicRelocationAddend::Implicit,
+                    core::mem::size_of::<relocation::class_64::RelRepresentation>() as u64,
+                ),
+                (Class::Class64, Tag::RelocationWithAddend) => (
+                    DynamicRelocationAddend::Explicit,
+                    core::mem::size_of::<relocation::class_64::RelaRepresentation>() as u64,
                 ),
                 _ => return None,
             };
@@ -388,6 +665,36 @@ impl<'file> ObjectFile<'file> {
         }
 
         Some(tables)
+    }
+
+    pub fn validate_dynamic_relocation_tables(
+        &self,
+        index: usize,
+    ) -> Result<(), dynamic::validation::ValidationError> {
+        use dynamic::validation::ValidationError;
+
+        self.validate_dynamic_array(index)?;
+        self.validate_dynamic_linking_tables(index)?;
+
+        let tables = self
+            .dynamic_relocation_tables_from_program_header(index)
+            .ok_or(ValidationError::DynamicRelocationTablesUnavailable)?;
+
+        for (table_index, table) in tables.iter().enumerate() {
+            for (entry_index, relocation) in table.relocations.iter().enumerate() {
+                if relocation.symbol_index as usize >= table.symbols.len() {
+                    return Err(
+                        ValidationError::DynamicRelocationSymbolIndexOutOfBounds {
+                            table_index,
+                            entry_index,
+                            symbol_index: relocation.symbol_index,
+                        },
+                    );
+                }
+            }
+        }
+
+        Ok(())
     }
 
     fn dynamic_relocation_table_from_parts(
