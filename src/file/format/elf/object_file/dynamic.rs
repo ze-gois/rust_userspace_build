@@ -31,7 +31,7 @@ use super::super::{
     program_header,
     relocation::{self, relative, Relocation},
     section_header,
-    shared_object_dependencies::SharedObjectDependencies,
+    shared_object_dependencies::{SharedObjectDependencies, SharedObjectDependency},
     string_table::StringTable,
     symbol::{self, Symbol},
 };
@@ -390,7 +390,7 @@ impl<'file> ObjectFile<'file> {
             let string_is_meaningful = match entry.tag {
                 Tag::Needed | Tag::RunPath => true,
                 Tag::SharedObjectName => matches!(self.header.r#type, header::Type::SharedObject),
-                Tag::RuntimeSearchPath => matches!(self.header.r#type, header::Type::Executable),
+                Tag::RPath => matches!(self.header.r#type, header::Type::Executable),
                 _ => false,
             };
 
@@ -952,18 +952,29 @@ impl<'file> ObjectFile<'file> {
         let strings = self.dynamic_string_table_from_program_header(index)?;
 
         let mut needed = Vec::new();
-        for entry in array.iter() {
+        for (dynamic_entry_index, entry) in array.iter().enumerate() {
             if matches!(entry.tag, Tag::Needed) {
-                needed.push(strings.get_str(entry.payload as usize)?);
+                needed.push(SharedObjectDependency::new(
+                    dynamic_entry_index,
+                    strings.get_str(entry.payload as usize)?,
+                ));
             }
         }
 
-        let shared_object_name = array
-            .first(Tag::SharedObjectName)
-            .and_then(|entry| strings.get_str(entry.payload as usize));
-        let runtime_search_path = array
-            .first(Tag::RuntimeSearchPath)
-            .and_then(|entry| strings.get_str(entry.payload as usize));
+        let shared_object_name = if matches!(self.header.r#type, header::Type::SharedObject) {
+            array
+                .first(Tag::SharedObjectName)
+                .and_then(|entry| strings.get_str(entry.payload as usize))
+        } else {
+            None
+        };
+        let rpath = if matches!(self.header.r#type, header::Type::Executable) {
+            array
+                .first(Tag::RPath)
+                .and_then(|entry| strings.get_str(entry.payload as usize))
+        } else {
+            None
+        };
         let run_path = array
             .first(Tag::RunPath)
             .and_then(|entry| strings.get_str(entry.payload as usize));
@@ -971,7 +982,7 @@ impl<'file> ObjectFile<'file> {
         Some(SharedObjectDependencies::new(
             needed,
             shared_object_name,
-            runtime_search_path,
+            rpath,
             run_path,
         ))
     }
